@@ -2,22 +2,21 @@
 
 > **Date:** 2026-03-25
 > **Category:** Frontend System Design
-> **Sub-Topic:** Rendering / Performance
+> **Sub-Topic:** Performance / Rendering
+
+> **Pre-requisite:** Read [How Browsers Work](./how-browsers-work.md) first.
+> This note focuses on **optimizing** the pipeline — not explaining it from scratch.
 
 ---
 
 ## ELI5 — Simple Explanation
 
-Imagine building a house before anyone can live in it:
-- First you need the **blueprint** (HTML → DOM)
-- Then the **interior design plan** (CSS → CSSOM)
-- Then **combine both plans** (Render Tree)
-- Then **measure every room** (Layout)
-- Then **paint the walls** (Paint)
-- Then **open the doors** for people (Screen visible)
+Imagine a new restaurant opening day:
+- Without optimization: Chef waits for ALL ingredients before cooking anything → customers wait forever
+- With optimization: Chef starts cooking with available ingredients, orders the rest in parallel → first dish out fast
 
-> **CRP = The minimum set of steps a browser MUST complete before showing anything on screen.**
-> Optimizing CRP = making users see your page faster.
+> **CRP = The minimum steps browser MUST complete before showing ANYTHING on screen.**
+> **Optimizing CRP = reducing what blocks those first steps.**
 
 ---
 
@@ -25,218 +24,246 @@ Imagine building a house before anyone can live in it:
 
 ### Section 1: What is the Critical Rendering Path?
 
-The **Critical Rendering Path (CRP)** is the sequence of steps the browser takes to convert HTML + CSS + JS into pixels on screen.
+The **Critical Rendering Path (CRP)** is specifically about:
+- **Which resources block** the browser from rendering
+- **How many bytes** must download before first render
+- **How many round trips** to the server are required
 
 ```
-HTML  ──→  DOM
-CSS   ──→  CSSOM
-            ↓
-       Render Tree
-            ↓
-          Layout
-            ↓
-          Paint
-            ↓
-        Composite
-            ↓
-         SCREEN ✅
+GOAL: Get pixels on screen as fast as possible
+
+PROBLEM: Some resources BLOCK the pipeline
+         Until they finish downloading → nothing renders
+
+SOLUTION: Identify + eliminate blocking resources
 ```
 
-**Why it matters:**
-- Every extra step = more time before user sees content
-- Blocking resources (CSS, JS) pause this pipeline
-- Faster CRP = better **FCP** (First Contentful Paint) & **LCP** (Largest Contentful Paint)
+**Three CRP metrics:**
+
+| Metric | What it measures | How to reduce |
+|---|---|---|
+| **Critical Resources** | Files that block rendering | Fewer files, inline critical CSS |
+| **Critical Bytes** | Total size of blocking files | Minify, compress (gzip/brotli) |
+| **Critical Round Trips** | Network requests needed | HTTP/2, preload, reduce files |
 
 ---
 
 ### Section 2: Render-Blocking Resources
 
-**Render-blocking** = resource that pauses the CRP pipeline until it fully downloads + processes.
-
-#### CSS is always render-blocking
+#### CSS — Always Render-Blocking
 
 ```html
-<!-- This BLOCKS rendering until styles.css fully downloads -->
+<!-- Browser STOPS rendering until this fully downloads -->
 <link rel="stylesheet" href="styles.css">
 ```
 
-Browser will NOT render anything until ALL CSS is downloaded.
-Why? Because it needs CSSOM to build the Render Tree.
+Why? Browser needs CSSOM to build Render Tree → needs Render Tree to paint → nothing shows until CSS loads.
 
-#### JavaScript is parser-blocking (by default)
+#### JavaScript — Parser-Blocking by Default
 
 ```html
-<!-- BAD: stops HTML parsing AND rendering -->
+<!-- Default: STOPS HTML parsing AND delays rendering -->
 <script src="app.js"></script>
-
-<!-- GOOD: downloads in parallel, runs after HTML parsed -->
-<script src="app.js" defer></script>
-
-<!-- GOOD: downloads in parallel, runs immediately when ready -->
-<script src="app.js" async></script>
 ```
 
-#### `defer` vs `async` — Key Difference
+**The fix — `defer` vs `async`:**
 
 ```
-Normal <script>:
-HTML: ██████░░░░░░░░░░░░██████  (pause while JS downloads + runs)
-JS:         ████████████
+DEFAULT <script>:
+HTML:  ████████░░░░░░░░░░░████████  ← paused while JS downloads + runs
+JS:            ████████████
 
-defer:
-HTML: ██████████████████████    (never paused)
-JS:         ████████████░░░░    (runs AFTER HTML fully parsed)
+DEFER:
+HTML:  ████████████████████████    ← never paused
+JS:            ████████████░░░░    ← runs AFTER HTML fully parsed, in order
 
-async:
-HTML: ██████████░░░██████████   (paused only when JS runs)
-JS:         ████████████        (runs immediately when downloaded)
+ASYNC:
+HTML:  ████████████░░████████████  ← paused only when JS actually runs
+JS:            ████████████        ← runs immediately when downloaded, any order
 ```
 
-> **Rule:** Use `defer` for scripts that need the DOM. Use `async` for independent scripts (analytics, ads).
+**When to use which:**
 
----
-
-### Section 3: Critical Resources, Bytes & Round Trips
-
-Three metrics define CRP cost:
-
-| Metric | What it means | How to reduce |
+| | `defer` | `async` |
 |---|---|---|
-| **Critical Resources** | Number of files that block rendering | Fewer CSS/JS files, inline critical CSS |
-| **Critical Bytes** | Total size of blocking files | Minify, compress (gzip/brotli), tree-shake |
-| **Critical Round Trips** | Number of network requests needed | HTTP/2 multiplexing, preload, reduce files |
+| Needs DOM ready | ✅ Yes | ❌ No |
+| Order matters | ✅ Preserves order | ❌ Random order |
+| Use for | App scripts, frameworks | Analytics, ads, independent scripts |
 
 ---
 
-### Section 4: Preload, Prefetch, Preconnect
+### Section 3: Resource Hints
 
-Tell the browser what it will need **before** it discovers it:
+Tell the browser what it needs **before** it discovers it in HTML:
 
 ```html
-<!-- preload: fetch THIS resource ASAP (critical for current page) -->
-<link rel="preload" href="hero-font.woff2" as="font" crossorigin>
-<link rel="preload" href="critical.css" as="style">
+<!-- preload: fetch THIS file RIGHT NOW (critical for current page) -->
+<link rel="preload" href="hero.jpg" as="image">
+<link rel="preload" href="main.js" as="script">
+<link rel="preload" href="font.woff2" as="font" crossorigin>
 
-<!-- prefetch: fetch for NEXT page navigation (low priority) -->
-<link rel="prefetch" href="next-page.js">
-
-<!-- preconnect: open TCP+TLS to a domain early (no file yet) -->
+<!-- preconnect: open TCP+TLS to domain early (no file yet) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <!-- dns-prefetch: just DNS lookup early (cheaper than preconnect) -->
 <link rel="dns-prefetch" href="https://api.mysite.com">
+
+<!-- prefetch: fetch for NEXT page navigation (low priority) -->
+<link rel="prefetch" href="next-page-bundle.js">
 ```
+
+**When to use each:**
+
+| Hint | Use when | Priority |
+|---|---|---|
+| `preload` | Current page needs this file soon | 🔴 High — fetch immediately |
+| `preconnect` | Will request from this domain soon | 🟡 Medium — open connection |
+| `dns-prefetch` | May request from this domain | 🟢 Low — just DNS |
+| `prefetch` | Next page will need this file | 🔵 Idle — download when quiet |
 
 ---
 
-### Section 5: Inlining Critical CSS
+### Section 4: Inlining Critical CSS
 
-**Critical CSS** = styles needed for above-the-fold content (what user sees first without scrolling).
+**Critical CSS** = styles for content visible without scrolling (above the fold).
 
 ```html
-<!-- Strategy: inline critical CSS → defer the rest -->
 <head>
-  <!-- INLINE: renders immediately, no network request -->
+  <!-- INLINE: renders immediately, zero network cost -->
   <style>
-    body { margin: 0; font-family: sans-serif; }
+    /* Only above-the-fold styles — keep under 14KB (1 TCP round trip) */
+    body  { margin: 0; font-family: sans-serif; }
     .hero { background: #1a1a2e; color: white; padding: 60px; }
     .nav  { display: flex; justify-content: space-between; }
   </style>
 
-  <!-- DEFER: non-critical CSS loads after render -->
-  <link rel="stylesheet" href="full-styles.css" media="print"
+  <!-- DEFER rest of CSS: non-blocking trick -->
+  <link rel="stylesheet"
+        href="full-styles.css"
+        media="print"
         onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="full-styles.css">
+  </noscript>
 </head>
 ```
 
-> **Result:** Page renders with hero section visible immediately. Rest of styles load in background.
+**Why 14KB limit?** → First TCP round trip carries ~14KB. Inline CSS within 14KB = renders without extra network wait.
 
 ---
 
-### Section 6: Measuring CRP — Key Metrics
+### Section 5: Font Optimization
 
-| Metric | What it measures | Good target |
+Fonts are a common CRP bottleneck:
+
+```html
+<!-- BAD: font blocks render → Flash of Invisible Text (FOIT) -->
+<link href="https://fonts.googleapis.com/css?family=Inter" rel="stylesheet">
+
+<!-- GOOD: 3 optimizations together -->
+
+<!-- 1. preconnect: open connection to Google Fonts early -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- 2. load font CSS non-blocking -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter"
+      media="print" onload="this.media='all'">
+
+<!-- 3. font-display: swap in CSS → show fallback instantly, swap when loaded -->
+<style>
+  @font-face {
+    font-family: 'Inter';
+    src: url('inter.woff2') format('woff2');
+    font-display: swap;  /* no invisible text */
+  }
+</style>
+```
+
+---
+
+### Section 6: CRP Performance Metrics
+
+| Metric | Measures | Good Target |
 |---|---|---|
-| **FCP** (First Contentful Paint) | When first text/image appears | < 1.8s |
-| **LCP** (Largest Contentful Paint) | When main content appears | < 2.5s |
-| **TTI** (Time To Interactive) | When page is fully interactive | < 3.8s |
-| **TBT** (Total Blocking Time) | JS blocking main thread | < 200ms |
-| **CLS** (Cumulative Layout Shift) | Visual stability score | < 0.1 |
+| **FCP** — First Contentful Paint | First text/image visible | < 1.8s |
+| **LCP** — Largest Contentful Paint | Main content visible | < 2.5s |
+| **TTI** — Time To Interactive | Page fully usable | < 3.8s |
+| **TBT** — Total Blocking Time | JS blocking main thread | < 200ms |
+| **CLS** — Cumulative Layout Shift | Visual stability | < 0.1 |
 
 ---
 
-## Visual — CRP Optimization Comparison
+## Visual — Optimized vs Unoptimized
 
 ```
-UNOPTIMIZED CRP:
-─────────────────────────────────────────────────────
-HTML download  ████
-               → parse → hit CSS link → STOP
-CSS download           ████████████████
-                                       → CSSOM built
-JS download            ██████
-                             → JS runs → DOM modified
-Render Tree                                          ██
-Layout                                                 ██
-Paint                                                    ██
-Screen visible                                             ✅ LATE
+❌ UNOPTIMIZED:
+────────────────────────────────────────────────────────
+HTML:       ████
+            → hits <link css> → STOP
+CSS:              ████████████████
+                                  → hits <script> → STOP
+JS:                               ████████████
+Render Tree:                                  ██
+Layout:                                         ██
+First Paint:                                      ✅ SLOW (1.8s+)
 
-OPTIMIZED CRP:
-─────────────────────────────────────────────────────
-Inline CSS     (already in HTML, no extra request)
-HTML download  ████
-               → parse → DOM + CSSOM built together
-JS defer       ████████ (parallel, runs after parse)
-Render Tree        ██
-Layout               ██
-Paint                  ██
-Screen visible           ✅ EARLY
+
+✅ OPTIMIZED:
+────────────────────────────────────────────────────────
+Critical CSS: (inlined in HTML, no extra request)
+HTML:       ████
+            → CSSOM ready immediately from inline CSS
+JS defer:       ████████ (parallel download, runs after)
+Render Tree:        ██
+Layout:               ██
+First Paint:            ✅ FAST (< 0.5s)
 ```
 
 ---
 
 ## Real-World Examples
 
-**Example 1 — Google's approach (inline critical CSS):**
+**Example 1 — Correct script loading:**
 ```html
 <head>
-  <style>
-    /* Only above-the-fold styles — ~14KB max (1 TCP round trip) */
-    .search-bar { ... }
-    .logo { ... }
-  </style>
-  <link rel="stylesheet" href="rest.css" media="print" onload="this.media='all'">
-</head>
-```
-
-**Example 2 — Font optimization:**
-```html
-<!-- BAD: font blocks render, causes Flash of Invisible Text (FOIT) -->
-<link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
-
-<!-- GOOD: preconnect early + font-display swap -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<style>
-  @font-face {
-    font-family: 'Inter';
-    font-display: swap; /* show fallback font instantly, swap when loaded */
-  }
-</style>
-```
-
-**Example 3 — Script loading strategy:**
-```html
-<head>
-  <!-- analytics: doesn't need DOM, load async -->
+  <!-- Analytics: independent, load async -->
   <script async src="analytics.js"></script>
 
-  <!-- preload important script so it's ready when needed -->
-  <link rel="preload" href="main-app.js" as="script">
+  <!-- Preload app bundle so it's ready when needed -->
+  <link rel="preload" href="app.js" as="script">
 </head>
 <body>
-  <!-- app script: needs DOM, run after parse -->
-  <script defer src="main-app.js"></script>
+  <div id="app"></div>
+
+  <!-- App: needs DOM, runs after parse, in order -->
+  <script defer src="vendors.js"></script>
+  <script defer src="app.js"></script>
 </body>
+```
+
+**Example 2 — Hero image optimization (LCP fix):**
+```html
+<!-- BAD: browser discovers hero image late during parse -->
+<img src="hero.jpg" alt="Hero">
+
+<!-- GOOD: preload tells browser immediately -->
+<link rel="preload" as="image" href="hero.jpg">
+<img src="hero.jpg" alt="Hero" fetchpriority="high">
+```
+
+**Example 3 — Eliminate render-blocking CSS:**
+```html
+<!-- BAD: all CSS blocks render -->
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="animations.css">
+<link rel="stylesheet" href="print.css">
+
+<!-- GOOD: only critical CSS blocks, rest deferred -->
+<style>/* critical above-fold styles inlined */</style>
+<link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="animations.css" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="print.css" media="print">
 ```
 
 ---
@@ -245,81 +272,93 @@ Screen visible           ✅ EARLY
 
 | Concept | One-Line Explanation |
 |---|---|
-| **Critical Rendering Path** | Steps browser must complete before showing pixels |
-| **Render-blocking CSS** | ALL CSS blocks rendering until fully downloaded |
-| **Parser-blocking JS** | Default `<script>` pauses HTML parsing |
+| **CRP** | Minimum steps before browser shows anything on screen |
+| **Render-blocking CSS** | ALL CSS files block rendering until downloaded |
+| **Parser-blocking JS** | Default `<script>` stops HTML parsing |
 | **defer** | Script runs after HTML parsed, in order |
 | **async** | Script runs immediately when downloaded, any order |
 | **Critical CSS** | Above-the-fold styles inlined in `<head>` |
-| **preload** | Force-fetch critical resource early |
-| **prefetch** | Fetch resource for next navigation |
-| **preconnect** | Open TCP+TLS connection to domain early |
-| **FCP / LCP** | Key metrics measuring CRP speed |
+| **preload** | Force-fetch critical resource immediately |
+| **preconnect** | Open connection to domain early |
+| **FCP** | First Contentful Paint — first visible text/image |
+| **LCP** | Largest Contentful Paint — main content visible |
 
 ---
 
 ## Test Your Understanding
 
 **Q1 (Basic):**
-A page has 3 CSS files and 2 JS files (no `defer`/`async`). How many render-blocking resources does it have, and which steps of the CRP are delayed?
+A page has 3 `<link>` CSS files and 2 `<script>` tags (no `defer`/`async`).
+How many render-blocking resources are there?
 
 **Q2 (Application):**
-You have a Google Font causing a 500ms delay in your FCP. List 3 specific techniques you would apply (with code) to fix this without removing the font.
+Your LCP score is 4.2s — too slow. The LCP element is a hero image.
+List 3 specific techniques with code to fix it.
 
 **Q3 (Tricky):**
-A developer uses `<link rel="preload" as="script" href="app.js">` but forgets the `<script src="app.js">` tag. What happens? Does preload help or hurt here?
+A developer adds `<link rel="preload" as="script" href="app.js">` but forgets the actual `<script src="app.js">` tag.
+What happens? Does preload help here?
 
 ---
 
 ## Cheat Sheet
 
 **Key Definitions:**
-- **CRP:** Steps from HTML/CSS/JS → visible pixels
-- **Render-blocking:** Resource that pauses CRP pipeline
-- **Parser-blocking:** Resource that pauses HTML parsing
-- **Critical CSS:** Above-the-fold styles needed for first paint
-- **FCP:** First Contentful Paint — first text/image visible
-- **LCP:** Largest Contentful Paint — main content visible
+- **CRP:** Minimum steps before first pixel on screen
+- **Render-blocking:** Resource that pauses the rendering pipeline
+- **Critical CSS:** Above-fold styles that must load for first paint
+- **FCP:** First visible text or image
+- **LCP:** Largest visible content element painted
 
-**Key HTML Tags:**
+**Essential HTML:**
 ```html
 <!-- Script loading -->
-<script src="x.js">          <!-- blocks parser + render -->
-<script src="x.js" defer>    <!-- non-blocking, runs after parse, in order -->
-<script src="x.js" async>    <!-- non-blocking, runs ASAP, no order -->
+<script defer src="x.js">    <!-- after HTML parse, in order -->
+<script async src="x.js">    <!-- immediately when ready, no order -->
 
 <!-- Resource hints -->
 <link rel="preload" href="x" as="font|script|style|image">
-<link rel="prefetch" href="x">
 <link rel="preconnect" href="https://domain.com">
 <link rel="dns-prefetch" href="https://domain.com">
+<link rel="prefetch" href="next-page.js">
 
-<!-- Non-blocking CSS trick -->
-<link rel="stylesheet" href="x.css" media="print" onload="this.media='all'">
+<!-- Non-blocking CSS -->
+<link rel="stylesheet" href="x.css"
+      media="print" onload="this.media='all'">
+
+<!-- Font display -->
+font-display: swap;
 ```
 
 **CRP Optimization Checklist:**
-- Inline critical (above-fold) CSS in `<head>`
-- Defer all non-critical CSS
-- Use `defer` on app scripts, `async` on analytics
-- `preconnect` to third-party domains (fonts, APIs)
-- `preload` critical fonts, hero images
-- Minify + compress HTML/CSS/JS (gzip/brotli)
-- Use HTTP/2 to reduce round trips
-- Use `font-display: swap` for web fonts
+```
+✅ Inline critical (above-fold) CSS in <head>
+✅ Defer all non-critical CSS with media="print" trick
+✅ defer app scripts, async analytics/ads
+✅ preconnect to Google Fonts, CDN domains
+✅ preload hero image with fetchpriority="high"
+✅ preload critical fonts
+✅ font-display: swap for web fonts
+✅ Minify + gzip/brotli all assets
+✅ HTTP/2 to reduce round trips
+✅ Keep inline critical CSS under 14KB
+```
 
 **Common Mistakes to Avoid:**
 
 | Mistake | Why Wrong | Fix |
 |---|---|---|
-| All CSS in one big file | Entire file blocks render | Split: inline critical + defer rest |
-| `<script>` in `<head>` without `defer` | Blocks HTML parsing | Add `defer` or move before `</body>` |
-| No `preconnect` for Google Fonts | DNS + TCP delay on first request | Add `<link rel="preconnect">` |
-| Using `async` for scripts that depend on each other | Runs out of order, breaks app | Use `defer` for ordered execution |
-| Loading hero image without `preload` | LCP is slow | `<link rel="preload" as="image" href="hero.jpg">` |
-| `preload` without actually using the resource | Wastes bandwidth | Only preload what current page uses |
-| Render-blocking third-party scripts | Delays entire page | Use `async` or load after page interactive |
+| `<script>` in `<head>` no defer | Blocks HTML parsing | Add `defer` or move to bottom of `<body>` |
+| All CSS in one unspilt file | Entire file blocks render | Inline critical + defer rest |
+| No `preconnect` for Google Fonts | Extra DNS+TCP delay | Add `<link rel="preconnect">` |
+| `async` for interdependent scripts | Runs out of order, breaks app | Use `defer` for ordered execution |
+| Hero image not preloaded | LCP is slow | `<link rel="preload" as="image">` |
+| `preload` without using the resource | Wastes bandwidth | Only preload what current page uses |
+| Third-party scripts not async | Blocks entire page for external server | Always `async` or `defer` third-party |
 
 ---
+
+> **Previous Topic:** [How Browsers Work](./how-browsers-work.md)
+> — Understand the full browser pipeline before optimizing it
 
 *Saved on: 2026-03-25 | Repo: Frontend System Design Learning Notes*
