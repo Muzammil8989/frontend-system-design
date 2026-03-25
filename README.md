@@ -11,7 +11,7 @@
 | # | Topic | Category |
 |---|---|---|
 | 1 | ✅ [How Browsers Work](./notes/how-browsers-work.md) | Browser Internals |
-| 2 | ✅ Critical Rendering Path | Browser Internals |
+| 2 | ✅ [Critical Rendering Path](./notes/critical-rendering-path.md) | Browser Internals |
 | 3 | 🔄 Browser Storage Mechanisms | Browser Internals |
 | 4 | ⬜ JavaScript Runtime & Event Loop | Browser Internals |
 | 5 | ⬜ DOM & Virtual DOM | Browser Internals |
@@ -218,7 +218,7 @@
 | 9 — Monitoring & Observability | 7 | — |
 | 10 — Advanced Topics | 8 | — |
 | 11 — System Design Cases | 15 | — |
-| **Total** | **120** | **2 / 120** |
+| **Total** | **120** | **2 / 120 (2%)** |
 
 ---
 
