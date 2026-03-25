@@ -2,8 +2,6 @@
 
 > 120 topics across 11 phases. Every completed topic saved as a structured `.md` note.
 
-**Legend:** ✅ Completed &nbsp;|&nbsp; 🔄 Started &nbsp;|&nbsp; ⬜ Not Started
-
 ---
 
 ## Phase 1 — Web Fundamentals
