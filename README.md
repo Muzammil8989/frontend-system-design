@@ -1,37 +1,40 @@
 # Frontend System Design — Learning Notes
 
 > Personal deep-dive notes on Frontend System Design concepts.
-> Every topic learned is saved as a structured `.md` file.
+> Structured learning tracker — every topic saved as `.md` file.
 
 ---
 
-## Notes Index
+## Learning Tracker
 
-| # | Topic | Category | Date |
+| # | Topic | Category | Phase | Priority | Confidence | Status | Est. Hours | Notes | Resource |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | [How Browsers Work](./notes/how-browsers-work.md) | Browser Internals | 1 - Web Fundamentals | 🔴 High | 100% | ✅ Completed | 4h | Parsing, rendering engine, compositing, layout, paint | [Blog](https://muhammad-muzammil-khan.vercel.app/blog/how-browsers-work-a-complete-guide-with-interview-questions) |
+
+---
+
+## Phases
+
+| Phase | Name | Topics |
+|---|---|---|
+| **Phase 1** | Web Fundamentals | How Browsers Work, DNS, HTTP, Rendering Pipeline |
+| **Phase 2** | Performance | CRP, Lazy Loading, Code Splitting, Caching |
+| **Phase 3** | Architecture | CSR / SSR / SSG / ISR, Micro-Frontends, Module Federation |
+| **Phase 4** | State Management | Redux, Zustand, React Query, Context API |
+| **Phase 5** | Design Systems | Component Libraries, Tokens, Theming |
+| **Phase 6** | DevOps / Infra | CDN, Edge, CI/CD, Deployment |
+
+---
+
+## Stats
+
+| Total Topics | Completed | In Progress | Pending |
 |---|---|---|---|
-| 01 | [How Browsers Work](./notes/how-browsers-work.md) | Rendering / Networking | 2026-03-25 |
-
----
-
-## Topics Coming Soon
-
-```
-rendering-patterns.md       (CSR, SSR, SSG, ISR)
-micro-frontends.md
-state-management.md
-performance-optimization.md
-caching-strategies.md
-cdn-and-edge.md
-design-systems.md
-module-federation.md
-```
+| 1 | 1 ✅ | 0 | 0 |
 
 ---
 
 ## How Notes Are Created
-
-Each topic is learned and saved using Claude's `/save-learning` skill —
-structured lesson auto-pushed to GitHub.
 
 | Command | What it does |
 |---|---|
