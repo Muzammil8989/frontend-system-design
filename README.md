@@ -202,5 +202,3 @@
 | 120 | ⬜ Design a Design Tool (Figma-like Canvas) | Advanced |
 
 ---
-
-*Notes auto-saved via `/save-learning` skill → pushed to GitHub*
