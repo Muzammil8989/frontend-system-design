@@ -1,0 +1,14 @@
+# Claude personal config — do NOT push
+.claude/
+
+# Node
+node_modules/
+dist/
+
+# Env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
