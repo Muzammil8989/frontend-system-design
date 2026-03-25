@@ -203,23 +203,4 @@
 
 ---
 
-## Progress
-
-| Phase | Total | Done |
-|---|---|---|
-| 1 — Web Fundamentals | 14 | ✅ 2 &nbsp; 🔄 1 |
-| 2 — Rendering & Architecture | 12 | — |
-| 3 — State & Data | 12 | — |
-| 4 — Performance Engineering | 15 | — |
-| 5 — Design Systems & Components | 12 | — |
-| 6 — Accessibility & i18n | 9 | — |
-| 7 — Security | 8 | — |
-| 8 — Testing | 8 | — |
-| 9 — Monitoring & Observability | 7 | — |
-| 10 — Advanced Topics | 8 | — |
-| 11 — System Design Cases | 15 | — |
-| **Total** | **120** | **2 / 120 (2%)** |
-
----
-
 *Notes auto-saved via `/save-learning` skill → pushed to GitHub*
