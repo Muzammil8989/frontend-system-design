@@ -10,7 +10,7 @@
 |---|---|---|
 | 1 | ✅ [How Browsers Work](./notes/how-browsers-work.md) | Browser Internals |
 | 2 | ✅ [Critical Rendering Path](./notes/critical-rendering-path.md) | Browser Internals |
-| 3 | 🔄 Browser Storage Mechanisms | Browser Internals |
+| 3 | ✅ [Browser Storage Mechanisms](./notes/browser-storage-mechanisms.md) | Browser Internals |
 | 4 | ⬜ JavaScript Runtime & Event Loop | Browser Internals |
 | 5 | ⬜ DOM & Virtual DOM | Browser Internals |
 | 6 | ⬜ HTTP/1.1 vs HTTP/2 vs HTTP/3 | Networking |
