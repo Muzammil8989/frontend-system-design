@@ -1,5 +1,6 @@
 # Claude personal config — do NOT push
 .claude/
+CLAUDE.md
 
 # Node
 node_modules/
