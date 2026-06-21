@@ -141,7 +141,7 @@ console.log(`~${(total / 1024).toFixed(2)} KB used`);
 - Synchronous — blocks the main thread on large reads/writes
 - Strings only — must `JSON.stringify` / `JSON.parse` objects
 - No expiry — data never auto-deletes
-- ~5MB limit (varies by browser)
+- ~5–10MB limit (varies by browser)
 - Not available in Web Workers or Service Workers
 
 ```
@@ -548,13 +548,23 @@ Files/blobs offline   → IndexedDB
 
 | Mistake | Why Wrong | Fix |
 |---|---|---|
-| Storing auth tokens in `localStorage` | XSS can `document.cookie` steal them — wait, JS can read `localStorage` directly | Use `HttpOnly` cookies for refresh tokens; memory for access tokens |
-| Using `localStorage` for large data | 5MB limit, synchronous, blocks main thread | Use IndexedDB for anything >100KB or complex |
+| Storing auth tokens in `localStorage` | Any XSS script can read `localStorage` directly and exfiltrate the token | Use `HttpOnly` cookies for refresh tokens; keep access tokens in memory |
+| Using `localStorage` for large data | ~5–10MB limit, synchronous, blocks main thread | Use IndexedDB for anything >100KB or complex |
 | Forgetting `JSON.stringify` in Web Storage | Stores `[object Object]` — unreadable | Always `JSON.stringify` on write, `JSON.parse` on read |
 | No cookie `SameSite` flag | CSRF attacks can use cookie cross-site | Always set `SameSite=Strict` or `Lax` |
 | No cookie `Secure` flag in production | Cookie sent over HTTP — interceptable | Always set `Secure` in production |
 | `Cache API` in regular JS without Service Worker | Fetches work, but offline support doesn't | Register a Service Worker to intercept fetches |
 | Assuming storage survives forever | Browsers evict storage under storage pressure | Use `navigator.storage.persist()` to request persistence |
+
+---
+
+## References
+
+- MDN: [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+- MDN: [Using HTTP cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies)
+- MDN: [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
+- MDN: [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache)
+- web.dev: [Storage for the web](https://web.dev/articles/storage-for-the-web)
 
 ---
 

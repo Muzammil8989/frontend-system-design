@@ -198,8 +198,9 @@ Layer 4: modal/popup
 ```
 
 **Why `transform` and `opacity` are special:**
-> They only affect the **Composite** step — GPU handles them directly.
+> They can be handled at the **Composite** step alone — GPU moves/blends an existing layer directly.
 > No Layout recalc, no Paint — that's why they're smooth at 60fps.
+> *Caveat:* this only holds when the element is on its own compositor layer (promote it with `will-change: transform`). Otherwise the browser may still repaint.
 
 ```css
 /* Triggers Layout + Paint + Composite (slow) */
@@ -369,6 +370,15 @@ Composite = ✅ cheapest        → prefer (transform, opacity)
 | Confusing `display:none` vs `visibility:hidden` | Different Render Tree + cost behavior | `display:none` = out of tree; `visibility:hidden` = in tree |
 | Changing many styles one by one | Multiple reflows | Batch via CSS class toggle |
 | Large unoptimized images | Slow download, blocks paint | Use WebP, correct sizing |
+
+---
+
+## References
+
+- MDN: [Populating the page: how browsers work](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/How_browsers_work)
+- MDN: [Critical rendering path](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Critical_rendering_path)
+- web.dev: [Rendering performance](https://web.dev/articles/rendering-performance)
+- web.dev: [Stick to compositor-only properties and manage layer count](https://web.dev/articles/stick-to-compositor-only-properties-and-manage-layer-count)
 
 ---
 

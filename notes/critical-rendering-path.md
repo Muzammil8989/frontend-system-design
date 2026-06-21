@@ -148,7 +148,7 @@ Tell the browser what it needs **before** it discovers it in HTML:
 </head>
 ```
 
-**Why 14KB limit?** → First TCP round trip carries ~14KB. Inline CSS within 14KB = renders without extra network wait.
+**Why 14KB limit?** → TCP's initial congestion window is ~10 segments × ~1460 bytes ≈ 14KB, so the first round trip carries ~14KB before the server must wait for an ACK. Inline CSS within 14KB = renders without an extra network round trip. (See [RFC 3390](https://datatracker.ietf.org/doc/html/rfc3390).)
 
 ---
 
@@ -184,13 +184,16 @@ Fonts are a common CRP bottleneck:
 
 ### Section 6: CRP Performance Metrics
 
-| Metric | Measures | Good Target |
-|---|---|---|
-| **FCP** — First Contentful Paint | First text/image visible | < 1.8s |
-| **LCP** — Largest Contentful Paint | Main content visible | < 2.5s |
-| **TTI** — Time To Interactive | Page fully usable | < 3.8s |
-| **TBT** — Total Blocking Time | JS blocking main thread | < 200ms |
-| **CLS** — Cumulative Layout Shift | Visual stability | < 0.1 |
+The three **Core Web Vitals** (field metrics Google ranks on) are **LCP, INP, CLS**. The rest are lab/supporting metrics. (INP replaced FID as a Core Web Vital in March 2024.)
+
+| Metric | Measures | Good Target | Type |
+|---|---|---|---|
+| **LCP** — Largest Contentful Paint | Main content visible | ≤ 2.5s | 🟢 Core Web Vital |
+| **INP** — Interaction to Next Paint | Responsiveness to user input | ≤ 200ms | 🟢 Core Web Vital |
+| **CLS** — Cumulative Layout Shift | Visual stability | ≤ 0.1 | 🟢 Core Web Vital |
+| **FCP** — First Contentful Paint | First text/image visible | ≤ 1.8s | Lab / supporting |
+| **TBT** — Total Blocking Time | JS blocking main thread | ≤ 200ms | Lab (proxy for INP) |
+| **TTI** — Time To Interactive | Page fully usable | ≤ 3.8s | Lab (deprecated in Lighthouse 10) |
 
 ---
 
@@ -281,7 +284,9 @@ First Paint:            ✅ FAST (< 0.5s)
 | **preload** | Force-fetch critical resource immediately |
 | **preconnect** | Open connection to domain early |
 | **FCP** | First Contentful Paint — first visible text/image |
-| **LCP** | Largest Contentful Paint — main content visible |
+| **LCP** | Largest Contentful Paint — main content visible (Core Web Vital) |
+| **INP** | Interaction to Next Paint — input responsiveness (Core Web Vital) |
+| **CLS** | Cumulative Layout Shift — visual stability (Core Web Vital) |
 
 ---
 
@@ -308,7 +313,9 @@ What happens? Does preload help here?
 - **Render-blocking:** Resource that pauses the rendering pipeline
 - **Critical CSS:** Above-fold styles that must load for first paint
 - **FCP:** First visible text or image
-- **LCP:** Largest visible content element painted
+- **LCP:** Largest visible content element painted (Core Web Vital, ≤ 2.5s)
+- **INP:** Responsiveness to user input across the visit (Core Web Vital, ≤ 200ms)
+- **CLS:** Cumulative unexpected layout shift (Core Web Vital, ≤ 0.1)
 
 **Essential HTML:**
 ```html
@@ -355,6 +362,16 @@ font-display: swap;
 | Hero image not preloaded | LCP is slow | `<link rel="preload" as="image">` |
 | `preload` without using the resource | Wastes bandwidth | Only preload what current page uses |
 | Third-party scripts not async | Blocks entire page for external server | Always `async` or `defer` third-party |
+
+---
+
+## References
+
+- MDN: [Critical rendering path](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Critical_rendering_path)
+- web.dev: [Web Vitals](https://web.dev/articles/vitals)
+- web.dev: [Render-blocking resources](https://web.dev/articles/render-blocking-resources)
+- MDN: [`<link rel="preload">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preload)
+- RFC 3390: [Increasing TCP's Initial Window](https://datatracker.ietf.org/doc/html/rfc3390) (the 14KB rule)
 
 ---
 
