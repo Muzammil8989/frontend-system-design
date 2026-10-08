@@ -13,12 +13,79 @@
 
 ## Table of Contents
 
+- [Getting Started (Clone & Read)](#getting-started-clone--read)
+- [Diagrams Not Showing? (Mermaid fix)](#diagrams-not-showing-mermaid-fix)
 - [Learning Path](#learning-path)
 - [Progress](#progress)
 - [How Each Note Is Structured](#how-each-note-is-structured)
 - [Roadmap](#phase-1--web-fundamentals) (Phases 1–11)
 - [Suggested Resources](#suggested-resources)
 - [Contributing / Adding a New Note](#adding-a-new-note)
+
+---
+
+## Getting Started (Clone & Read)
+
+**1. Clone the project**
+
+```bash
+git clone https://github.com/Muzammil8989/frontend-system-design.git
+cd frontend-system-design
+code .          # opens the folder in VS Code
+```
+
+> No Git? Download the ZIP from the green **Code** button on GitHub and extract it.
+
+**2. Open a note in VS Code and read it as a formatted page**
+
+1. In the left sidebar open the [`notes/`](./notes) folder and click any `.md` file.
+2. Press **`Ctrl + Shift + V`** (Mac: `Cmd + Shift + V`) → opens the **Markdown Preview** (formatted view with tables, headings, code blocks).
+3. Press **`Ctrl + K`, then `V`** to open the preview **side-by-side** with the raw file.
+
+> Tip: read the first note in order — [How Browsers Work](./notes/how-browsers-work.md) → [Critical Rendering Path](./notes/critical-rendering-path.md) → [Browser Storage Mechanisms](./notes/browser-storage-mechanisms.md).
+
+**3. Alternative: just read it on GitHub**
+
+Open the repo on GitHub and click any note — tables, collapsible answers and diagrams all render there with **no setup**.
+
+---
+
+## Diagrams Not Showing? (Mermaid fix)
+
+The notes use [Mermaid](https://mermaid.js.org/) for diagrams. GitHub renders them automatically, but **VS Code's built-in preview does not**, so you may see raw code like ` ```mermaid ` instead of a picture. Fix it in under a minute:
+
+**Option 1 — Install the VS Code extension (recommended)**
+
+1. Open Extensions: **`Ctrl + Shift + X`**
+2. Search **`Markdown Preview Mermaid Support`** (publisher: *Matt Bierner*, id `bierner.markdown-mermaid`) → click **Install**
+3. Re-open the preview with **`Ctrl + Shift + V`** — diagrams now appear.
+
+Or install from a terminal:
+
+```bash
+code --install-extension bierner.markdown-mermaid
+```
+
+> When you open this project, VS Code will also suggest this extension automatically (see [`.vscode/extensions.json`](./.vscode/extensions.json)) — just click **Install**.
+
+**Option 2 — Read on GitHub**
+
+Diagrams work out of the box on github.com. Nothing to install.
+
+**Option 3 — Paste into the online editor**
+
+Copy the diagram code (without the ` ```mermaid ` lines) into [mermaid.live](https://mermaid.live) to view or export it as an image.
+
+**Option 4 — Alternative extension**
+
+[`Markdown Preview Enhanced`](https://marketplace.visualstudio.com/items?itemName=shd101wyy.markdown-preview-enhanced) (`shd101wyy.markdown-preview-enhanced`) also renders Mermaid. Open it via `Ctrl + Shift + P` → **Markdown Preview Enhanced: Open Preview to the Side**.
+
+| Problem | Fix |
+|---|---|
+| Diagram shows as plain code | Install `Markdown Preview Mermaid Support` (Option 1) |
+| Installed but still not showing | Reload VS Code: `Ctrl + Shift + P` → **Developer: Reload Window** |
+| Answers hidden under "Answer" | Click the small ▶ arrow — they are collapsible on purpose |
+| No internet / office PC blocks extensions | Use Option 2 (GitHub) or Option 3 (mermaid.live) |
 
 ---
 
