@@ -1,6 +1,80 @@
 # Frontend System Design — Learning Roadmap
 
-> 120 topics across 11 phases. Every completed topic saved as a structured `.md` note.
+> 120 topics across 11 phases. Every completed topic is saved as a structured, diagram-rich `.md` note with an ELI5 explanation, real-world code, quiz questions (with answers), a cheat sheet and curated references.
+
+![Progress](https://img.shields.io/badge/progress-3%2F120-blue)
+![Topics](https://img.shields.io/badge/topics-120-informational)
+![Phases](https://img.shields.io/badge/phases-11-informational)
+![Notes](https://img.shields.io/badge/format-Markdown%20%2B%20Mermaid-success)
+
+**Legend:** ✅ note completed · ⬜ planned
+
+---
+
+## Table of Contents
+
+- [Learning Path](#learning-path)
+- [Progress](#progress)
+- [How Each Note Is Structured](#how-each-note-is-structured)
+- [Roadmap](#phase-1--web-fundamentals) (Phases 1–11)
+- [Suggested Resources](#suggested-resources)
+- [Contributing / Adding a New Note](#adding-a-new-note)
+
+---
+
+## Learning Path
+
+```mermaid
+flowchart LR
+    P1["1 · Web<br/>Fundamentals"] --> P2["2 · Rendering &<br/>Architecture"]
+    P2 --> P3["3 · State<br/>& Data"]
+    P3 --> P4["4 · Performance"]
+    P4 --> P5["5 · Design Systems<br/>& Components"]
+    P5 --> P6["6 · A11y<br/>& i18n"]
+    P6 --> P7["7 · Security"]
+    P7 --> P8["8 · Testing"]
+    P8 --> P9["9 · Monitoring"]
+    P9 --> P10["10 · Advanced"]
+    P10 --> P11["11 · System<br/>Design Cases"]
+    style P1 fill:#dcfce7,stroke:#16a34a
+```
+
+Phases 1–4 build the foundations; 5–9 are the engineering practices used in production; 10–11 combine everything into interview-style system design cases.
+
+---
+
+## Progress
+
+| Phase | Done | Total |
+|---|:---:|:---:|
+| 1 · Web Fundamentals | 3 | 14 |
+| 2 · Rendering & Architecture | 0 | 12 |
+| 3 · State & Data | 0 | 12 |
+| 4 · Performance Engineering | 0 | 15 |
+| 5 · Design Systems & Components | 0 | 12 |
+| 6 · Accessibility & i18n | 0 | 9 |
+| 7 · Security | 0 | 8 |
+| 8 · Testing | 0 | 8 |
+| 9 · Monitoring & Observability | 0 | 7 |
+| 10 · Advanced Topics | 0 | 8 |
+| 11 · System Design Cases | 0 | 15 |
+| **Total** | **3** | **120** |
+
+---
+
+## How Each Note Is Structured
+
+Every note in [`notes/`](./notes) follows the same layout so they are quick to skim and easy to revise:
+
+1. **ELI5** — the idea in plain language
+2. **Core concept** — step-by-step, with Mermaid diagrams
+3. **Real-world examples** — copy-pasteable code
+4. **Key points summary** — one-liners
+5. **Test your understanding** — questions with collapsible answers
+6. **Cheat sheet** — definitions, quick reference, common mistakes
+7. **References & further reading** — MDN, web.dev, specs, deep dives
+
+> Diagrams are written in [Mermaid](https://mermaid.js.org/) and render automatically on GitHub (and in VS Code with a Mermaid preview extension).
 
 ---
 
@@ -198,5 +272,32 @@
 | 118 | ⬜ Design a Map-Based Application | Geo |
 | 119 | ⬜ Design a Calendar Component | Productivity |
 | 120 | ⬜ Design a Design Tool (Figma-like Canvas) | Advanced |
+
+---
+
+## Suggested Resources
+
+| Resource | Why |
+|---|---|
+| [MDN Web Docs](https://developer.mozilla.org/) | Authoritative reference for HTML, CSS, JS and Web APIs |
+| [web.dev](https://web.dev/) | Performance, Core Web Vitals, PWA and accessibility guides |
+| [Chrome for Developers](https://developer.chrome.com/) | Browser internals, DevTools, new platform features |
+| [WHATWG HTML Standard](https://html.spec.whatwg.org/) | The actual spec behind parsing, scripting and the event loop |
+| [patterns.dev](https://www.patterns.dev/) | Rendering, design and performance patterns |
+| [GreatFrontEnd](https://www.greatfrontend.com/) | Frontend interview and system design practice |
+| [Frontend Masters](https://frontendmasters.com/) | In-depth video courses |
+| [W3C WAI](https://www.w3.org/WAI/) | Accessibility standards (WCAG, ARIA) |
+| [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) | Practical web security guidance |
+
+---
+
+## Adding a New Note
+
+1. Copy [`notes/_TEMPLATE.md`](./notes/_TEMPLATE.md) to `notes/<topic-slug>.md` (lower-case, hyphenated).
+2. Fill every section — diagrams, code, quiz with answers, cheat sheet, references.
+3. Verify all links open and Mermaid diagrams render in the GitHub preview.
+4. Flip the topic's ⬜ to ✅ and link it in the roadmap above.
+5. Update the **Progress** table and the badge at the top.
+6. Commit with a conventional message, e.g. `feat(notes): add <Topic> note`.
 
 ---
