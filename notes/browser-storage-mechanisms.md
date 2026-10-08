@@ -8,7 +8,7 @@
 > **Pre-requisite:** Read [How Browsers Work](./how-browsers-work.md) first.
 > This note covers where and how browsers store data — on the client side.
 
-**Previous:** [Critical Rendering Path](./critical-rendering-path.md) · **Next:** JavaScript Runtime & Event Loop *(coming soon)*
+**Previous:** [Critical Rendering Path](./critical-rendering-path.md) · **Next:** [JavaScript Runtime & Event Loop](./javascript-runtime-event-loop.md)
 
 ---
 
@@ -851,7 +851,7 @@ Files/blobs offline   → IndexedDB (or OPFS)
 > **Previous Topic:** [Critical Rendering Path](./critical-rendering-path.md)
 > — How browsers optimize the rendering pipeline
 
-> **Next Topic:** JavaScript Runtime & Event Loop *(coming soon)*
+> **Next Topic:** [JavaScript Runtime & Event Loop](./javascript-runtime-event-loop.md)
 > — How JS executes, the call stack, task queue, and microtasks
 
 *Saved on: 2026-03-27 · Updated: 2026-10-08 | Repo: Frontend System Design Learning Notes*

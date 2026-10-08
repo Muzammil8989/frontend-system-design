@@ -2,7 +2,7 @@
 
 > 120 topics across 11 phases. Every completed topic is saved as a structured, diagram-rich `.md` note with an ELI5 explanation, real-world code, quiz questions (with answers), a cheat sheet and curated references.
 
-![Progress](https://img.shields.io/badge/progress-3%2F120-blue)
+![Progress](https://img.shields.io/badge/progress-4%2F120-blue)
 ![Topics](https://img.shields.io/badge/topics-120-informational)
 ![Phases](https://img.shields.io/badge/phases-11-informational)
 ![Notes](https://img.shields.io/badge/format-Markdown%20%2B%20Mermaid-success)
@@ -42,7 +42,7 @@ code .          # opens the folder in VS Code
 2. Press **`Ctrl + Shift + V`** (Mac: `Cmd + Shift + V`) → opens the **Markdown Preview** (formatted view with tables, headings, code blocks).
 3. Press **`Ctrl + K`, then `V`** to open the preview **side-by-side** with the raw file.
 
-> Tip: read the first note in order — [How Browsers Work](./notes/how-browsers-work.md) → [Critical Rendering Path](./notes/critical-rendering-path.md) → [Browser Storage Mechanisms](./notes/browser-storage-mechanisms.md).
+> Tip: read the first note in order — [How Browsers Work](./notes/how-browsers-work.md) → [Critical Rendering Path](./notes/critical-rendering-path.md) → [Browser Storage Mechanisms](./notes/browser-storage-mechanisms.md) → [JavaScript Runtime & Event Loop](./notes/javascript-runtime-event-loop.md).
 
 **3. Alternative: just read it on GitHub**
 
@@ -114,7 +114,7 @@ Phases 1–4 build the foundations; 5–9 are the engineering practices used in 
 
 | Phase | Done | Total |
 |---|:---:|:---:|
-| 1 · Web Fundamentals | 3 | 14 |
+| 1 · Web Fundamentals | 4 | 14 |
 | 2 · Rendering & Architecture | 0 | 12 |
 | 3 · State & Data | 0 | 12 |
 | 4 · Performance Engineering | 0 | 15 |
@@ -125,7 +125,7 @@ Phases 1–4 build the foundations; 5–9 are the engineering practices used in 
 | 9 · Monitoring & Observability | 0 | 7 |
 | 10 · Advanced Topics | 0 | 8 |
 | 11 · System Design Cases | 0 | 15 |
-| **Total** | **3** | **120** |
+| **Total** | **4** | **120** |
 
 ---
 
@@ -152,7 +152,7 @@ Every note in [`notes/`](./notes) follows the same layout so they are quick to s
 | 1 | ✅ [How Browsers Work](./notes/how-browsers-work.md) | Browser Internals |
 | 2 | ✅ [Critical Rendering Path](./notes/critical-rendering-path.md) | Browser Internals |
 | 3 | ✅ [Browser Storage Mechanisms](./notes/browser-storage-mechanisms.md) | Browser Internals |
-| 4 | ⬜ JavaScript Runtime & Event Loop | Browser Internals |
+| 4 | ✅ [JavaScript Runtime & Event Loop](./notes/javascript-runtime-event-loop.md) | Browser Internals |
 | 5 | ⬜ DOM & Virtual DOM | Browser Internals |
 | 6 | ⬜ HTTP/1.1 vs HTTP/2 vs HTTP/3 | Networking |
 | 7 | ⬜ DNS Resolution & CDN | Networking |
