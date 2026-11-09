@@ -65,7 +65,7 @@ ${c.bold('Commands')}
     --dir <path>           Target project (default: current directory)
     --companions <ids>     Run these third-party companion installers (pinned versions; see list-companions)
     --no-companions        Skip third-party companion skills
-    --all                  Every tool + every default companion skill
+    --all                  Every tool + the recommended companion skills
     --yes, -y              No questions: use flags/defaults (companions only with --companions or --all)
     --force                Overwrite files you changed locally
     --dry-run              Preview; write and run nothing
@@ -85,12 +85,19 @@ Docs: ${REPO_URL}#readme
 }
 
 function listCompanions() {
-  console.log(c.bold('\nCompanion skills (installed by default; --no-companions to skip, --companions <ids> to choose)\n'));
-  for (const x of COMPANIONS) {
-    console.log(`${c.cyan(x.id.padEnd(22))} ${c.bold(x.name)}`);
-    console.log(`${' '.repeat(23)}${x.purpose}`);
-    console.log(`${' '.repeat(23)}${c.dim(`${x.license} · ${x.repo} · tools: ${Object.keys(x.agents).join(', ')}`)}\n`);
+  const groups = [
+    ['Recommended companion skills (pre-selected in the wizard; installed by --all)', COMPANIONS.filter((x) => x.default)],
+    ['Optional extras (choose them in the wizard or with --companions <ids>)', COMPANIONS.filter((x) => !x.default)],
+  ];
+  for (const [title, list] of groups.filter(([, l]) => l.length)) {
+    console.log(c.bold(`\n${title}\n`));
+    for (const x of list) {
+      console.log(`${c.cyan(x.id.padEnd(22))} ${c.bold(x.name)}`);
+      console.log(`${' '.repeat(23)}${x.purpose}`);
+      console.log(`${' '.repeat(23)}${c.dim(`${x.license} · ${x.repo} · tools: ${Object.keys(x.agents).join(', ')}`)}\n`);
+    }
   }
+  console.log(c.dim('Skip all of them with --no-companions.\n'));
 }
 
 function list() {

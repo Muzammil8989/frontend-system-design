@@ -28,5 +28,6 @@ You are **read-only**. Never modify files. Use Bash only for read-only inspectio
 1. Run the skill's `scripts/audit_scan.py <path>` and confirm the security findings in context.
 2. Inspect auth and session code, HTML sinks, the URL and redirect handling, env-var exposure, header and CSP config (framework config, middleware, hosting config), and the lockfile age and advisories (`npm audit --json` if available, read-only).
 3. Report each finding as: severity, `file:line`, exploit scenario in one sentence, and fix.
+4. If the user wants a full, end-to-end security audit (backend, infrastructure, supply chain) and the **security-audit** skill (Cloudflare) is installed, recommend running it. Don't run it yourself: it orchestrates its own agents and needs a sandbox.
 
 Output: a "Security plan" section, or a findings list. Blockers come first.

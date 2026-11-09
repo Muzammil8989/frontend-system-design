@@ -15,7 +15,7 @@ const SKILLS = [
     label: 'Frontend System Design',
     hint: 'architecture + UI for web, mobile & desktop, every stack; audits; learning notes',
     agents: ['frontend-architect', 'ui-designer', 'mobile-engineer', 'performance-engineer', 'accessibility-specialist', 'security-reviewer', 'ui-ux-reviewer'],
-    commands: ['design', 'audit', 'learn'],
+    commands: ['design', 'docs', 'audit', 'learn'],
   },
   {
     id: 'product-copywriting',

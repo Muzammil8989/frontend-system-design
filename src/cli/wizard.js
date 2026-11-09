@@ -2,7 +2,7 @@
 
 /**
  * Interactive install wizard (shown when running in a terminal without --yes/--all).
- * Asks: AI tools → scope → skills → companion skills → confirm.
+ * Asks: AI tools → scope → skills → recommended companions → optional companions → confirm.
  * Every answer can also be given as a flag, which skips that question.
  */
 
@@ -84,15 +84,33 @@ async function runWizard({ tools: detected, stack, opts }) {
   if (!opts.noCompanions) {
     const available = COMPANIONS.filter((comp) => toolIds.some((t) => comp.agents[t]));
     if (opts.companions) companions = String(opts.companions).split(',').map((s) => s.trim());
-    else if (available.length) {
-      companions = cancelled(
-        await p.multiselect({
-          message: 'Also install these companion skills? (third-party, via their official installers)',
-          options: available.map((comp) => ({ value: comp.id, label: comp.name, hint: `${comp.license} · ${comp.purpose}` })),
-          initialValues: available.filter((comp) => comp.default).map((comp) => comp.id),
-          required: false,
-        })
-      );
+    else {
+      // Recommended companions first (pre-selected), then the optional extras (unselected).
+      const option = (comp) => ({ value: comp.id, label: comp.name, hint: `${comp.license} · ${comp.purpose}` });
+      const recommended = available.filter((comp) => comp.default);
+      const optional = available.filter((comp) => !comp.default);
+      if (recommended.length) {
+        companions = cancelled(
+          await p.multiselect({
+            message: 'Recommended companion skills (third-party, via their official installers):',
+            options: recommended.map(option),
+            initialValues: recommended.map((comp) => comp.id),
+            required: false,
+          })
+        );
+      }
+      if (optional.length) {
+        companions = companions.concat(
+          cancelled(
+            await p.multiselect({
+              message: 'Optional extras, for specific needs (space to select, enter to skip):',
+              options: optional.map(option),
+              initialValues: [],
+              required: false,
+            })
+          )
+        );
+      }
     }
   }
   validate({ companions });

@@ -26,9 +26,14 @@ All notable changes to this project are documented here. The format follows [Kee
   - an `Informs:` line that the skill uses to cite the note in designs.
 
   The system design cases follow RADIO and end with a 45-minute interview walkthrough. Browser-support claims are checked against MDN browser-compat-data. All notes are synced into the skill's knowledge base.
+- **Project docs and `/fsd:docs`.** When you create a product, `/fsd:design` now also writes living docs into `docs/`: `architecture.md`, `system-design.md`, `quality.md` and `design-system/` (direction, `tokens.json`, tokens, color, typography, components). Every value is marked In code, Proposed or TBD. `/fsd:docs` writes or refreshes them from the code. Template: `references/templates/project-docs.md`.
+- **Optional companion: [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill)** (MIT), for full, multi-phase codebase security audits. Install it with `--companions security-audit` or pick it in the wizard.
+- `scripts/tokens_check.py`: validates a W3C Design Tokens file (types, aliases, cycles) and prints the WCAG contrast table for each color mode and the type scale with step ratios. It exits 1 on errors or failed contrast, so it can run in CI. Example file: `references/templates/tokens.example.json`.
 - `docs/reading-the-notes.md`: how to clone and read the notes, and how to fix Mermaid previews in VS Code.
 
 ### Changed
+- **The wizard asks about companions in two steps:** first the recommended ones (pre-selected), then the optional extras (unselected). `--all` installs only the recommended ones, and `list-companions` shows both groups.
+- **Companion installers run in parallel**, so `install --all` finishes much sooner (about 48 s instead of about 73 s with every companion for Claude Code; Impeccable's own download is now the floor). Commands for the same npx package still run one after another, and each one's output is printed when it finishes. Impeccable runs with `--yes`, so it no longer stops to ask about its hook.
 - **The skill uses far fewer tokens, and its answers are better grounded.**
   - `knowledge/INDEX.md` went from ~29k to ~6k tokens: one short table per phase, with the duplicate roadmap table removed. `index.json` keeps every field.
   - Line 2 of every generated note maps its sections to line ranges. Agents now read *Key Points Summary* + *Cheat Sheet* (~1–2k tokens) instead of the whole note (~12k), and teach one section at a time.
@@ -50,6 +55,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - The plugin-marketplace manifest. Install with `npx github:Muzammil8989/frontend-system-design install`, which copies only the skills, notes, agents and commands.
 
 ### Fixed
+- **Vercel agent-skills installed only 1 of its 3 skills while still showing ✔.** Vercel renamed `react-best-practices` and `composition-patterns` to `vercel-react-best-practices` and `vercel-composition-patterns`, and `skills add` silently skips unknown names and exits 0. The installer now uses the new names, runs `skills add` with `--json`, and marks a companion ✖ (with the reason) if any requested skill wasn't installed.
 - `install --agent all` (or a mistyped `--agent`) crashed in the interactive wizard with a `TypeError`.
 - With `--global`, companions for tools that install per project (Cursor, Copilot, …) were installed globally.
 - The installer refuses to write through a dangling symlink or one that points outside the target folder.

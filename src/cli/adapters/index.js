@@ -16,6 +16,7 @@ const { byId, localize, skillFiles, skillMd, agentFile, commandFile } = require(
 
 const PROMPT_INPUTS = {
   design: '${input:product:Describe the product or problem}',
+  docs: '${input:focus:What changed, or a docs file to focus on (default: all)}',
   audit: '${input:target:Path or URL (default: this project)}',
   learn: '${input:topic:Topic to learn, e.g. event loop}',
   copy: '${input:page:Page or screen, e.g. landing page hero}',

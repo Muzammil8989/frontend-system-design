@@ -2,12 +2,12 @@
 
 /**
  * Third-party companion skills (companions.json), installed with THEIR official installers.
- * planCompanions() resolves commands for the selected tools; runCompanions() executes them.
+ * planCompanions() resolves commands for the selected tools; runCompanions() executes them in parallel.
  */
 
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 const { PKG_ROOT, versionGte } = require('./util');
 const { ADAPTERS } = require('./adapters');
 
@@ -39,19 +39,77 @@ function planCompanions(tools, { global = false, ids = null } = {}) {
   });
 }
 
-/** Runs each planned companion; one failure doesn't stop the others. */
-function runCompanions(plan, cwd, log = console.log) {
-  const results = [];
+/** `npx --yes skills@1.7.6 add …` → `skills`; any other command is its own lane. */
+const npxPackage = (cmd) => (cmd.match(/^npx --yes ((?:@[\w.-]+\/)?[\w.-]+)@/) || [, cmd])[1];
+
+/**
+ * Groups commands into lanes that may run at the same time. Commands for the same npx package
+ * share a lane and run in order: concurrent first-time installs of one package race on npx's cache folder.
+ */
+function lanes(plan) {
+  const byPkg = new Map();
   for (const c of plan.filter((p) => p.commands.length)) {
-    let ok = true;
-    for (const cmd of c.commands) {
-      log(`\n▶ ${c.name}: ${cmd}${c.note ? `\n  ${c.note}` : ''}`);
-      const r = spawnSync(cmd, { cwd, stdio: 'inherit', shell: true, env: process.env });
-      if (r.status !== 0) ok = false;
-    }
-    results.push({ id: c.id, name: c.name, ok, commands: c.commands });
+    for (const cmd of c.commands) byPkg.set(npxPackage(cmd), [...(byPkg.get(npxPackage(cmd)) || []), { companion: c, cmd }]);
   }
-  return results;
+  return [...byPkg.values()];
 }
 
-module.exports = { COMPANIONS, planCompanions, runCompanions };
+/** Runs one command with buffered output (so parallel runs don't interleave) and no stdin (so a prompt fails fast instead of hanging). */
+function exec(cmd, cwd) {
+  return new Promise((resolve) => {
+    let stdout = '';
+    let stderr = '';
+    const child = spawn(cmd, { cwd, shell: true, env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
+    child.stdout.on('data', (d) => (stdout += d));
+    child.stderr.on('data', (d) => (stderr += d));
+    child.on('error', (e) => resolve({ code: 1, stdout, stderr: `${stderr}${e.message}\n` }));
+    child.on('close', (code) => resolve({ code, stdout, stderr }));
+  });
+}
+
+/**
+ * `skills add … --json` exits 0 even when a requested skill doesn't exist (e.g. after an upstream rename),
+ * so read its per-skill report. Returns null when stdout isn't that report.
+ */
+function skillsReport(stdout) {
+  let rows;
+  try {
+    rows = JSON.parse(stdout.slice(stdout.indexOf('[')));
+  } catch {
+    return null;
+  }
+  if (!Array.isArray(rows) || !rows.every((r) => r && typeof r.name === 'string' && typeof r.status === 'string')) return null;
+  const bad = rows.filter((r) => r.status !== 'installed');
+  const installed = [...new Set(rows.filter((r) => r.status === 'installed').map((r) => r.name))];
+  const lines = [];
+  if (installed.length) lines.push(`installed: ${installed.join(', ')}`);
+  for (const r of bad) lines.push(`not installed: ${r.name} (${r.reason || r.status})`);
+  return { ok: !bad.length && installed.length > 0, text: lines.join('\n') || 'no skills reported' };
+}
+
+/** Runs the planned companions in parallel lanes; output is printed per command as it finishes. One failure doesn't stop the others. */
+async function runCompanions(plan, cwd, log = console.log) {
+  const runnable = plan.filter((p) => p.commands.length);
+  const total = runnable.reduce((n, c) => n + c.commands.length, 0);
+  const failed = new Set();
+  if (total) log(`\n▶ Running ${total} companion installer(s) in parallel. This can take a minute…`);
+  await Promise.all(
+    lanes(runnable).map(async (jobs) => {
+      for (const { companion: c, cmd } of jobs) {
+        const started = Date.now();
+        const r = await exec(cmd, cwd);
+        const report = / --json\b/.test(cmd) ? skillsReport(r.stdout) : null;
+        const ok = r.code === 0 && (!/ --json\b/.test(cmd) || (report && report.ok));
+        if (!ok) failed.add(c.id);
+        const secs = ((Date.now() - started) / 1000).toFixed(0);
+        log(`\n${ok ? '✔' : '✖'} ${c.name} (${secs}s): ${cmd}`);
+        // On success show the short report; on failure show everything the installer printed.
+        const out = (report && ok ? report.text : [report && report.text, r.stdout, r.stderr].filter(Boolean).join('\n')).trimEnd();
+        if (out) log(out.replace(/^/gm, '  │ '));
+      }
+    })
+  );
+  return runnable.map((c) => ({ id: c.id, name: c.name, ok: !failed.has(c.id), note: c.note, commands: c.commands }));
+}
+
+module.exports = { COMPANIONS, planCompanions, runCompanions, lanes, skillsReport };

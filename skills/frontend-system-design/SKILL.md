@@ -13,7 +13,8 @@ You act as a **staff frontend/app architect paired with a senior product designe
 
 | Mode | Trigger | Output |
 |---|---|---|
-| **Design** | A new product, feature area or redesign; "how should I build X?" | Design doc (`references/templates/design-doc-template.md`), then implement if asked |
+| **Design** | A new product, feature area or redesign; "how should I build X?" | Design doc (`references/templates/design-doc-template.md`) plus the project docs, then implement if asked |
+| **Docs** | Creating or scaffolding a new site or app; "document our architecture / tokens / typography"; `/fsd:docs` | Project docs in `docs/` (`references/templates/project-docs.md`): architecture, system design, tokens, color, typography, components, quality |
 | **Audit** | "Review / audit / improve my app or UI"; an existing codebase | Scored report (`references/templates/audit-rubric.md`) |
 | **Advise** | One focused question ("Riverpod or Bloc?", "SSR or SSG?") | Short answer, a trade-off table, and the reference or note that backs it |
 | **Learn** | "Explain / teach me X", `/fsd:learn` | Lesson from `references/knowledge/` (ELI5 → concept → example → quiz) |
@@ -77,6 +78,18 @@ Follow `references/core/ui-design.md`, plus the platform conventions in `platfor
 - Write the design doc from `references/templates/design-doc-template.md`.
 - Give every major decision a trade-off row: **Option · Pros · Cons · Verdict · Revisit when · Why — learn more**. The last column cites `references/knowledge/<note>.md` when a project note covers the topic. Read the note's Key Points before citing it.
 - End with a phased rollout and the top risks. If the user wants code, scaffold phase 1 using the folder structure.
+- **Whenever the user is creating a product** (a new site, app or scaffold), also write the project docs (see below) so the project starts with its architecture, tokens and typography written down.
+
+## Project docs
+
+Living docs in the user's `docs/` folder that describe what is true now: architecture, system design, design tokens, color, typography, components and quality. The design doc keeps the *why*. Follow `references/templates/project-docs.md` for the rules, layout and skeletons:
+- **Code wins.** Read values from the theme, config, CSS variables and token files, and mark each row **In code** (`path:line`), **Proposed** or **TBD**.
+- **Tokens:** use the project's token file, or write `docs/design-system/tokens.json` in the format of `references/templates/tokens.example.json`. Then run:
+  ```bash
+  python3 <skill-dir>/scripts/tokens_check.py docs/design-system/tokens.json    # aliases, types, WCAG contrast per mode, type scale
+  ```
+  Fix contrast failures before documenting them, and paste its tables into `color.md` and `typography.md`.
+- Update existing files in place and ask before replacing the user's text.
 
 ## Project knowledge (the learning notes)
 
@@ -115,7 +128,8 @@ The lead (`frontend-architect`, or you) owns steps 0–3 and 6, merges the resul
 | **ui-ux-pro-max** | A large searchable catalogue of UI styles, palettes, font pairings and UX guidelines |
 | **impeccable** | Polishing, critiquing and auditing visual design |
 | **frontend-design** (Anthropic) | Distinctive, non-generic visual direction |
-| **react-best-practices**, **composition-patterns**, **web-design-guidelines** (Vercel) | React/Next.js performance rules, component APIs, UI guideline reviews |
+| **vercel-react-best-practices**, **vercel-composition-patterns**, **web-design-guidelines** (Vercel) | React/Next.js performance rules, component APIs, UI guideline reviews |
+| **security-audit** (Cloudflare, optional) | A full, multi-phase security audit of the codebase when the user asks for one. Our security review stays focused on the frontend |
 
 This skill stays the **architect**. It hands visual polish and framework-specific rules to the companions.
 
@@ -142,4 +156,5 @@ This skill stays the **architect**. It hands visual polish and framework-specifi
 | `references/stacks/<stack>.md` | Stack-specific folder structure and practices |
 | `references/playbooks/product-playbooks.md` | Baseline for the product type |
 | `references/templates/design-doc-template.md` · `templates/audit-rubric.md` | Output formats |
+| `references/templates/project-docs.md` · `templates/tokens.example.json` | Project docs set and the token file format |
 | `references/knowledge/INDEX.md` | Project notes: cite them when designing, teach from them when learning |

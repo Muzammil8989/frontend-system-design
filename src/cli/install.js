@@ -135,7 +135,7 @@ function nextSteps(tools, skills, global, log) {
   const copy = skills.includes('product-copywriting');
   log(`\n${c.bold('Try it')}`);
   if (tools.includes('claude')) {
-    log(`  Claude Code   ${[fsd && '/fsd:design "your product"', fsd && '/fsd:audit', fsd && '/fsd:learn event loop', copy && '/fsd:copy landing page'].filter(Boolean).map(c.cyan).join(' · ')}`);
+    log(`  Claude Code   ${[fsd && '/fsd:design "your product"', fsd && '/fsd:docs', fsd && '/fsd:audit', fsd && '/fsd:learn event loop', copy && '/fsd:copy landing page'].filter(Boolean).map(c.cyan).join(' · ')}`);
   }
   if (tools.includes('copilot')) log(`  Copilot Chat  ${skills.flatMap((s) => byId(s).commands).map((x) => c.cyan(`/fsd-${x}`)).join(' · ')}`);
   for (const t of ['cursor', 'windsurf', 'gemini', 'agents'].filter((x) => tools.includes(x))) {
@@ -176,13 +176,13 @@ async function install(opts) {
   let companionResults = [];
   if (choices.companions.length) {
     const plan = planCompanions(choices.tools, { global: choices.global, ids: choices.companions });
-    if (await confirmCompanions(plan, opts, log)) companionResults = runCompanions(plan, projectRoot, log);
+    if (await confirmCompanions(plan, opts, log)) companionResults = await runCompanions(plan, projectRoot, log);
   } else if (!interactive && !opts.noCompanions) {
     log(c.dim('\nCompanion skills (third-party) were not installed. To add them: --companions <ids> (see list-companions) or --all.'));
   }
 
   nextSteps(choices.tools, choices.skills, choices.global, log);
-  for (const r of companionResults) log(`  ${r.ok ? c.green('✔') : c.red('✖')} ${r.name}${r.ok ? '' : c.dim(` failed — run manually: ${r.commands.join(' && ')}`)}`);
+  for (const r of companionResults) log(`  ${r.ok ? c.green('✔') : c.red('✖')} ${r.name}${r.ok ? (r.note ? c.dim(` — ${r.note}`) : '') : c.dim(` failed — run manually: ${r.commands.join(' && ')}`)}`);
   if (interactive) require('@clack/prompts').outro(opts.dryRun ? 'Dry run complete — nothing was written.' : 'Done. Happy building!');
   else log('');
   if (companionResults.some((r) => !r.ok) || refused.length) process.exitCode = 1;
