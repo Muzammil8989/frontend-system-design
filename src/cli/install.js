@@ -182,7 +182,14 @@ async function install(opts) {
   }
 
   nextSteps(choices.tools, choices.skills, choices.global, log);
-  for (const r of companionResults) log(`  ${r.ok ? c.green('✔') : c.red('✖')} ${r.name}${r.ok ? (r.note ? c.dim(` — ${r.note}`) : '') : c.dim(` failed — run manually: ${r.commands.join(' && ')}`)}`);
+  for (const r of companionResults) {
+    if (r.ok) log(`  ${c.green('✔')} ${r.name}${r.note ? c.dim(` — ${r.note}`) : ''}`);
+    else {
+      log(`  ${c.red('✖')} ${r.name} failed${r.reason ? `: ${r.reason.replace(/\n/g, '; ')}` : ''}`);
+      log(c.dim(`      Your own skills are installed. This companion's installer failed (often a temporary download error); try again later:`));
+      log(c.dim(`      ${r.commands.join(' && ')}`));
+    }
+  }
   if (interactive) require('@clack/prompts').outro(opts.dryRun ? 'Dry run complete — nothing was written.' : 'Done. Happy building!');
   else log('');
   if (companionResults.some((r) => !r.ok) || refused.length) process.exitCode = 1;

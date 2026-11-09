@@ -87,20 +87,37 @@ function skillsReport(stdout) {
   return { ok: !bad.length && installed.length > 0, text: lines.join('\n') || 'no skills reported' };
 }
 
-/** Runs the planned companions in parallel lanes; output is printed per command as it finishes. One failure doesn't stop the others. */
-async function runCompanions(plan, cwd, log = console.log) {
+/** The last meaningful line an installer printed, e.g. "Download failed: … HTTP 504", for the summary. */
+function lastLine(text) {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => /[a-z]/i.test(l));
+  const line = lines[lines.length - 1] || '';
+  return line.length > 160 ? `${line.slice(0, 157)}…` : line;
+}
+
+/**
+ * Runs the planned companions in parallel lanes; output is printed per command as it finishes. One failure doesn't stop the others.
+ * A command that exits non-zero is retried (`retries` times, after `retryDelayMs`): companion installers download from
+ * GitHub releases and their own servers, where a 5xx often clears within seconds. A skill that `skills add` reports as
+ * missing is not retried: that won't change on a second try.
+ */
+async function runCompanions(plan, cwd, log = console.log, { retries = 1, retryDelayMs = 5000 } = {}) {
   const runnable = plan.filter((p) => p.commands.length);
   const total = runnable.reduce((n, c) => n + c.commands.length, 0);
-  const failed = new Set();
+  const failed = new Map(); // companion id → reason
   if (total) log(`\n▶ Running ${total} companion installer(s) in parallel. This can take a minute…`);
   await Promise.all(
     lanes(runnable).map(async (jobs) => {
       for (const { companion: c, cmd } of jobs) {
         const started = Date.now();
-        const r = await exec(cmd, cwd);
+        let r = await exec(cmd, cwd);
+        for (let attempt = 1; r.code !== 0 && attempt <= retries; attempt++) {
+          log(`\n↻ ${c.name} failed (${lastLine(r.stderr || r.stdout) || `exit ${r.code}`}); retrying in ${Math.round(retryDelayMs / 1000)}s…`);
+          await new Promise((done) => setTimeout(done, retryDelayMs));
+          r = await exec(cmd, cwd);
+        }
         const report = / --json\b/.test(cmd) ? skillsReport(r.stdout) : null;
         const ok = r.code === 0 && (!/ --json\b/.test(cmd) || (report && report.ok));
-        if (!ok) failed.add(c.id);
+        if (!ok) failed.set(c.id, (report && !report.ok && report.text) || lastLine(r.stderr || r.stdout) || `exit code ${r.code}`);
         const secs = ((Date.now() - started) / 1000).toFixed(0);
         log(`\n${ok ? '✔' : '✖'} ${c.name} (${secs}s): ${cmd}`);
         // On success show the short report; on failure show everything the installer printed.
@@ -109,7 +126,7 @@ async function runCompanions(plan, cwd, log = console.log) {
       }
     })
   );
-  return runnable.map((c) => ({ id: c.id, name: c.name, ok: !failed.has(c.id), note: c.note, commands: c.commands }));
+  return runnable.map((c) => ({ id: c.id, name: c.name, ok: !failed.has(c.id), reason: failed.get(c.id), note: c.note, commands: c.commands }));
 }
 
 module.exports = { COMPANIONS, planCompanions, runCompanions, lanes, skillsReport };

@@ -172,10 +172,29 @@ test('runCompanions reports each companion and keeps going after a failure', asy
     { id: 'skip', name: 'Skip', commands: [] },
   ];
   const lines = [];
-  const results = await runCompanions(plan, tmp(), (l) => lines.push(l));
+  const results = await runCompanions(plan, tmp(), (l) => lines.push(l), { retryDelayMs: 0 });
   assert.deepEqual(results.map((r) => [r.id, r.ok]), [['bad', false], ['good', true]]);
   assert.equal(results[1].note, 'then do X');
   assert.ok(lines.some((l) => l.includes('│ hi')));
+});
+
+test('runCompanions retries a failed installer once and reports the reason when it still fails', async () => {
+  // Fails the first time (like a temporary HTTP 504 from a release download), succeeds on the retry.
+  const dir = tmp();
+  const marker = path.join(dir, 'tried');
+  const flaky = path.join(dir, 'flaky.js');
+  fs.writeFileSync(flaky, `const fs = require('fs');
+if (!fs.existsSync(${JSON.stringify(marker)})) { fs.writeFileSync(${JSON.stringify(marker)}, ''); console.error('Download failed: HTTP 504'); process.exit(1); }
+console.log('installed');`);
+  const lines = [];
+  const [ok] = await runCompanions([{ id: 'flaky', name: 'Flaky', commands: [`"${process.execPath}" "${flaky}"`] }], dir, (l) => lines.push(l), { retryDelayMs: 0 });
+  assert.equal(ok.ok, true);
+  assert.ok(lines.some((l) => l.includes('↻ Flaky failed (Download failed: HTTP 504); retrying')));
+
+  const down = path.join(dir, 'down.js');
+  fs.writeFileSync(down, `console.log('Downloading…'); console.error('Download failed: HTTP 504'); process.exit(1);`);
+  const [bad] = await runCompanions([{ id: 'down', name: 'Down', commands: [`"${process.execPath}" "${down}"`] }], dir, () => {}, { retryDelayMs: 0 });
+  assert.deepEqual([bad.ok, bad.reason], [false, 'Download failed: HTTP 504']);
 });
 
 test('skills --json report: a skipped skill fails the companion even though the CLI exits 0', () => {
