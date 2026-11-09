@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Lint notes & validate skill
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Lint learning notes + README progress
+        run: npm run lint:notes
+      - name: Notes are synced into the skill's knowledge/
+        run: npm run sync:check
+      - name: Validate skills, stack files, agents, commands, plugin & companion registry
+        run: npm run validate
+      - name: Installer tests (node:test)
+        run: npm run test:node
+
+  python:
+    name: Python engine (${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests (stdlib only — nothing to install)
+        run: python -m unittest discover -s tests/python -v
+      - name: Smoke-run the scripts
+        run: |
+          S=skills/frontend-system-design/scripts
+          python $S/recommend.py "real-time analytics dashboard for logistics"
+          python $S/recommend.py "fitness tracking app for iOS and Android"
+          python $S/search.py --domain palettes "fintech trustworthy"
+          python $S/budget.py --from "online sneaker store" --format lighthouse
+          python $S/budget.py --type mobile-consumer --platform mobile
+          python $S/detect_stack.py .
+          python $S/audit_scan.py . --max 5
+          python skills/product-copywriting/scripts/copy_check.py skills/product-copywriting/SKILL.md --min-score 80
+
+  installer:
+    name: Installer (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [18, 22]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci --omit=dev
+      - name: Install every integration into a temp project
+        shell: bash
+        run: |
+          T="$RUNNER_TEMP/proj"
+          mkdir -p "$T"
+          node bin/cli.js install --all --yes --dir "$T" --no-companions
+          test -f "$T/.claude/skills/frontend-system-design/SKILL.md"
+          test -f "$T/.claude/skills/frontend-system-design/scripts/recommend.py"
+          test -f "$T/.claude/skills/frontend-system-design/references/knowledge/INDEX.md"
+          test -f "$T/.claude/skills/product-copywriting/scripts/copy_check.py"
+          test -f "$T/.claude/agents/mobile-engineer.md"
+          test -f "$T/.claude/commands/fsd/design.md"
+          test -f "$T/.agents/skills/frontend-system-design/references/stacks/flutter.md"
+          test -f "$T/.cursor/rules/frontend-system-design.mdc"
+          test -f "$T/.github/prompts/fsd-copy.prompt.md"
+          test -f "$T/.windsurf/rules/frontend-system-design.md"
+          grep -q "fsd:start" "$T/GEMINI.md"
+          grep -q "fsd:start" "$T/AGENTS.md"
+      - name: Re-run is idempotent
+        shell: bash
+        run: |
+          out=$(node bin/cli.js install --all --yes --dir "$RUNNER_TEMP/proj" --no-companions)
+          echo "$out"
+          if echo "$out" | grep -E " (created|overwritten|appended)$"; then echo "::error::second install changed files"; exit 1; fi
+          test "$(grep -c 'fsd:start' "$RUNNER_TEMP/proj/AGENTS.md")" = "1"
+      - name: Packed tarball works through npx
+        shell: bash
+        run: |
+          npm pack --pack-destination "$RUNNER_TEMP"
+          mkdir -p "$RUNNER_TEMP/npx-proj"
+          cd "$RUNNER_TEMP/npx-proj"
+          npx --yes "file:$(ls "$RUNNER_TEMP"/frontend-system-design-*.tgz)" install --agent claude --yes --no-companions
+          test -f .claude/skills/frontend-system-design/SKILL.md
+
+  companions:
+    name: Companion skills install (real)
+    runs-on: ubuntu-latest
+    # Third-party installers can change upstream; report without blocking merges.
+    continue-on-error: true
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'companions')
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - run: npm ci --omit=dev
+      - name: Install with all companions
+        run: |
+          mkdir -p "$RUNNER_TEMP/companion-proj"
+          ids=$(node -p "require('./companions.json').companions.map((c) => c.id).join(',')")
+          node bin/cli.js install --agent claude --dir "$RUNNER_TEMP/companion-proj" --yes --companions "$ids" < /dev/null
+          ls -la "$RUNNER_TEMP/companion-proj/.claude/skills"
+
+  links:
+    name: Links in changed Markdown
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: markdown-link-check on changed files
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          files=$(git diff --name-only --diff-filter=AM "$BASE_SHA"...HEAD -- '*.md' | grep -v '/_' || true)
+          if [ -z "$files" ]; then echo "No changed Markdown."; exit 0; fi
+          echo "$files" | xargs npx --yes markdown-link-check@3.12.2 --quiet --retry

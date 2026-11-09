@@ -4,6 +4,7 @@
 > **Category:** Frontend System Design
 > **Sub-Topic:** <e.g. Browser Internals / Networking / Performance>
 > **Level:** Beginner | Intermediate | Advanced · **Reading time:** ~N min
+> **Informs:** <decision areas this topic informs, e.g. rendering strategy, caching, auth token storage>
 
 > **Pre-requisite:** [Previous Topic](./previous-topic.md)
 
@@ -108,7 +109,7 @@ sequenceDiagram
 - **X:** …
 
 **Quick Reference:**
-```
+```text
 …
 ```
 

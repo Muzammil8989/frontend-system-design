@@ -1,0 +1,50 @@
+name: "📝 New topic / claim a note"
+description: Claim a ⬜ roadmap topic to write, or propose a new one.
+title: "[Topic] "
+labels: ["new-topic"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Please check the [roadmap](https://github.com/Muzammil8989/frontend-system-design#phase-1--web-fundamentals) and [open issues](https://github.com/Muzammil8989/frontend-system-design/issues) so nobody writes the same topic twice.
+  - type: input
+    id: topic
+    attributes:
+      label: Topic
+      description: The exact title from the README roadmap, or your proposed title.
+      placeholder: "#5 DOM & Virtual DOM"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Request type
+      options:
+        - I want to write this roadmap topic (claim it)
+        - Propose a new topic that is not on the roadmap
+    validations:
+      required: true
+  - type: textarea
+    id: outline
+    attributes:
+      label: Planned outline
+      description: The core-concept subsections and diagrams you plan to include. A rough list is fine.
+      placeholder: |
+        - What the DOM is (tree diagram)
+        - Why direct DOM updates are expensive (layout/paint link)
+        - Virtual DOM diffing + reconciliation (sequence diagram)
+        - When VDOM is *not* faster (Svelte/Solid signals)
+  - type: input
+    id: eta
+    attributes:
+      label: Expected PR date
+      placeholder: "2 weeks"
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and PRs for this topic.
+          required: true
+        - label: I have read [CONTRIBUTING.md](https://github.com/Muzammil8989/frontend-system-design/blob/main/CONTRIBUTING.md) and the note template.
+          required: true

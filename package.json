@@ -1,0 +1,77 @@
+{
+  "name": "frontend-system-design",
+  "version": "1.1.0",
+  "description": "Staff-level frontend/app architect + product copywriter skills for AI coding tools (Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI, Codex). Designs the best UI and system for web, mobile and desktop on any stack, grounded in a 120-topic learning roadmap. Interactive npx installer.",
+  "keywords": [
+    "frontend",
+    "system-design",
+    "ui",
+    "ux",
+    "design-system",
+    "architecture",
+    "performance",
+    "accessibility",
+    "claude-code",
+    "cursor",
+    "copilot",
+    "agent-skills",
+    "agents",
+    "mobile",
+    "react-native",
+    "flutter",
+    "swiftui",
+    "jetpack-compose",
+    "copywriting",
+    "windsurf",
+    "gemini-cli"
+  ],
+  "homepage": "https://github.com/Muzammil8989/frontend-system-design#readme",
+  "bugs": {
+    "url": "https://github.com/Muzammil8989/frontend-system-design/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muzammil8989/frontend-system-design.git"
+  },
+  "license": "MIT",
+  "author": "Muzammil8989",
+  "bin": {
+    "frontend-system-design": "bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "scripts/lint-notes.js",
+    "skills/",
+    "agents/",
+    "commands/",
+    "companions.json",
+    "notes/_TEMPLATE.md",
+    "LICENSE-NOTES.md",
+    "THIRD_PARTY.md",
+    "!**/__pycache__",
+    "!**/*.pyc"
+  ],
+  "scripts": {
+    "test": "npm run lint:notes && npm run sync:check && npm run validate && npm run test:node && npm run test:py",
+    "lint:notes": "node scripts/lint-notes.js",
+    "sync:knowledge": "node scripts/sync-knowledge.js",
+    "sync:check": "node scripts/sync-knowledge.js --check",
+    "validate": "node scripts/validate-skills.js",
+    "test:node": "node --test tests/node/installer.test.js",
+    "test:py": "node scripts/run-python-tests.js",
+    "new-note": "node bin/cli.js new",
+    "skills:install": "node bin/cli.js install",
+    "skills:list": "node bin/cli.js list"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0"
+  }
+}

@@ -1,15 +1,38 @@
-# Claude personal config — do NOT push
-.claude/
-CLAUDE.md
+# Personal Claude config — do NOT push
+/.claude/
+/CLAUDE.md
+/.claude-plugin/
+
+# Output of `frontend-system-design install` when run inside this repo (root only)
+/.agents/
+/.cursor/
+/AGENTS.md
+/.github/copilot-instructions.md
+/.github/prompts/
+/.github/instructions/
 
 # Node
 node_modules/
 dist/
+*.tgz
 
-# Env
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Env & secrets
 .env
-.env.local
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Windsurf / Gemini output of the installer (root only)
+/.windsurf/
+/GEMINI.md

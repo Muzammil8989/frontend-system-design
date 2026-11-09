@@ -1,0 +1,74 @@
+id,name,category,platform,ref,keywords,best_for,trade_offs,url
+nextjs,Next.js,framework,web,nextjs,react full-stack ssr ssg isr streaming server components app router edge,Full-stack React with mixed rendering per route,Server runtime concepts; hosting matters for some features,https://nextjs.org/docs
+astro,Astro,framework,web,astro,content islands static ssg zero js mdx multi-framework,Content-first sites and docs with minimal JS,Less suited to app-like UIs where everything is interactive,https://docs.astro.build
+nuxt,Nuxt,framework,web,vue-nuxt,vue full-stack ssr ssg hybrid rendering,Vue teams needing SSR/SSG,Vue ecosystem only,https://nuxt.com/docs
+sveltekit,SvelteKit,framework,web,svelte-sveltekit,svelte ssr small bundles compiler,"Small, fast apps; teams that like Svelte",Smaller ecosystem than React,https://svelte.dev/docs/kit
+react-router,React Router (framework mode),framework,web,react-router,react remix loaders actions ssr nested routes forms,Web-standards data loading with nested routes,Fewer built-ins than Next.js,https://reactrouter.com
+vite-react,Vite + React SPA,framework,web,react-vite,spa vite react client-side fast dev internal dashboard,"Authenticated SPAs, dashboards, internal tools",No SSR/SEO out of the box,https://vite.dev/guide/
+tanstack-router,TanStack Router,routing,web,react-vite,type-safe router search params spa loaders,Type-safe routing and URL state in SPAs,Newer; smaller community than React Router,https://tanstack.com/router
+angular,Angular,framework,web,angular,enterprise di rxjs signals opinionated,Large enterprise teams wanting strong conventions,Heavier learning curve and bundle,https://angular.dev
+solidstart,SolidStart,framework,web,solid,solid signals fine-grained reactivity fast,Highly interactive UIs needing fine-grained updates,Smaller ecosystem,https://docs.solidjs.com/solid-start
+lit,Lit (Web Components),framework,web,web-components-lit,web components custom elements shadow dom embeddable widgets design system,Framework-agnostic embeddable widgets and design systems,SSR and form participation need care,https://lit.dev
+tanstack-query,TanStack Query,data,cross,,server state cache fetching mutations optimistic swr react vue svelte,"Server-state caching, mutations, pagination",Not a global client store,https://tanstack.com/query
+swr,SWR,data,web,,stale-while-revalidate fetching cache react,Lightweight data fetching in React,Fewer mutation/devtools features than TanStack Query,https://swr.vercel.app
+zustand,Zustand,state,cross,,client state store small global ui state react,Small global client state,Not for server state,https://zustand.docs.pmnd.rs
+redux-toolkit,Redux Toolkit,state,cross,,redux global state devtools large team rtk query,Large teams wanting strict patterns and devtools,More boilerplate than Zustand,https://redux-toolkit.js.org
+jotai,Jotai,state,cross,,atoms atomic state react derived,Fine-grained derived client state,Many atoms can get hard to trace,https://jotai.org
+react-hook-form,React Hook Form,forms,cross,,forms validation zod performance uncontrolled,Performant complex forms,Learning curve for controlled third-party inputs,https://react-hook-form.com
+shadcn,shadcn/ui,ui-kit,web,,components radix tailwind copy-in themeable accessible,"Owned, themeable components built on Radix",You maintain the copied code,https://ui.shadcn.com
+radix,Radix Primitives,ui-kit,web,,headless accessible primitives dialog menu popover,Accessible behavior with your own styling,Styling is up to you,https://www.radix-ui.com/primitives
+react-aria,React Aria,ui-kit,web,,headless accessible adobe i18n date picker complex widgets,Best-in-class accessibility and i18n for complex widgets,More verbose APIs,https://react-spectrum.adobe.com/react-aria/
+mui,MUI (Material UI),ui-kit,web,,material design full component library enterprise admin,"Fast, consistent internal/enterprise UIs",Distinct Material look; bundle size,https://mui.com
+mantine,Mantine,ui-kit,web,,full component library hooks forms dates admin,Feature-rich apps and admin panels,Opinionated styling system,https://mantine.dev
+antd,Ant Design,ui-kit,web,,enterprise admin data tables forms,Data-heavy enterprise admin panels,Heavy; strong visual identity,https://ant.design
+tailwind,Tailwind CSS,styling,web,,utility css tokens design system rapid,Token-driven styling with tiny CSS output,Long class lists; needs conventions,https://tailwindcss.com/docs
+css-modules,CSS Modules,styling,web,,scoped css plain css variables,Plain CSS with local scope,Manual token discipline,https://github.com/css-modules/css-modules
+tanstack-table,TanStack Table,data-viz,web,,headless table sorting filtering pagination virtualization grid,Custom data tables,Headless: you build the UI,https://tanstack.com/table
+echarts,Apache ECharts,data-viz,web,,charts canvas large datasets dashboards,Rich interactive charts with large data,Larger bundle; custom a11y work,https://echarts.apache.org
+recharts,Recharts,data-viz,web,,react charts svg composable,Composable React charts for moderate data,SVG slows down with many points,https://recharts.org
+uplot,uPlot,data-viz,web,,time series fast canvas tiny,Very large time series,Minimal chart types,https://github.com/leeoniya/uPlot
+maplibre,MapLibre GL JS,maps,web,,maps vector tiles open source webgl,Interactive vector maps without vendor lock-in,WebGL bundle; lazy-load it,https://maplibre.org
+yjs,Yjs,collaboration,cross,,crdt realtime collaboration offline sync multiplayer,Multiplayer editing and offline sync,Requires sync provider and persistence,https://docs.yjs.dev
+tiptap,Tiptap,editor,web,,rich text editor prosemirror collaborative,Rich text editing with extensions,Complex documents need careful schema design,https://tiptap.dev
+lexical,Lexical,editor,web,,rich text editor meta extensible accessible,"Extensible, performant text editing",Younger ecosystem,https://lexical.dev
+dexie,Dexie.js,storage,web,,indexeddb offline local-first storage,Offline/local-first data in IndexedDB,Sync logic is yours,https://dexie.org
+pagefind,Pagefind,search,web,,static search index docs blog,Search for static sites without a server,Static content only,https://pagefind.app
+docusaurus,Docusaurus,framework,web,,docs documentation react mdx versioning,Versioned product documentation,React-based; heavier than Astro,https://docusaurus.io
+starlight,Starlight,framework,web,astro,docs astro documentation fast,Fast documentation sites on Astro,Docs-focused only,https://starlight.astro.build
+playwright,Playwright,testing,web,,e2e cross-browser testing screenshots a11y,E2E and visual tests across browsers,Slower than unit tests,https://playwright.dev
+vitest,Vitest,testing,cross,,unit component testing vite fast,Unit and component tests,—,https://vitest.dev
+msw,Mock Service Worker,testing,cross,,api mocking tests storybook,Realistic API mocking in tests and dev,—,https://mswjs.io
+sentry,Sentry,observability,cross,,error tracking performance replay monitoring,Error tracking and release health,Privacy review needed for replays,https://docs.sentry.io
+web-vitals,web-vitals,observability,web,,rum core web vitals lcp inp cls attribution,Field Core Web Vitals with attribution,You need a backend/analytics to store results,https://github.com/GoogleChrome/web-vitals
+expo,Expo (React Native),framework,mobile,react-native-expo,react native expo ios android cross-platform mobile app ota,Cross-platform iOS/Android apps for React/TypeScript teams,Advanced native modules still need native knowledge,https://docs.expo.dev
+expo-router,Expo Router,routing,mobile,react-native-expo,file-based routing deep links react native navigation,File-based navigation with deep links for Expo apps,Expo ecosystem,https://docs.expo.dev/router/introduction/
+flashlist,FlashList,performance,mobile,react-native-expo,react native list virtualization fast feed,Fast virtualized lists in React Native,Needs good item size estimates,https://shopify.github.io/flash-list/
+reanimated,Reanimated,animation,mobile,react-native-expo,react native animation gestures 60fps ui thread,Smooth animations and gestures on the UI thread,Worklet mental model,https://docs.swmansion.com/react-native-reanimated/
+mmkv,react-native-mmkv,storage,mobile,react-native-expo,react native key value storage fast persistence,Fast synchronous key-value storage,Not for secrets (use secure storage),https://github.com/mrousavy/react-native-mmkv
+nativewind,NativeWind,styling,mobile,react-native-expo,tailwind react native styling tokens,Tailwind-style tokens in React Native,Build-step configuration,https://www.nativewind.dev
+flutter,Flutter,framework,cross,flutter,flutter dart ios android web desktop cross-platform pixel perfect custom ui,"One codebase for iOS, Android, web and desktop with custom UI",Non-native widgets; larger app size; Dart ecosystem,https://docs.flutter.dev
+riverpod,Riverpod,state,cross,flutter,flutter state management providers dependency injection,Testable reactive state and DI in Flutter,"Concepts to learn (providers, ref)",https://riverpod.dev
+bloc,Bloc,state,cross,flutter,flutter bloc cubit state management events,Event-driven predictable state for larger Flutter teams,More boilerplate,https://bloclibrary.dev
+go-router,go_router,routing,cross,flutter,flutter routing deep links navigation,Declarative routing and deep links in Flutter,-,https://pub.dev/packages/go_router
+drift,Drift,storage,cross,flutter,flutter sqlite offline database reactive queries,"Typed, reactive SQLite for offline-first Flutter apps",Code generation,https://drift.simonbinder.eu
+swiftui,SwiftUI,framework,mobile,swiftui,ios ipados macos watchos native swift apple iphone,Native Apple-platform apps with the best platform fit,Apple platforms only,https://developer.apple.com/documentation/swiftui
+swiftdata,SwiftData,storage,mobile,swiftui,swift persistence offline models icloud,Model persistence integrated with SwiftUI,Check OS minimums,https://developer.apple.com/documentation/swiftdata
+jetpack-compose,Jetpack Compose,framework,mobile,jetpack-compose,android native kotlin compose material 3,Native Android apps with modern declarative UI,Android only,https://developer.android.com/compose
+room,Room,storage,mobile,jetpack-compose,android sqlite offline database flow,Offline persistence on Android,Check current KMP support in docs,https://developer.android.com/training/data-storage/room
+hilt,Hilt,di,mobile,jetpack-compose,android dependency injection dagger viewmodel,Standard DI for Android apps,Annotation processing,https://developer.android.com/training/dependency-injection/hilt-android
+compose-multiplatform,Compose Multiplatform,framework,cross,compose-multiplatform,kotlin multiplatform kmp compose ios android desktop shared ui,"Shared Kotlin UI and logic across Android, iOS and desktop",Check current iOS maturity and ecosystem,https://www.jetbrains.com/compose-multiplatform/
+ktor,Ktor client,networking,cross,compose-multiplatform,kotlin http client multiplatform networking,Multiplatform HTTP client,-,https://ktor.io/docs/client-create-new-application.html
+sqldelight,SQLDelight,storage,cross,compose-multiplatform,kotlin multiplatform sqlite typed queries offline,Typed SQL shared across KMP targets,Write SQL by hand,https://sqldelight.github.io/sqldelight/
+dotnet-maui,.NET MAUI,framework,cross,dotnet-maui,c# dotnet xaml ios android windows macos enterprise,Cross-platform apps for .NET/C# teams,Smaller UI ecosystem; platform quirks,https://learn.microsoft.com/dotnet/maui/
+mvvm-toolkit,MVVM Community Toolkit,state,cross,dotnet-maui,mvvm observable commands c# maui wpf,Less MVVM boilerplate for .NET apps,-,https://learn.microsoft.com/dotnet/communitytoolkit/mvvm/
+capacitor,Capacitor,framework,mobile,ionic-capacitor,web to native wrapper ios android plugins hybrid pwa,Ship an existing web app to the stores with native plugins,WebView performance ceiling,https://capacitorjs.com/docs
+ionic,Ionic Framework,ui-kit,mobile,ionic-capacitor,mobile ui components web angular react vue hybrid,Mobile-styled components for web-tech apps,Hybrid look-and-feel trade-offs,https://ionicframework.com/docs
+electron,Electron,framework,desktop,electron,desktop app chromium node windows macos linux,Desktop apps from web tech with full Node access,Large bundle and memory; needs security hardening,https://www.electronjs.org/docs/latest
+tauri,Tauri,framework,desktop,tauri,desktop app rust small bundle system webview secure,"Small, secure desktop apps with a web UI",Rust for native parts; WebView differences per OS,https://tauri.app
+maestro,Maestro,testing,mobile,react-native-expo,mobile e2e ui testing flows yaml ios android,Simple cross-platform mobile E2E flows,-,https://maestro.dev
+detox,Detox,testing,mobile,react-native-expo,react native e2e gray box testing,Gray-box E2E for React Native,Setup complexity,https://wix.github.io/Detox/
+qwik,Qwik,framework,web,qwik,resumability instant interactive no hydration,Content-heavy sites needing instant interactivity,Smaller ecosystem; new mental model,https://qwik.dev
+htmx,htmx,framework,web,server-rendered-mpa,server rendered html hypermedia django rails laravel go,Server-rendered apps with sprinkles of interactivity,Complex client state is awkward,https://htmx.org/docs/
+hotwire,Hotwire (Turbo + Stimulus),framework,web,server-rendered-mpa,rails turbo stimulus server rendered html streams,Server-rendered apps that feel like SPAs,Best in the Rails ecosystem,https://hotwired.dev
+livewire,Laravel Livewire,framework,web,server-rendered-mpa,laravel php livewire reactive server components,Laravel apps with reactive UI without a JS framework,Server round-trip per interaction,https://livewire.laravel.com/docs
+pinia,Pinia,state,web,vue-nuxt,vue store state management,Global client state in Vue/Nuxt,Not for server state,https://pinia.vuejs.org

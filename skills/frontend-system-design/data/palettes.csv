@@ -1,0 +1,22 @@
+id,name,tags,mood,scheme,bg,surface,text,muted,primary,on_primary,accent,border,success,warning,danger
+calm-saas,Calm SaaS,"saas b2b tool productivity ai app modern calm chat messaging support crm","calm trustworthy modern",light,#FFFFFF,#F8FAFC,#0F172A,#475569,#4F46E5,#FFFFFF,#0EA5E9,#E2E8F0,#15803D,#B45309,#B91C1C
+fintech-trust,Fintech Trust,"fintech bank finance payments insurance secure trust","trustworthy secure precise",light,#FFFFFF,#F5F7FA,#0B1F33,#4A5B6D,#0A58CA,#FFFFFF,#00A389,#DCE3EA,#1E7B4F,#A15C07,#C0262D
+fintech-dark,Fintech Dark,"fintech trading crypto investing dark dashboard","precise premium focused",dark,#0B1220,#121A2B,#E6EDF7,#9AA8BD,#3B82F6,#0B1220,#22D3EE,#24304A,#34D399,#FBBF24,#F87171
+analytics-dark,Analytics Dark,"analytics dashboard dark data monitoring observability","focused technical calm",dark,#0F1115,#171A21,#ECEFF4,#A0A7B4,#7C9CFF,#0F1115,#4FD1C5,#2A2F3A,#4ADE80,#FACC15,#F87171
+dev-dark,Developer Dark,"developer tools code ide dark technical github","technical efficient",dark,#0D1117,#161B22,#E6EDF3,#9198A1,#4493F8,#0D1117,#A371F7,#30363D,#3FB950,#D29922,#F85149
+enterprise-neutral,Enterprise Neutral,"enterprise admin internal tool b2b neutral corporate","neutral efficient professional",light,#FFFFFF,#F4F4F4,#161616,#525252,#0F62FE,#FFFFFF,#8A3FFC,#E0E0E0,#198038,#8E6A00,#DA1E28
+ecommerce-warm,Commerce Warm,"ecommerce retail shop fashion warm inviting store","inviting warm friendly",light,#FFFFFF,#FAF7F2,#1C1917,#57534E,#C2410C,#FFFFFF,#0F766E,#E7E5E4,#15803D,#A16207,#B91C1C
+luxury-noir,Luxury Noir,"luxury premium fashion jewelry hospitality elegant black gold","elegant premium refined",dark,#0C0C0C,#161616,#F5F1E8,#A8A29E,#C8A96A,#0C0C0C,#E7D8B1,#2A2A2A,#86EFAC,#FCD34D,#FCA5A5
+health-calm,Health Calm,"health wellness medical clinic care calm mental","calm reassuring clean",light,#FAFCFB,#FFFFFF,#12312B,#4B635D,#0F766E,#FFFFFF,#0284C7,#DCE7E3,#15803D,#B45309,#B91C1C
+editorial-paper,Editorial Paper,"editorial blog magazine news publication reading docs","classic readable editorial",light,#FBFAF7,#FFFFFF,#1A1A1A,#5C5C5C,#9B1C1C,#FFFFFF,#1D4ED8,#E5E2DA,#166534,#92400E,#9B1C1C
+playful-kids,Playful Bright,"kids education playful fun social community friendly","playful energetic friendly",light,#FFFDF5,#FFFFFF,#1F2A44,#4A5578,#6D28D9,#FFFFFF,#F59E0B,#F1E9D0,#15803D,#B45309,#B91C1C
+education-bright,Education Bright,"education learning lms course school students bright","clear encouraging bright",light,#FFFFFF,#F0F7FF,#0F2547,#45597A,#1D4ED8,#FFFFFF,#F97316,#DBE7F5,#15803D,#B45309,#B91C1C
+eco-organic,Eco Organic,"eco sustainable organic nature food farm green earthy wellness","natural calm earthy",light,#F7F5EF,#FFFFFF,#22301F,#56634F,#3F6212,#FFFFFF,#CA8A04,#E4E0D3,#3F6212,#A16207,#B91C1C
+bold-startup,Bold Startup,"startup landing launch marketing bold modern saas","bold confident modern",light,#FFFFFF,#F6F5FF,#111111,#52525B,#111111,#FFFFFF,#FF5A1F,#E4E4E7,#15803D,#B45309,#DC2626
+neo-brutal,Neo Brutal,"brutalism neo-brutalist indie playful creative portfolio bold","raw playful loud",light,#FFFEF0,#FFFFFF,#000000,#3F3F3F,#000000,#FDE047,#FF6B6B,#000000,#166534,#92400E,#B91C1C
+real-estate,Real Estate,"real estate property booking maps housing architecture trustworthy","trustworthy grounded",light,#FFFFFF,#F7F7F5,#1E2A2F,#55636A,#1F4E5F,#FFFFFF,#D97706,#E3E6E4,#15803D,#B45309,#B91C1C
+travel-sunset,Travel Sunset,"travel booking hotel tourism hospitality warm vacation","warm adventurous inviting",light,#FFFBF7,#FFFFFF,#2B1B12,#6B4F3F,#B43C1E,#FFFFFF,#0E7490,#F1E3D8,#15803D,#A16207,#B91C1C
+gaming-neon,Gaming Neon,"gaming esports entertainment neon dark streaming music nightlife","energetic immersive",dark,#0A0A12,#141425,#F2F2FF,#A9A9C8,#B47CFF,#0A0A12,#22D3EE,#2B2B45,#4ADE80,#FACC15,#FB7185
+legal-classic,Legal Classic,"legal law firm government consulting professional services classic","authoritative classic",light,#FFFFFF,#F7F6F3,#1B1F24,#4F5661,#1E3A5F,#FFFFFF,#8B6B2E,#E2DFD8,#166534,#92400E,#9B1C1C
+food-fresh,Food Fresh,"food restaurant delivery recipes grocery fresh appetite","fresh appetizing lively",light,#FFFFFF,#FFF8F1,#2A1A0E,#6A5442,#B91C1C,#FFFFFF,#15803D,#F0E2D3,#15803D,#A16207,#B91C1C
+ai-midnight,AI Midnight,"ai assistant chatbot llm generative dark modern saas","modern intelligent calm",dark,#0B0B10,#15151C,#EDEDF2,#A1A1B0,#8B9CFF,#0B0B10,#5EEAD4,#26262F,#4ADE80,#FBBF24,#F87171
