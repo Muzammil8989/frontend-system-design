@@ -827,7 +827,7 @@ Mobile        real mid-range devices · release/profile builds · Macrobenchmark
 
 **Page and flow testing**
 - Lighthouse: [User flows](https://github.com/GoogleChrome/lighthouse/blob/main/docs/user-flows.md) · [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
-- [WebPageTest documentation](https://docs.webpagetest.org/) · [sitespeed.io documentation](https://www.sitespeed.io/documentation/)
+- [WebPageTest documentation (Catchpoint)](https://docs.catchpoint.com/wpt/docs/webpageteststarter) · [sitespeed.io documentation](https://www.sitespeed.io/documentation/)
 - Playwright: [`CDPSession`](https://playwright.dev/docs/api/class-cdpsession)
 
 **Benchmarks, render and memory**

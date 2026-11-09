@@ -17,11 +17,12 @@ jobs:
   validate:
     name: Lint notes & validate skill
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
       - run: npm ci
@@ -36,16 +37,22 @@ jobs:
 
   python:
     name: Python engine (${{ matrix.python }})
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.9", "3.12"]
+        include:
+          # 3.9 (our documented floor) has no build for ubuntu-latest (26.04); 24.04 still ships it.
+          - python: "3.9"
+            os: ubuntu-24.04
+          - python: "3.12"
+            os: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python }}
       - name: Unit tests (stdlib only — nothing to install)
@@ -65,16 +72,17 @@ jobs:
   installer:
     name: Installer (${{ matrix.os }}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node: [18, 22]
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci --omit=dev
@@ -115,14 +123,15 @@ jobs:
   companions:
     name: Companion skills install (real)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Third-party installers can change upstream; report without blocking merges.
     continue-on-error: true
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'companions')
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
       - run: npm ci --omit=dev
@@ -138,18 +147,25 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     continue-on-error: true
+    # Big PRs touch thousands of external links; rate-limited hosts must not hold the PR open.
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
+      - name: Install markdown-link-check
+        run: npm install --global markdown-link-check@3.12.2
       - name: markdown-link-check on changed files
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        # references/knowledge/ is a generated copy of notes/ (enforced by sync:check), so skip it.
         run: |
-          files=$(git diff --name-only --diff-filter=AM "$BASE_SHA"...HEAD -- '*.md' | grep -v '/_' || true)
+          files=$(git diff --name-only --diff-filter=AM "$BASE_SHA"...HEAD -- '*.md' \
+            | grep -v -e '/_' -e '/references/knowledge/' || true)
           if [ -z "$files" ]; then echo "No changed Markdown."; exit 0; fi
-          echo "$files" | xargs npx --yes markdown-link-check@3.12.2 --quiet --retry
+          echo "$(echo "$files" | wc -l) file(s) to check"
+          echo "$files" | xargs -P 4 -n 15 markdown-link-check --quiet --config .github/markdown-link-check.json

@@ -835,10 +835,10 @@ RecoilRoot → Provider (optional)
 
 **Zustand**
 - Zustand: [Documentation](https://zustand.docs.pmnd.rs/) · [GitHub](https://github.com/pmndrs/zustand)
-- Zustand: [Migrating to v5](https://zustand.docs.pmnd.rs/migrations/migrating-to-v5)
-- Zustand: [Setup with Next.js](https://zustand.docs.pmnd.rs/guides/nextjs)
-- Zustand: [Prevent rerenders with `useShallow`](https://zustand.docs.pmnd.rs/guides/prevent-rerenders-with-use-shallow)
-- Zustand: [`persist` middleware](https://zustand.docs.pmnd.rs/middlewares/persist) · [Slices pattern](https://zustand.docs.pmnd.rs/guides/slices-pattern)
+- Zustand: [Migrating to v5](https://zustand.docs.pmnd.rs/reference/migrations/migrating-to-v5)
+- Zustand: [Setup with Next.js](https://zustand.docs.pmnd.rs/learn/guides/nextjs)
+- Zustand: [Prevent rerenders with `useShallow`](https://zustand.docs.pmnd.rs/learn/guides/prevent-rerenders-with-use-shallow)
+- Zustand: [`persist` middleware](https://zustand.docs.pmnd.rs/reference/middlewares/persist) · [Slices pattern](https://zustand.docs.pmnd.rs/learn/guides/slices-pattern)
 
 **Jotai**
 - Jotai: [Documentation](https://jotai.org/) · [GitHub](https://github.com/pmndrs/jotai)

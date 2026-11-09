@@ -955,7 +955,7 @@ Upgrade          npx storybook@latest upgrade   (runs automigrations)
 - Storybook: [Interaction tests](https://storybook.js.org/docs/writing-tests/interaction-testing) · [Accessibility tests](https://storybook.js.org/docs/writing-tests/accessibility-testing) · [Visual tests](https://storybook.js.org/docs/writing-tests/visual-testing)
 - Storybook: [Portable stories in Vitest](https://storybook.js.org/docs/api/portable-stories/portable-stories-vitest)
 - Storybook: [Storybook composition](https://storybook.js.org/docs/sharing/storybook-composition) · [Publish Storybook](https://storybook.js.org/docs/sharing/publish-storybook)
-- Storybook: [Migration guide](https://storybook.js.org/docs/migration-guide)
+- Storybook: [Migration guide](https://storybook.js.org/docs/releases/migration-guide)
 - Component Story Format: [CSF specification](https://github.com/ComponentDriven/csf)
 
 **Mocking & testing**

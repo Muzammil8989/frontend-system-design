@@ -707,7 +707,7 @@ Remember: storage limits theft, not use — XSS prevention comes first
 **Security guidance**
 - OWASP: [HTML5 Security Cheat Sheet — Local Storage](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html#local-storage)
 - OWASP: [Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
-- OWASP: [JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html)
+- OWASP: [JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html)
 - IETF: [OAuth 2.0 for Browser-Based Applications (draft) — token storage and threats](https://datatracker.ietf.org/doc/draft-ietf-oauth-browser-based-apps/)
 
 **Specs**

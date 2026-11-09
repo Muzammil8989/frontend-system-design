@@ -901,7 +901,7 @@ Never: fixed sleeps · CSS/XPath layout selectors · UI login in every test · t
 
 **Mobile**
 - [Detox](https://wix.github.io/Detox/) · [Maestro](https://docs.maestro.dev/) · [Appium](https://appium.io/docs/en/latest/)
-- Apple: [User interface tests (XCTest)](https://developer.apple.com/documentation/xctest/user-interface-tests)
+- Apple: [User interface tests (XCUIAutomation)](https://developer.apple.com/documentation/xcuiautomation)
 - Android: [Espresso](https://developer.android.com/training/testing/espresso)
 - Flutter: [Integration testing](https://docs.flutter.dev/testing/integration-tests)
 

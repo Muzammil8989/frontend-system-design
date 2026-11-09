@@ -804,7 +804,7 @@ Pipeline        lint + component + E2E per PR (gate on NEW violations) · manual
 - Chrome for Developers: [Accessibility features reference (DevTools)](https://developer.chrome.com/docs/devtools/accessibility/reference)
 
 **Native mobile**
-- Apple: [`performAccessibilityAudit`](https://developer.apple.com/documentation/xctest/xcuiapplication/performaccessibilityaudit(for:_:))
+- Apple: [`performAccessibilityAudit`](https://developer.apple.com/documentation/xcuiautomation/xcuiapplication/performaccessibilityaudit(for:_:))
 - Android Developers: [Accessibility testing](https://developer.android.com/guide/topics/ui/accessibility/testing)
 - Flutter: [Accessibility testing](https://docs.flutter.dev/ui/accessibility-and-internationalization/accessibility)
 

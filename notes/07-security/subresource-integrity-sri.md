@@ -644,7 +644,7 @@ Best:       self-host > SRI-pinned remote file > isolated iframe > trusted everg
 ## References & Further Reading
 
 **Core docs**
-- MDN: [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
+- MDN: [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity)
 - MDN: [`<script>` `integrity` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script#integrity) · [`<link>` `integrity`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/link#integrity)
 - MDN: [`crossorigin` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/crossorigin) · [`Request.integrity`](https://developer.mozilla.org/en-US/docs/Web/API/Request/integrity)
 - MDN: [`<script type="importmap">` — integrity metadata](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap)
@@ -656,10 +656,10 @@ Best:       self-host > SRI-pinned remote file > isolated iframe > trusted everg
 - W3C: [Content Security Policy Level 3](https://www.w3.org/TR/CSP3/)
 
 **Tools & build integration**
-- [SRI Hash Generator (srihash.org)](https://www.srihash.org/)
+- MDN: [Tools for generating SRI hashes](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity#tools_for_generating_sri_hashes)
 - [webpack-subresource-integrity](https://github.com/waysact/webpack-subresource-integrity)
 - Angular: [Workspace build options (`subresourceIntegrity`)](https://angular.dev/reference/configs/workspace-config)
-- Next.js: [`sri` configuration](https://nextjs.org/docs/app/api-reference/config/next-config-js/sri)
+- Next.js: [Subresource Integrity (experimental `sri` option)](https://nextjs.org/docs/app/guides/content-security-policy#subresource-integrity-experimental)
 - jsDelivr: [Documentation](https://www.jsdelivr.com/documentation)
 
 **Incidents & deep dives**

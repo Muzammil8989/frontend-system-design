@@ -736,7 +736,7 @@ Error budget:  99.9 % of 30 days = 43.2 min ; 99.5 % = 216 min
 - New Relic: [Synthetic monitoring](https://docs.newrelic.com/docs/synthetics/)
 - Grafana: [Synthetic Monitoring](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/)
 - Checkly: [Documentation](https://www.checklyhq.com/docs/)
-- WebPageTest: [Documentation](https://docs.webpagetest.org/)
+- WebPageTest: [Documentation (Catchpoint)](https://docs.catchpoint.com/wpt/docs/webpageteststarter)
 - Lighthouse CI: [Getting started](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md)
 
 **Reliability practice**

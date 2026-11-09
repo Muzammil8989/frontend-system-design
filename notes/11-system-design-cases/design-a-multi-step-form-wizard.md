@@ -903,7 +903,7 @@ O  focus step heading + document.title, error summary, enabled Continue, autocom
 - TanStack Form: [Overview](https://tanstack.com/form/latest/docs/overview)
 - VeeValidate: [Getting started (Composition API)](https://vee-validate.logaretm.com/v4/guide/composition-api/getting-started/)
 - Angular: [Reactive forms](https://angular.dev/guide/forms/reactive-forms) · Angular Material: [Stepper](https://material.angular.dev/components/stepper/overview)
-- SvelteKit: [Form actions](https://svelte.dev/docs/kit/form-actions) · Superforms: [Multi-step forms](https://superforms.rocks/concepts/multistep-forms)
+- SvelteKit: [Form actions](https://svelte.dev/docs/kit/form-actions) · Superforms: [Examples (client- and server-side multi-step forms)](https://superforms.rocks/examples)
 - XState: [Documentation (v5)](https://stately.ai/docs/xstate)
 
 ---

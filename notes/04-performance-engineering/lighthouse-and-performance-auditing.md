@@ -664,7 +664,7 @@ Workflow: field (CrUX/RUM) → pick templates → lab x3-5 median → insights �
 - web.dev: [Why lab and field data can be different](https://web.dev/articles/lab-and-field-data-differences)
 
 **Other tools**
-- [WebPageTest documentation](https://docs.webpagetest.org/)
+- [WebPageTest documentation (Catchpoint)](https://docs.catchpoint.com/wpt/docs/webpageteststarter)
 - Next.js: [Optimizing package bundling (bundle analyzer)](https://nextjs.org/docs/app/guides/package-bundling)
 - Android Developers: [Macrobenchmark overview](https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview)
 

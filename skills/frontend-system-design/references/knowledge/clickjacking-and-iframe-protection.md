@@ -839,7 +839,7 @@ Cookies:      SameSite=Lax/Strict for session cookies; None only when truly cros
 - web.dev: [Play safely in sandboxed IFrames](https://web.dev/articles/sandboxed-iframes)
 - web.dev: [Protect your resources from web attacks with Fetch Metadata](https://web.dev/articles/fetch-metadata)
 - web.dev: [Making your website "cross-origin isolated" using COOP and COEP](https://web.dev/articles/coop-coep)
-- Chrome for Developers: [Trust is good, observation is better — Intersection Observer v2](https://developer.chrome.com/blog/intersectionobserver-v2)
+- web.dev: [Trust is good, observation is better — Intersection Observer v2](https://web.dev/articles/intersectionobserver-v2)
 
 **Specs**
 - W3C: [Content Security Policy Level 3 — `frame-ancestors`](https://www.w3.org/TR/CSP3/#directive-frame-ancestors)

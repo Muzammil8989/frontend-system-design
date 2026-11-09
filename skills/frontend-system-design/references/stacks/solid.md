@@ -125,5 +125,5 @@ web/
 - https://docs.solidjs.com/concepts/components/props
 - https://docs.solidjs.com/solid-router
 - https://docs.solidjs.com/solid-start
-- https://docs.solidjs.com/solid-start/building-your-application/data-loading
+- https://docs.solidjs.com/solid-start/v1/building-your-application/data-fetching
 - https://kobalte.dev/docs/core/overview/introduction

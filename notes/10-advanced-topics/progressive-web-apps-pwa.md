@@ -906,9 +906,9 @@ Testing:      DevTools Application panel (installability errors) · real iOS + A
 - MDN: [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) · [Badging API](https://developer.mozilla.org/en-US/docs/Web/API/Badging_API) · [`StorageManager.persist()`](https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist)
 - web.dev: [Learn PWA](https://web.dev/learn/pwa/) · [Installation criteria](https://web.dev/articles/install-criteria) · [Maskable icons](https://web.dev/articles/maskable-icon)
 - web.dev: [Patterns for promoting PWA installation](https://web.dev/articles/promote-install)
-- Chrome for Developers: [Window Controls Overlay](https://developer.chrome.com/docs/capabilities/window-controls-overlay)
+- web.dev: [Window Controls Overlay](https://web.dev/articles/window-controls-overlay)
 - Chrome for Developers: [Trusted Web Activity overview](https://developer.chrome.com/docs/android/trusted-web-activity)
-- Chrome for Developers: [Lighthouse 12.0 — removal of the PWA category](https://developer.chrome.com/blog/lighthouse-12-0)
+- Lighthouse: [v12.0.0 release notes — PWA category removal](https://github.com/GoogleChrome/lighthouse/releases/tag/v12.0.0)
 
 **Specs**
 - W3C: [Web Application Manifest](https://www.w3.org/TR/appmanifest/)

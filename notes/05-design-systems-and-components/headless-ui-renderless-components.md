@@ -874,7 +874,7 @@ Still yours:     focus ring · contrast · labels/i18n · motion + reduced motio
 - Headless UI: [Documentation](https://headlessui.com/)
 - Ark UI: [Documentation](https://ark-ui.com/) · Zag.js: [Documentation](https://zagjs.com/)
 - Downshift: [`useCombobox`](https://www.downshift-js.com/use-combobox)
-- TanStack Table: [Introduction (headless)](https://tanstack.com/table/latest/docs/introduction)
+- TanStack Table: [Overview (headless)](https://tanstack.com/table/latest/docs/overview)
 - Reka UI (Vue): [Documentation](https://reka-ui.com/) · Bits UI (Svelte): [Documentation](https://bits-ui.com/)
 - Angular CDK: [Listbox](https://material.angular.dev/cdk/listbox/overview) · Angular: [Directive composition API (`hostDirectives`)](https://angular.dev/guide/directives/directive-composition-api)
 - Vue: [Composables](https://vuejs.org/guide/reusability/composables.html) · [Scoped slots / renderless components](https://vuejs.org/guide/components/slots.html#scoped-slots)
