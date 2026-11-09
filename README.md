@@ -117,7 +117,8 @@ The installer detects the AI tools on your machine, preselects them, asks a few 
 │  ◻ Codex & other AGENTS.md tools
 ◆  Where should Claude Code get them?   ● This project   ○ Globally (~/.claude)
 ◆  Which skills?   ◼ Frontend System Design   ◼ Product Copywriting
-◆  Also install these companion skills?   ◼ UI UX Pro Max   ◼ Impeccable   ◼ Vercel agent-skills   ◼ frontend-design
+◆  Recommended companion skills:   ◼ UI UX Pro Max   ◼ Impeccable   ◼ Vercel agent-skills   ◼ frontend-design
+◆  Optional extras, for specific needs:   ◻ Cloudflare security-audit
 ◆  Install now?   Yes
 └  Done. Happy building!
 ```
@@ -157,11 +158,12 @@ Then ask your agent, for example:
 | Command | What happens |
 |---|---|
 | `/fsd:design <problem>` | The lead architect runs **specialists in parallel** and merges their work into one design doc: `ui-designer`, `mobile-engineer`, `performance-engineer`, `accessibility-specialist`, `security-reviewer` and `copywriter` |
+| `/fsd:docs [focus]` | Writes or refreshes the project docs in `docs/`: architecture, system design, design tokens (`tokens.json`), color with a computed contrast table, typography with the type scale, components and quality. `/fsd:design` writes them too when you create a product |
 | `/fsd:audit [path]` | The read-only `ui-ux-reviewer` and the specialists score the app out of 100 |
 | `/fsd:learn <topic>` | An interactive lesson from the roadmap notes |
 | `/fsd:copy <page>` | The `copywriter` writes, checks and revises until the copy scores at least 80 |
 
-Copilot gets the same commands as `/fsd-design`, `/fsd-audit`, `/fsd-learn` and `/fsd-copy`. Tools without subagents run each specialist role in sequence.
+Copilot gets the same commands as `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn` and `/fsd-copy`. Tools without subagents run each specialist role in sequence.
 
 ### Python engine (standard library only, offline)
 
@@ -273,7 +275,7 @@ flowchart LR
 
 **Cursor, Windsurf, Gemini CLI, Codex.** Ask in plain language, e.g. *"Design the frontend for a hotel booking marketplace"* or *"Rewrite our onboarding so it sounds human"*.
 
-**Copilot Chat:** `/fsd-design`, `/fsd-audit`, `/fsd-learn`, `/fsd-copy`.
+**Copilot Chat:** `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn`, `/fsd-copy`.
 
 **Any terminal:**
 
@@ -293,14 +295,24 @@ On Windows, use `py` (or `python`) instead of `python3`.
 
 Our skills act as the **architect** and the **storyteller**. The wizard also offers these well-regarded skills for extra depth, and our skills hand off to them when they're installed. Each one is installed with **its own official installer**; nothing is copied into this repository.
 
+The wizard asks in two steps. First come the **recommended** companions, already selected. Then come the **optional extras**, unselected, for specific needs. `--all` installs the recommended ones only.
+
+**Recommended**
+
 | Companion | Adds | License |
 |---|---|---|
 | [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | A large searchable catalogue of UI styles, palettes, font pairings and UX guidelines | MIT |
 | [Impeccable](https://github.com/pbakaus/impeccable) | Design polish, critique and audit commands; anti-pattern detection | Apache-2.0 |
-| [Vercel agent-skills](https://github.com/vercel-labs/agent-skills) | `react-best-practices`, `web-design-guidelines`, `composition-patterns` | MIT |
+| [Vercel agent-skills](https://github.com/vercel-labs/agent-skills) | `vercel-react-best-practices`, `web-design-guidelines`, `vercel-composition-patterns` | MIT |
 | [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Distinctive, non-generic visual direction | See upstream |
 
-Every installer is pinned to an exact version in [`companions.json`](./companions.json), and its command is shown before it runs. Non-interactive runs (`--yes`) install companions only when you ask for them with `--companions <ids>` or `--all`. See [THIRD_PARTY.md](./THIRD_PARTY.md).
+**Optional extras**
+
+| Companion | Adds | License |
+|---|---|---|
+| [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill) | Full multi-phase security audits of a codebase, with independently verified findings and a report. Needs an agent with parallel subagents; run target code only inside a sandbox | MIT |
+
+Every installer is pinned to an exact version in [`companions.json`](./companions.json), and its command is shown before it runs. For `npx skills` packs, the installer reads the per-skill result and marks the companion ✖ if any requested skill wasn't installed. Non-interactive runs (`--yes`) install companions only when you ask for them with `--companions <ids>` or `--all`. See [THIRD_PARTY.md](./THIRD_PARTY.md).
 
 ---
 
@@ -316,7 +328,7 @@ install                  Interactive wizard in a terminal; flags skip questions
   --dir <path>             Target project (default: current directory)
   --companions <ids>       Run these third-party companion installers (pinned versions)
   --no-companions          Skip third-party companion skills
-  --all                    Every tool + every default companion skill
+  --all                    Every tool + the recommended companion skills
   --yes, -y                No questions; companions only with --companions or --all
   --force                  Overwrite files you changed locally
   --dry-run                Preview; write and run nothing
@@ -382,7 +394,7 @@ frontend-system-design/
 │   ├── frontend-system-design/     SKILL.md · references/{core,platforms,stacks,playbooks,templates,knowledge} · scripts/ · data/
 │   └── product-copywriting/        SKILL.md · references/ · scripts/copy_check.py · data/
 ├── agents/                         8 specialist subagents
-├── commands/                       /fsd:design · /fsd:audit · /fsd:learn · /fsd:copy
+├── commands/                       /fsd:design · /fsd:docs · /fsd:audit · /fsd:learn · /fsd:copy
 ├── src/cli/                        installer: index · install · wizard · detect · adapters/ · writer · companions
 ├── bin/cli.js                      npx entry point
 ├── notes/                          learning roadmap: 01-web-fundamentals/ … 11-system-design-cases/ (synced into the skill's knowledge/)

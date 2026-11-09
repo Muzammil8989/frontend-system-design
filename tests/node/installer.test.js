@@ -15,7 +15,7 @@ const { install, choicesFromFlags, agentList } = require('../../src/cli/install'
 const { CliError } = require('../../src/cli/util');
 const { ADAPTERS } = require('../../src/cli/adapters');
 const { SKILLS } = require('../../src/cli/skills');
-const { planCompanions } = require('../../src/cli/companions');
+const { COMPANIONS, planCompanions, runCompanions, lanes, skillsReport } = require('../../src/cli/companions');
 const { detectTools, detectStack } = require('../../src/cli/detect');
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'fsd-test-'));
@@ -43,6 +43,7 @@ test('install --all writes every integration and both skills', async () => {
     '.claude/agents/mobile-engineer.md',
     '.claude/agents/copywriter.md',
     '.claude/commands/fsd/design.md',
+    '.claude/commands/fsd/docs.md',
     '.claude/commands/fsd/learn.md',
     '.claude/commands/fsd/copy.md',
     '.agents/skills/frontend-system-design/scripts/detect_stack.py',
@@ -50,6 +51,7 @@ test('install --all writes every integration and both skills', async () => {
     '.cursor/rules/frontend-system-design.mdc',
     '.cursor/rules/product-copywriting.mdc',
     '.github/prompts/fsd-design.prompt.md',
+    '.github/prompts/fsd-docs.prompt.md',
     '.github/prompts/fsd-copy.prompt.md',
     '.windsurf/rules/frontend-system-design.md',
     'GEMINI.md',
@@ -130,7 +132,7 @@ test('companion plan maps tools to each installer', () => {
   const uipro = plan.find((c) => c.id === 'ui-ux-pro-max');
   assert.deepEqual(uipro.commands, ['npx --yes ui-ux-pro-max-cli@2.15.0 init --ai claude', 'npx --yes ui-ux-pro-max-cli@2.15.0 init --ai windsurf']);
   const imp = plan.find((c) => c.id === 'impeccable');
-  assert.deepEqual(imp.commands, ['npx --yes impeccable@4.8.1 install --providers=claude --scope=project']);
+  assert.deepEqual(imp.commands, ['npx --yes impeccable@4.8.1 install --providers=claude --scope=project --yes']);
   const global = planCompanions(['claude'], { global: true, ids: ['ui-ux-pro-max'] });
   assert.equal(global[0].commands[0], 'npx --yes ui-ux-pro-max-cli@2.15.0 init --ai claude --global');
   const none = planCompanions(['gemini'], { ids: ['impeccable'] });
@@ -146,11 +148,70 @@ test('companion installers are pinned to exact versions', () => {
 test('--global only applies to companions for tools that install globally', () => {
   const [imp] = planCompanions(['claude', 'cursor'], { global: true, ids: ['impeccable'] });
   assert.deepEqual(imp.commands, [
-    'npx --yes impeccable@4.8.1 install --providers=claude --scope=global',
-    'npx --yes impeccable@4.8.1 install --providers=cursor --scope=project',
+    'npx --yes impeccable@4.8.1 install --providers=claude --scope=global --yes',
+    'npx --yes impeccable@4.8.1 install --providers=cursor --scope=project --yes',
   ]);
   const [uipro] = planCompanions(['cursor'], { global: true, ids: ['ui-ux-pro-max'] });
   assert.deepEqual(uipro.commands, ['npx --yes ui-ux-pro-max-cli@2.15.0 init --ai cursor']);
+});
+
+test('companions run in parallel lanes; one npx package never runs twice at once', () => {
+  const plan = planCompanions(['claude', 'windsurf'], { ids: COMPANIONS.map((x) => x.id) });
+  const pkgs = lanes(plan).map((jobs) => [...new Set(jobs.map((j) => j.cmd.split(' ')[2].replace(/@[\d.]+$/, '')))]);
+  for (const p of pkgs) assert.equal(p.length, 1, `lane mixes packages: ${p}`);
+  assert.equal(new Set(pkgs.flat()).size, pkgs.length);
+  // Both skills@ companions need Node ≥ 22.20, so on older Node there is no skills lane to check.
+  const skillsLane = lanes(plan).find((jobs) => jobs[0].cmd.includes(' skills@'));
+  if (skillsLane) assert.deepEqual(skillsLane.map((j) => j.companion.id), ['vercel-agent-skills', 'frontend-design', 'security-audit']);
+});
+
+test('runCompanions reports each companion and keeps going after a failure', async () => {
+  const plan = [
+    { id: 'bad', name: 'Bad', commands: [`"${process.execPath}" -e "process.exit(3)"`] },
+    { id: 'good', name: 'Good', note: 'then do X', commands: [`"${process.execPath}" -e "console.log('hi')"`] },
+    { id: 'skip', name: 'Skip', commands: [] },
+  ];
+  const lines = [];
+  const results = await runCompanions(plan, tmp(), (l) => lines.push(l));
+  assert.deepEqual(results.map((r) => [r.id, r.ok]), [['bad', false], ['good', true]]);
+  assert.equal(results[1].note, 'then do X');
+  assert.ok(lines.some((l) => l.includes('│ hi')));
+});
+
+test('skills --json report: a skipped skill fails the companion even though the CLI exits 0', () => {
+  const row = (name, status, reason) => ({ name, status, ...(reason && { reason }) });
+  const ok = skillsReport(`progress…\n${JSON.stringify([row('a', 'installed'), row('a', 'installed'), row('b', 'installed')])}`);
+  assert.deepEqual(ok, { ok: true, text: 'installed: a, b' });
+  const bad = skillsReport(JSON.stringify([row('a', 'installed'), row('old-name', 'skipped', 'No matching skill found in source')]));
+  assert.equal(bad.ok, false);
+  assert.match(bad.text, /not installed: old-name \(No matching skill found in source\)/);
+  assert.equal(skillsReport(JSON.stringify([])).ok, false);
+  assert.equal(skillsReport('Done!'), null);
+  assert.equal(skillsReport('[1, 2]'), null);
+});
+
+test('runCompanions marks a --json companion failed when a requested skill was skipped', async () => {
+  const report = JSON.stringify([{ name: 'gone', status: 'skipped', reason: 'No matching skill found in source' }]);
+  const script = path.join(tmp(), 'fake-skills.js');
+  fs.writeFileSync(script, `console.log(${JSON.stringify(report)})`);
+  const lines = [];
+  const [r] = await runCompanions([{ id: 'x', name: 'X', commands: [`"${process.execPath}" "${script}" --json`] }], tmp(), (l) => lines.push(l));
+  assert.equal(r.ok, false);
+  assert.ok(lines.some((l) => l.includes('not installed: gone')));
+});
+
+test('recommended companions are the defaults; Cloudflare security-audit is an optional extra', () => {
+  const recommended = COMPANIONS.filter((x) => x.default).map((x) => x.id);
+  assert.deepEqual(recommended, ['ui-ux-pro-max', 'impeccable', 'vercel-agent-skills', 'frontend-design']);
+  assert.ok(!choicesFromFlags({ all: true, yes: true }, {}).companions.includes('security-audit'));
+  const [sec] = planCompanions(['claude'], { ids: ['security-audit'] });
+  if (sec.commands.length) {
+    assert.deepEqual(sec.commands, ['npx --yes skills@1.7.6 add cloudflare/security-audit-skill --skill security-audit --agent claude-code --yes --json']);
+  }
+  // Vercel renamed two skills upstream; the old names are silently skipped by `skills add`.
+  const vercel = COMPANIONS.find((x) => x.id === 'vercel-agent-skills').command;
+  assert.match(vercel, /--skill vercel-react-best-practices web-design-guidelines vercel-composition-patterns /);
+  for (const c of COMPANIONS.filter((x) => x.command.includes(' skills@'))) assert.match(c.command, / --json$/, c.id);
 });
 
 test('--yes alone never runs third-party companions', () => {

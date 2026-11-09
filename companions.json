@@ -1,5 +1,5 @@
 {
-  "$comment": "Third-party skills installed alongside frontend-system-design via THEIR OWN official installers. Commands verified against each project's README. Installer packages are pinned to exact versions (scripts/validate-skills.js enforces this); bump them deliberately after reviewing the upstream changes. `skills add <owner/repo>` still fetches that repo's default branch. {agent}/{providers}/{skills_agents}/{scope}/{global} placeholders are filled by src/cli/companions.js. Nothing from these projects is vendored into this repo.",
+  "$comment": "Third-party skills installed alongside frontend-system-design via THEIR OWN official installers. Commands verified against each project's README. Installer packages are pinned to exact versions (scripts/validate-skills.js enforces this); bump them deliberately after reviewing the upstream changes. `skills add <owner/repo>` still fetches that repo's default branch. {agent}/{providers}/{skills_agents}/{scope}/{global} placeholders are filled by src/cli/companions.js. `default: true` marks a recommended companion: the wizard pre-selects it and --all installs it. Optional ones are listed after them, unchecked. `skills add` commands use --json so the installer can check that every requested skill was actually installed. Nothing from these projects is vendored into this repo.",
   "companions": [
     {
       "id": "ui-ux-pro-max",
@@ -28,24 +28,24 @@
       "purpose": "Design polish, critique and audit commands plus anti-pattern detection for frontend UI",
       "default": true,
       "runner": "once",
-      "command": "npx --yes impeccable@4.8.1 install --providers={providers} --scope={scope}",
+      "command": "npx --yes impeccable@4.8.1 install --providers={providers} --scope={scope} --yes",
       "agents": {
         "claude": "claude",
         "cursor": "cursor",
         "agents": "codex"
       },
-      "note": "May ask whether to set up its design hook; answer in the terminal."
+      "note": "next, type /impeccable init in your AI tool's chat to set up design context"
     },
     {
       "id": "vercel-agent-skills",
-      "name": "Vercel agent-skills (react-best-practices, web-design-guidelines, composition-patterns)",
+      "name": "Vercel agent-skills (vercel-react-best-practices, web-design-guidelines, vercel-composition-patterns)",
       "repo": "https://github.com/vercel-labs/agent-skills",
       "license": "MIT",
       "purpose": "React/Next.js performance rules, UI guideline reviews and component composition patterns",
       "default": true,
       "runner": "once",
       "requires_node": "22.20.0",
-      "command": "npx --yes skills@1.7.6 add vercel-labs/agent-skills --skill react-best-practices web-design-guidelines composition-patterns --agent {skills_agents}{skills_global} --yes",
+      "command": "npx --yes skills@1.7.6 add vercel-labs/agent-skills --skill vercel-react-best-practices web-design-guidelines vercel-composition-patterns --agent {skills_agents}{skills_global} --yes --json",
       "skills_global_flag": " --global",
       "agents": {
         "claude": "claude-code",
@@ -65,8 +65,29 @@
       "default": true,
       "runner": "once",
       "requires_node": "22.20.0",
-      "command": "npx --yes skills@1.7.6 add anthropics/skills --skill frontend-design --agent {skills_agents}{skills_global} --yes",
+      "command": "npx --yes skills@1.7.6 add anthropics/skills --skill frontend-design --agent {skills_agents}{skills_global} --yes --json",
       "skills_global_flag": " --global",
+      "agents": {
+        "claude": "claude-code",
+        "cursor": "cursor",
+        "copilot": "github-copilot",
+        "agents": "universal",
+        "windsurf": "windsurf",
+        "gemini": "gemini-cli"
+      }
+    },
+    {
+      "id": "security-audit",
+      "name": "Cloudflare security-audit",
+      "repo": "https://github.com/cloudflare/security-audit-skill",
+      "license": "MIT",
+      "purpose": "Multi-phase security audits of a codebase with independently verified, machine-readable findings",
+      "default": false,
+      "runner": "once",
+      "requires_node": "22.20.0",
+      "command": "npx --yes skills@1.7.6 add cloudflare/security-audit-skill --skill security-audit --agent {skills_agents}{skills_global} --yes --json",
+      "skills_global_flag": " --global",
+      "note": "ask your agent to \"security audit this codebase\"; run target code only inside a sandbox (see its README)",
       "agents": {
         "claude": "claude-code",
         "cursor": "cursor",

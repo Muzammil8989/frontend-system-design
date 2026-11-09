@@ -38,5 +38,6 @@ Use the `frontend-system-design` skill. You are the lead architect and you orche
    - Add the phased rollout and the risks.
 6. **Deliver.**
    - Save the doc to `docs/frontend-system-design.md`. Ask before overwriting an existing file.
+   - Write the **project docs** next to it, following `references/templates/project-docs.md`: `docs/README.md`, `architecture.md`, `system-design.md`, `quality.md` and `docs/design-system/` (README, `tokens.json`, tokens, color, typography, components). Values come from the design doc and stay marked **Proposed** until they are built. Run `scripts/tokens_check.py docs/design-system/tokens.json` and fix any contrast failure before you save.
    - Show a summary: the headline decisions, 3 decisions for the user to confirm, and the notes to read to understand the design.
-   - Offer to scaffold phase 1 using the folder structure.
+   - Offer to scaffold phase 1 using the folder structure. Later, `/fsd:docs` refreshes the project docs from the code.
