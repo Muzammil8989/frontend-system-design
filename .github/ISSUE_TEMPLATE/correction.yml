@@ -1,0 +1,53 @@
+name: "🐛 Correction / outdated content"
+description: Report a factual error, outdated claim, broken link, or broken diagram in a note.
+title: "[Fix] "
+labels: ["correction"]
+body:
+  - type: input
+    id: note
+    attributes:
+      label: Note
+      description: File path, and the line or section if you know it.
+      placeholder: "notes/01-web-fundamentals/javascript-runtime-event-loop.md, line 412"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Problem type
+      options:
+        - Factual error
+        - Outdated (deprecated API, changed spec or browser behaviour)
+        - Broken or low-quality link
+        - Diagram does not render or is wrong
+        - Code example does not work
+        - Typo or unclear wording
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: What the note says
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it should say
+      description: Include the corrected text if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: An MDN, spec, web.dev, or Chrome for Developers link that supports the correction.
+    validations:
+      required: true
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm happy to open a PR with the fix.

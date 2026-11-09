@@ -1,0 +1,48 @@
+name: "🧠 Skill improvement"
+description: Improve the frontend-system-design skill — a wrong recommendation, a new product playbook, new data, an agent or a new AI tool integration.
+title: "[Skill] "
+labels: ["skill"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Wrong or outdated recommendation
+        - New product playbook / product type
+        - Data (styles, palettes, fonts, patterns, stacks)
+        - Specialist agent or command
+        - Python scripts (recommend / search / budget / audit_scan)
+        - Installer / support for another AI tool
+        - Companion skill (add / update / remove)
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happens now?
+      description: For recommendations, include the prompt or the `recommend.py` input and its output.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or sources
+      description: Official docs (MDN, web.dev, framework docs), measurements, or real-world references that support the change.
+  - type: input
+    id: tool
+    attributes:
+      label: AI tool and version
+      placeholder: "Claude Code 2.x / Cursor / Copilot in VS Code / Codex CLI"
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: Contribution
+      options:
+        - label: I'd like to open a PR for this.

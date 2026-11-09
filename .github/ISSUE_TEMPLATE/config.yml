@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Contributing guide
+    url: https://github.com/Muzammil8989/frontend-system-design/blob/main/CONTRIBUTING.md
+    about: How to claim a topic, write a note, and get it reviewed.

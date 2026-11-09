@@ -1,0 +1,80 @@
+{
+  "$comment": "Third-party skills installed alongside frontend-system-design via THEIR OWN official installers. Commands verified against each project's README. Installer packages are pinned to exact versions (scripts/validate-skills.js enforces this); bump them deliberately after reviewing the upstream changes. `skills add <owner/repo>` still fetches that repo's default branch. {agent}/{providers}/{skills_agents}/{scope}/{global} placeholders are filled by src/cli/companions.js. Nothing from these projects is vendored into this repo.",
+  "companions": [
+    {
+      "id": "ui-ux-pro-max",
+      "name": "UI UX Pro Max",
+      "repo": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "license": "MIT",
+      "purpose": "Searchable database of UI styles, color palettes, font pairings and UX guidelines across many stacks",
+      "default": true,
+      "runner": "per-agent",
+      "command": "npx --yes ui-ux-pro-max-cli@2.15.0 init --ai {agent}{global}",
+      "global_flag": " --global",
+      "agents": {
+        "claude": "claude",
+        "cursor": "cursor",
+        "copilot": "copilot",
+        "agents": "codex",
+        "windsurf": "windsurf",
+        "gemini": "gemini"
+      }
+    },
+    {
+      "id": "impeccable",
+      "name": "Impeccable",
+      "repo": "https://github.com/pbakaus/impeccable",
+      "license": "Apache-2.0",
+      "purpose": "Design polish, critique and audit commands plus anti-pattern detection for frontend UI",
+      "default": true,
+      "runner": "once",
+      "command": "npx --yes impeccable@4.8.1 install --providers={providers} --scope={scope}",
+      "agents": {
+        "claude": "claude",
+        "cursor": "cursor",
+        "agents": "codex"
+      },
+      "note": "May ask whether to set up its design hook; answer in the terminal."
+    },
+    {
+      "id": "vercel-agent-skills",
+      "name": "Vercel agent-skills (react-best-practices, web-design-guidelines, composition-patterns)",
+      "repo": "https://github.com/vercel-labs/agent-skills",
+      "license": "MIT",
+      "purpose": "React/Next.js performance rules, UI guideline reviews and component composition patterns",
+      "default": true,
+      "runner": "once",
+      "requires_node": "22.20.0",
+      "command": "npx --yes skills@1.7.6 add vercel-labs/agent-skills --skill react-best-practices web-design-guidelines composition-patterns --agent {skills_agents}{skills_global} --yes",
+      "skills_global_flag": " --global",
+      "agents": {
+        "claude": "claude-code",
+        "cursor": "cursor",
+        "copilot": "github-copilot",
+        "agents": "universal",
+        "windsurf": "windsurf",
+        "gemini": "gemini-cli"
+      }
+    },
+    {
+      "id": "frontend-design",
+      "name": "Anthropic frontend-design",
+      "repo": "https://github.com/anthropics/skills/tree/main/skills/frontend-design",
+      "license": "See upstream LICENSE.txt",
+      "purpose": "Distinctive, intentional visual direction for new UI; avoids generic templated aesthetics",
+      "default": true,
+      "runner": "once",
+      "requires_node": "22.20.0",
+      "command": "npx --yes skills@1.7.6 add anthropics/skills --skill frontend-design --agent {skills_agents}{skills_global} --yes",
+      "skills_global_flag": " --global",
+      "agents": {
+        "claude": "claude-code",
+        "cursor": "cursor",
+        "copilot": "github-copilot",
+        "agents": "universal",
+        "windsurf": "windsurf",
+        "gemini": "gemini-cli"
+      }
+    }
+  ]
+}
