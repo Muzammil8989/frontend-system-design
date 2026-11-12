@@ -16,25 +16,31 @@ const BLOCK_RE = /<!-- fsd:start[\s\S]*?<!-- fsd:end -->/;
 
 const normalize = (s) => s.replace(/\r\n/g, '\n').trimEnd() + '\n';
 
+const lexists = (p) => {
+  try {
+    fs.lstatSync(p);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
 /**
- * A symlink at a target path (e.g. planted in an untrusted repo) must not redirect our write elsewhere.
- * Links that resolve inside root (like AGENTS.md → CLAUDE.md) are fine; dangling or outside-root links are refused.
+ * A symlink at a target path or any folder above it (e.g. `.claude → ~` planted in an untrusted repo) must not
+ * redirect our write elsewhere. Links that resolve inside root (like AGENTS.md → CLAUDE.md) are fine;
+ * dangling or outside-root links are refused.
  */
 function unsafeLink(root, abs) {
-  let st;
-  try {
-    st = fs.lstatSync(abs);
-  } catch {
-    return null; // does not exist yet
-  }
-  if (!st.isSymbolicLink()) return null;
+  const base = fs.realpathSync(root);
+  // The file itself if it exists, otherwise the deepest folder above it that does: that's where the write lands.
+  let probe = abs;
+  while (!lexists(probe) && path.dirname(probe) !== probe) probe = path.dirname(probe);
   let target;
   try {
-    target = fs.realpathSync(abs);
+    target = fs.realpathSync(probe);
   } catch {
     return 'dangling symlink';
   }
-  const base = fs.realpathSync(root);
   const relative = path.relative(base, target);
   return relative.startsWith('..') || path.isAbsolute(relative) ? `symlink to ${target}, outside ${base}` : null;
 }
