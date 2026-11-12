@@ -63,6 +63,7 @@ All notable changes to this project are documented here. The format follows [Kee
 - Python scripts: quadratic slow-downs on long/minified lines (`audit_scan.py`) and large HTML (`copy_check.py`); crashes on `null` dependencies or a UTF-8 BOM; projects under a `build/`/`bin/` folder not detected; `--project` ignored for plain React/Vue/Svelte; CSS `*:focus`/`#id:focus` outline removal missed; secrets echoed in scan output; empty copy passing `copy_check.py`.
 - Security notes: SameSite defaults (Chromium only), HttpOnly/SameSite described as defence in depth, DOMPurify defaults keep `<form>`/`<style>`, `<img>` vs `Lax` in CSRF, host-only `__Host-` session cookies instead of `Domain=`, `javascript:` blocklist → URL scheme allow-list, broken U+2028 regexes and lost `<` escapes in the XSS/SSR examples, CSP hash command.
 - `package-lock.json` version now matches `package.json`.
+- **Security:** the installer could write outside the target folder when a folder on the path (e.g. a `.claude` planted in an untrusted repo) was a symlink pointing elsewhere. Only the file itself was checked; now the file and every folder above it are. `@clack/prompts`, the only runtime dependency, is pinned to an exact version.
 
 ## [1.1.0] - 2026-11-06
 

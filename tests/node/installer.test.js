@@ -288,6 +288,26 @@ test('writes never follow a symlink out of the target directory', async (t) => {
   assert.match(fs.readFileSync(path.join(repo, 'CLAUDE.md'), 'utf8'), /fsd:start/);
 });
 
+test('writes never follow a symlinked folder out of the target directory', async (t) => {
+  const dir = tmp();
+  const outside = tmp();
+  try {
+    // 'junction' lets Windows create directory links without admin rights; it's ignored elsewhere.
+    fs.symlinkSync(outside, path.join(dir, '.claude'), 'junction');
+  } catch (e) {
+    return t.skip(`cannot create symlinks here (${e.code})`);
+  }
+  try {
+    const { report } = await quietInstall(dir, { agent: 'claude', skills: 'product-copywriting' });
+    const rows = report.flatMap((r) => r.rows);
+    assert.ok(rows.length && rows.every((r) => r.action === 'refused'), 'every .claude/ write is refused');
+    assert.deepEqual(listFiles(outside), []);
+    assert.equal(process.exitCode, 1);
+  } finally {
+    process.exitCode = 0;
+  }
+});
+
 test('--global puts Claude files in the home folder and other tools in the project', async () => {
   const home = tmp();
   const dir = tmp();

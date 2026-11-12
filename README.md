@@ -15,6 +15,10 @@ Describe a problem. Your agent designs the best-fit system for **web, mobile or 
 
 **Claude Code** · **Cursor** · **GitHub Copilot** · **Windsurf** · **Gemini CLI** · **Codex & any `AGENTS.md` tool**
 
+```bash
+npx github:Muzammil8989/frontend-system-design install
+```
+
 [Quick start](#quick-start) · [Features](#features) · [Stacks](#supported-platforms--stacks) · [Roadmap](#learning-roadmap) · [Docs](./docs/architecture.md) · [Contributing](./CONTRIBUTING.md)
 
 </div>
