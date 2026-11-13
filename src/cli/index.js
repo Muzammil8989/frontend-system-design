@@ -83,7 +83,7 @@ ${c.bold('Commands')}
 ${c.bold('Examples')}
   ${NPX} install
   ${NPX} install --all                       ${c.dim('# recommended: every tool, every skill, every companion')}
-  ${NPX} install --all --no-companions       ${c.dim('# our skills only, no third-party installers')}
+  ${NPX} install --all --no-companions       ${c.dim('# built-in skills only, no third-party installers')}
   ${NPX} install --all --hooks --mcp         ${c.dim('# plus guardrail hooks and the MCP server')}
   ${NPX} install --agent claude --global --yes
   ${NPX} install --agent cursor,windsurf --skills product-copywriting --no-companions
