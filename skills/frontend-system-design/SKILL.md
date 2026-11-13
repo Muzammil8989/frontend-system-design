@@ -1,6 +1,6 @@
 ---
 name: frontend-system-design
-description: Staff frontend/app architect + product designer for web, mobile and desktop on any stack (React, Next.js, Vue/Nuxt, Angular, Svelte, Solid, Astro, Qwik, htmx/Hotwire/Livewire, React Native/Expo, Flutter, SwiftUI, Jetpack Compose, Kotlin Multiplatform, .NET MAUI, Ionic/Capacitor, Electron, Tauri). Use whenever the user builds, designs, redesigns, scales or audits any product UI — SaaS, dashboard, e-commerce, landing page, docs, social, chat, editor, booking, maps, mobile app, desktop app — or asks which framework, rendering strategy, state management, folder structure, design system, colors, typography, performance budget, accessibility, security or testing approach to use. Turns the builder's problem into a professional, justified design doc grounded in the project's learning notes; audits existing apps with a scored report; teaches topics on request.
+description: Staff frontend/app architect and product designer for web, mobile and desktop on any stack (React, Next.js, Vue/Nuxt, Angular, Svelte, Solid, Astro, Qwik, htmx/Hotwire/Livewire, React Native/Expo, Flutter, SwiftUI, Jetpack Compose, Kotlin Multiplatform, .NET MAUI, Ionic/Capacitor, Electron, Tauri). Use when building, designing, redesigning, scaling or auditing any product UI (SaaS, dashboard, e-commerce, landing page, docs, social, chat, editor, booking, maps, mobile or desktop app), or choosing a framework, rendering strategy, state management, folder structure, design system, colors, typography, performance budget, accessibility, security or testing approach. Produces a justified design doc grounded in the project's learning notes, scored audits of existing apps, and lessons on request.
 ---
 
 # Frontend System Design
@@ -129,7 +129,7 @@ The lead (`frontend-architect`, or you) owns steps 0–3 and 6, merges the resul
 | **impeccable** | Polishing, critiquing and auditing visual design |
 | **frontend-design** (Anthropic) | Distinctive, non-generic visual direction |
 | **vercel-react-best-practices**, **vercel-composition-patterns**, **web-design-guidelines** (Vercel) | React/Next.js performance rules, component APIs, UI guideline reviews |
-| **security-audit** (Cloudflare, optional) | A full, multi-phase security audit of the codebase when the user asks for one. Our security review stays focused on the frontend |
+| **security-audit** (Cloudflare) | A full, multi-phase security audit of the codebase when the user asks for one. Our security review stays focused on the frontend |
 
 This skill stays the **architect**. It hands visual polish and framework-specific rules to the companions.
 

@@ -1,0 +1,35 @@
+problem,safest_fix,alternative,risk,rewrites_history,notes
+Typo in the last commit message (not pushed),git commit --amend,git rebase -i HEAD~N then reword,low,yes,Only for commits nobody else has. After a push use a follow-up commit instead.
+Forgot to add a file to the last commit (not pushed),git add <file> && git commit --amend --no-edit,Commit it separately as fix: or chore:,low,yes,Check git status first so --amend doesn't pull in unrelated staged changes.
+Undo the last commit but keep the changes (not pushed),git reset --soft HEAD~1,git reset --mixed HEAD~1 to also unstage,low,yes,Changes stay in the working tree. Nothing is lost.
+Undo the last commit and throw the changes away (not pushed),git branch backup/before-reset && git reset --hard HEAD~1,git reset --soft HEAD~1 then decide,high,yes,reset --hard deletes uncommitted work too. Backup branch first; reflog can still find the commit for about 90 days.
+Undo a commit that is already pushed or shared,git revert <sha>,git revert -m 1 <merge-sha> for a merge commit,low,no,Adds a new commit that undoes the old one. Safe on shared branches.
+Committed to the wrong branch (not pushed),git branch <right-branch> && git reset --hard HEAD~1 && git switch <right-branch>,git switch <right-branch> && git cherry-pick <sha> then remove it from the wrong branch,medium,yes,Check git status is clean first. If the right branch already exists use cherry-pick.
+Committed to main by mistake (already pushed),git revert <sha> on main and cherry-pick <sha> onto a feature branch,Ask the team before any force-push to main,medium,no,Never force-push a shared default branch without agreement.
+Unstage a file,git restore --staged <file>,git reset HEAD <file> on old git,low,no,Keeps the edits in the working tree.
+Discard local edits to one file,git restore <file>,git stash push <file> to keep a copy,high,no,The edits are gone for good unless stashed. Confirm first.
+Discard all local changes,git stash push -u -m "before discard" then git stash drop when sure,git reset --hard && git clean -fd,high,no,clean -fd deletes untracked files with no recovery. Run git clean -nd first to preview.
+Recover a deleted branch,git reflog then git branch <name> <sha>,git fsck --lost-found for unreachable commits,low,no,Works while the commits are still in the reflog (about 90 days by default).
+Recover work lost after reset --hard,git reflog then git reset --hard <sha-before-reset> or git branch rescue <sha>,git fsck --lost-found,low,no,Committed work is recoverable. Uncommitted work that was never staged is not.
+Recover a dropped stash,git fsck --unreachable | grep commit then git stash apply <sha>,git log --graph --oneline $(git fsck --no-reflogs | awk '/dangling commit/ {print $3}'),medium,no,Only possible until git gc prunes it.
+Rebase went wrong while in progress,git rebase --abort,git rebase --skip for one bad commit,low,no,Returns the branch to where it was before the rebase started.
+Rebase finished but the result is wrong,git reset --hard ORIG_HEAD,git reflog then git reset --hard <sha-before-rebase>,medium,yes,ORIG_HEAD is overwritten by the next reset/merge/rebase so do this straight away.
+Merge conflict during merge,Fix the files then git add <files> && git commit,git merge --abort to start over,low,no,Search for <<<<<<< markers before committing. Run the tests.
+Merge conflict during rebase,Fix the files then git add <files> && git rebase --continue,git rebase --abort,low,no,Conflicts can repeat per commit. git rerere remembers resolutions.
+Undo a merge that is not pushed,git reset --hard ORIG_HEAD,git reset --hard HEAD~1,medium,yes,Check git log first: HEAD~1 is the first parent of the merge.
+Squash my last N commits before a PR (not shared),git rebase -i HEAD~N and mark them squash or fixup,git reset --soft HEAD~N && git commit,low,yes,Use git commit --fixup <sha> during work and git rebase -i --autosquash to fold them in.
+Split the last commit into smaller ones (not pushed),git reset HEAD~1 then git add -p and commit each piece,git rebase -i and mark the commit edit,low,yes,Each new commit should build and pass tests on its own.
+Change an older commit (not pushed),git commit --fixup <sha> then git rebase -i --autosquash <sha>~1,git rebase -i <sha>~1 and mark it edit,medium,yes,Everything after that commit gets a new sha.
+Update my branch after main moved (my branch is private),git fetch && git rebase origin/main,git merge origin/main,low,yes,Rebase keeps history linear. Merge if others share the branch.
+Update a shared feature branch after main moved,git fetch && git merge origin/main,Agree with the team before rebasing a shared branch,low,no,Merge doesn't rewrite anyone else's history.
+Push was rejected (non-fast-forward),git pull --rebase then git push,git fetch && git merge origin/<branch> then push,low,no,Never answer a rejection with --force on a shared branch.
+Must overwrite my own remote branch after a rebase,git push --force-with-lease,git push --force-with-lease=<branch>:<expected-sha>,medium,yes,--force-with-lease refuses if someone else pushed in the meantime. Never use plain --force.
+Leaked a secret in a commit,Revoke or rotate the secret first then remove it in a new commit,git filter-repo --replace-text or BFG to purge history then force-push and have everyone re-clone,high,yes,Assume it is compromised the moment it was pushed. Purging history does not un-leak it. Check CI logs and forks too.
+Committed a large file by mistake (not pushed),git rm --cached <file> && git commit --amend --no-edit then add it to .gitignore,Move it to Git LFS,low,yes,If it is pushed you need git filter-repo to shrink the repo.
+File should be ignored but is already tracked,git rm --cached <file> then add it to .gitignore and commit,git update-index --skip-worktree <file> for local-only overrides,low,no,The file stays on disk. Other clones will delete it on pull.
+Detached HEAD with new commits,git switch -c <new-branch>,git branch <new-branch> then git switch <new-branch>,low,no,Do this before switching away or the commits are only in the reflog.
+Bring one commit from another branch,git cherry-pick <sha>,git cherry-pick -x <sha> to record the source,low,no,Prefer merging whole branches when you need many commits.
+Sync a fork with upstream,git fetch upstream && git rebase upstream/main,git merge upstream/main,low,yes,Add the remote once with git remote add upstream <url>.
+Find which commit broke something,git bisect start then git bisect bad and git bisect good <sha>,git bisect run <test-command> to automate,low,no,Finish with git bisect reset.
+Wrong author or email on recent commits (not pushed),git commit --amend --reset-author --no-edit,git rebase -i <sha> --exec "git commit --amend --reset-author --no-edit",low,yes,Set git config user.email first.
+Remove a remote branch,git push origin --delete <branch>,Delete it in the hosting UI so it can be restored,medium,no,Check nobody has open work on it. Ask before running.
