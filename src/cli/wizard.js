@@ -11,7 +11,7 @@ const { c, PKG } = require('./util');
 const { ADAPTERS } = require('./adapters');
 const { SKILLS } = require('./skills');
 const { COMPANIONS, planCompanions } = require('./companions');
-const { validate, agentList, skillList } = require('./install');
+const { validate, agentList, companionList, skillList } = require('./install');
 
 function cancelled(value) {
   if (p.isCancel(value)) {
@@ -27,9 +27,8 @@ function cancelled(value) {
  */
 async function runWizard({ tools: detected, stack, opts }) {
   // Reject mistyped flag values before asking anything.
-  const list = (v) => (v ? String(v).split(',').map((s) => s.trim()).filter(Boolean) : []);
   const flagSkills = opts.skills ? skillList(opts.skills) : null;
-  validate({ tools: opts.agent ? agentList(opts.agent) : [], skills: flagSkills || [], companions: opts.noCompanions ? [] : list(opts.companions) });
+  validate({ tools: opts.agent ? agentList(opts.agent) : [], skills: flagSkills || [], companions: opts.noCompanions || !opts.companions ? [] : companionList(opts.companions) });
 
   p.intro(c.bold(` Frontend System Design v${PKG.version} `));
 
@@ -83,7 +82,7 @@ async function runWizard({ tools: detected, stack, opts }) {
   let companions = [];
   if (!opts.noCompanions) {
     const available = COMPANIONS.filter((comp) => toolIds.some((t) => comp.agents[t]));
-    if (opts.companions) companions = String(opts.companions).split(',').map((s) => s.trim());
+    if (opts.companions) companions = companionList(opts.companions);
     else {
       // Recommended companions first (pre-selected), then the optional extras (unselected).
       const option = (comp) => ({ value: comp.id, label: comp.name, hint: `${comp.license} · ${comp.purpose}` });
@@ -115,6 +114,23 @@ async function runWizard({ tools: detected, stack, opts }) {
   }
   validate({ companions });
 
+  // Opt-in extras: both default to No, and a flag answers the question.
+  let hooks = !!opts.hooks;
+  if (!opts.hooks && (toolIds.includes('claude') || skills.includes('git-workflow'))) {
+    hooks = cancelled(
+      await p.confirm({
+        message: 'Add guardrail hooks? (Claude Code blocks force-push, --no-verify and committing secrets, and asks before risky git commands; a git commit-msg hook checks messages)',
+        initialValue: false,
+      })
+    );
+  }
+  let mcp = !!opts.mcp;
+  if (!opts.mcp) {
+    mcp = cancelled(
+      await p.confirm({ message: 'Connect the MCP server to your AI tools? (the design engine and notes as tools, for any MCP client)', initialValue: false })
+    );
+  }
+
   // Show the exact third-party commands before the one confirmation that runs them.
   const commands = companions.length ? planCompanions(toolIds, { global, ids: companions }).flatMap((x) => x.commands) : [];
   p.note(
@@ -123,7 +139,9 @@ async function runWizard({ tools: detected, stack, opts }) {
       `${c.bold('Scope')}       ${global ? 'global (~/.claude) + project for other tools' : 'this project'}`,
       `${c.bold('Skills')}      ${skills.join(', ')}`,
       `${c.bold('Companions')}  ${companions.length ? companions.join(', ') : 'none'}`,
+      `${c.bold('Extras')}      ${[hooks && 'guardrail hooks', mcp && 'MCP server'].filter(Boolean).join(', ') || 'none'}`,
       ...(commands.length ? ['', c.dim('Companion commands that will run (third-party code):'), ...commands.map((cmd) => c.dim(`  $ ${cmd}`))] : []),
+      ...COMPANIONS.filter((comp) => comp.warning && companions.includes(comp.id)).map((comp) => c.yellow(`⚠ ${comp.name}: ${comp.warning}`)),
     ].join('\n'),
     'Ready to install'
   );
@@ -134,7 +152,7 @@ async function runWizard({ tools: detected, stack, opts }) {
       process.exit(0);
     }
   }
-  return { tools: toolIds, global, skills, companions };
+  return { tools: toolIds, global, skills, companions, hooks, mcp };
 }
 
 module.exports = { runWizard };
