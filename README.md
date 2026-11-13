@@ -19,7 +19,7 @@ Describe a problem. Your agent designs the right system for **web, mobile or des
 npx frontend-system-design install --all
 ```
 
-<sub>One command installs our three skills plus UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit, in every AI tool you use.<br/>Prefer to pick each piece yourself? Run <code>install</code> without flags. See <a href="#choose-your-install">Choose your install</a>.</sub>
+<sub>No more running a separate <code>npx</code> for every skill. One command installs UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit, plus this project's own skills, in every AI tool you use.<br/>Prefer to pick each piece yourself? Run <code>install</code> without flags. See <a href="#choose-your-install">Choose your install</a>.</sub>
 
 [Quick start](#quick-start) · [Features](#features) · [Git workflow](#git-workflow-skill) · [Hooks](#guardrail-hooks) · [MCP](#mcp-server) · [Stacks](#supported-platforms--stacks) · [Roadmap](#learning-roadmap) · [Docs](./docs/architecture.md) · [Contributing](./CONTRIBUTING.md)
 
@@ -75,11 +75,11 @@ On their own, AI coding agents pick the same default stack, the same generic UI 
 
 Run one of these in your project folder.
 
-| | **Recommended: everything** | **Choose yourself** | **Our skills only** |
+| | **Recommended: everything** | **Choose yourself** | **Built-in skills only** |
 |---|---|---|---|
 | **Command** | `npx frontend-system-design install --all` | `npx frontend-system-design install` | `npx frontend-system-design install --all --no-companions` |
-| **Installs** | Our 3 skills, 8 agents and 9 commands, plus all five companions: UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit | Only what you tick in the wizard: AI tools, project or global scope, skills and companions. Everything recommended starts ticked | Our 3 skills, 8 agents and 9 commands. No third-party code |
-| **Choose it if** | You want the full setup without any decisions. This is the right choice for most people | You want to leave something out, or install for only some of your AI tools | Your company restricts third-party packages, or you only want our skills |
+| **Installs** | The built-in skills, 8 agents and 9 commands, plus all five companions: UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit | Only what you tick in the wizard: AI tools, project or global scope, skills and companions. Everything recommended starts ticked | The built-in skills, 8 agents and 9 commands. No third-party code |
+| **Choose it if** | You want the full setup without any decisions. This is the right choice for most people | You want to leave something out, or install for only some of your AI tools | Your company restricts third-party packages, or you only want the built-in skills |
 | **Good to know** | Asks once before running the five third-party installers; add `--yes` to skip that question | Shows every command, and any warning, before you confirm | Quickest to install. Add the companions later by running `install --all` |
 
 **About Cloudflare security-audit.** Its audits run many parallel subagents, so expect higher token use, and run any audited code only inside a sandbox. The installer prints this warning before Cloudflare's installer runs. To leave it out, untick it in the wizard, or name the companions you want: `--companions ui-ux-pro-max,impeccable,vercel-agent-skills,frontend-design`.
@@ -90,7 +90,7 @@ Add `--dry-run` to any command to see exactly what it would do without changing 
 
 <sub>Want the latest unreleased changes from <code>main</code>? Replace <code>npx frontend-system-design</code> with <code>npx github:Muzammil8989/frontend-system-design</code>.</sub>
 
-> **You don't need to clone this repo to use it.** The installer copies only what your agent needs: the three skills (with all 120 notes inside), the specialist agents and the commands. That's about 7 MB, with no tests, docs or build files. Clone the repo only if you want to [contribute](#contributing).
+> **You don't need to clone this repo to use it.** The installer copies only what your agent needs: the skills (with all 120 notes inside), the specialist agents and the commands. That's about 7 MB, with no tests, docs or build files. Clone the repo only if you want to [contribute](#contributing).
 
 | Install for | Where the files go |
 |---|---|
@@ -173,10 +173,10 @@ npx frontend-system-design install            # or choose each piece in the wiza
 | That one command | What it does |
 |---|---|
 | **Finds your AI tools** | Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI and Codex, each with the right file layout and flags |
-| **Installs our skills** | Frontend System Design, Product Copywriting and Git Workflow, plus 8 specialist agents, 9 `/fsd:*` commands and 120 notes |
+| **Installs the built-in skills** | Frontend System Design, Product Copywriting and Git Workflow, plus 8 specialist agents, 9 `/fsd:*` commands and 120 notes |
 | **Installs five well-known third-party skills** | [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [Impeccable](https://github.com/pbakaus/impeccable), [Vercel agent-skills](https://github.com/vercel-labs/agent-skills), [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) and [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill), in parallel |
 | **Lets you choose** | Without `--all`, a short wizard lets you untick any tool, skill or companion before anything runs |
-| **Wires them together** | Our skills hand off to the companions when they're installed, so your agent uses them on its own |
+| **Wires them together** | The built-in skills hand off to the companions when they're installed, so your agent uses them on its own |
 
 What it runs, and how you can check it:
 
@@ -218,7 +218,7 @@ This repo closes those tabs. It puts the whole team in one place and hands it to
 
 ## Features
 
-### Three skills
+### Skills
 
 | Skill | What it does |
 |---|---|
@@ -465,7 +465,7 @@ On Windows, use `py` (or `python`) instead of `python3`.
 
 ## Companion Skills
 
-Our skills act as the **architect**, the **storyteller** and the **release engineer**. The installer adds these five well-regarded skills for extra depth, and our skills hand off to them when they're installed. Each one is installed with **its own official installer**; nothing is copied into this repository.
+The built-in skills act as the **architect**, the **storyteller** and the **release engineer**. The installer adds these five well-regarded skills for extra depth, and the built-in skills hand off to them when they're installed. Each one is installed with **its own official installer**; nothing is copied into this repository.
 
 | How you install | Which companions you get |
 |---|---|
@@ -522,7 +522,7 @@ Re-running `install` is safe:
 <details>
 <summary><b>Which install should I choose?</b></summary>
 
-Start with **Recommended** (`install --all`): it installs everything. Run `install` without flags to **choose yourself** in the wizard, for example to leave out Cloudflare security-audit if you can't run audited code in a sandbox. Choose **Our skills only** (`--no-companions`) if you can't install third-party packages. You can switch later: re-running with different flags only adds what's missing.
+Start with **Recommended** (`install --all`): it installs everything. Run `install` without flags to **choose yourself** in the wizard, for example to leave out Cloudflare security-audit if you can't run audited code in a sandbox. Choose **Built-in skills only** (`--no-companions`) if you can't install third-party packages. You can switch later: re-running with different flags only adds what's missing.
 
 </details>
 
@@ -543,7 +543,7 @@ No. It reads `CONTRIBUTING`, commitlint or hook config and your recent `git log`
 <details>
 <summary><b>Does anything get sent over the network?</b></summary>
 
-Our installer only copies files into your project, or into `~/.claude` with `--global`. The Python scripts make no network calls. The only network activity is the companion installers (pinned versions). The MCP server and the guardrail hooks run locally and make no network calls. In the wizard you see their exact commands before confirming; with `--yes` they run only if you pass `--all` or `--companions`. Skip them with `--no-companions`. See [SECURITY.md](./SECURITY.md).
+The installer only copies files into your project, or into `~/.claude` with `--global`. The Python scripts make no network calls. The only network activity is the companion installers (pinned versions). The MCP server and the guardrail hooks run locally and make no network calls. In the wizard you see their exact commands before confirming; with `--yes` they run only if you pass `--all` or `--companions`. Skip them with `--no-companions`. See [SECURITY.md](./SECURITY.md).
 
 </details>
 
