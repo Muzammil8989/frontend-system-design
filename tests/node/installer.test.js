@@ -11,7 +11,7 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const { parseArgs } = require('../../src/cli/index');
-const { install, choicesFromFlags, agentList } = require('../../src/cli/install');
+const { install, choicesFromFlags, agentList, companionList } = require('../../src/cli/install');
 const { CliError } = require('../../src/cli/util');
 const { ADAPTERS } = require('../../src/cli/adapters');
 const { SKILLS } = require('../../src/cli/skills');
@@ -32,7 +32,7 @@ test('parseArgs handles flags, values and short -y', () => {
   assert.deepEqual(o._, ['extra']);
 });
 
-test('install --all writes every integration and both skills', async () => {
+test('install --all writes every integration and every skill', async () => {
   const dir = tmp();
   await quietInstall(dir, { all: true });
   const must = [
@@ -46,6 +46,16 @@ test('install --all writes every integration and both skills', async () => {
     '.claude/commands/fsd/docs.md',
     '.claude/commands/fsd/learn.md',
     '.claude/commands/fsd/copy.md',
+    '.claude/skills/git-workflow/scripts/commit_check.py',
+    '.claude/skills/git-workflow/data/git-recipes.csv',
+    '.claude/commands/fsd/commit.md',
+    '.claude/commands/fsd/pr.md',
+    '.claude/commands/fsd/undo.md',
+    '.claude/commands/fsd/release.md',
+    '.agents/skills/git-workflow/SKILL.md',
+    '.cursor/rules/git-workflow.mdc',
+    '.github/prompts/fsd-commit.prompt.md',
+    '.windsurf/rules/git-workflow.md',
     '.agents/skills/frontend-system-design/scripts/detect_stack.py',
     '.agents/skills/product-copywriting/SKILL.md',
     '.cursor/rules/frontend-system-design.mdc',
@@ -59,6 +69,8 @@ test('install --all writes every integration and both skills', async () => {
   ];
   for (const f of must) assert.ok(fs.existsSync(path.join(dir, f)), `missing ${f}`);
   assert.equal(listFiles(dir).filter((f) => f.includes('__pycache__')).length, 0);
+  // Tools without per-skill files still route git work to the skill.
+  assert.match(fs.readFileSync(path.join(dir, 'AGENTS.md'), 'utf8'), /\.agents\/skills\/git-workflow\/SKILL\.md/);
 });
 
 test('re-running is idempotent and managed blocks are not duplicated', async () => {
@@ -219,10 +231,10 @@ test('runCompanions marks a --json companion failed when a requested skill was s
   assert.ok(lines.some((l) => l.includes('not installed: gone')));
 });
 
-test('recommended companions are the defaults; Cloudflare security-audit is an optional extra', () => {
+test('every companion, Cloudflare security-audit included, is recommended and installed by --all', () => {
   const recommended = COMPANIONS.filter((x) => x.default).map((x) => x.id);
-  assert.deepEqual(recommended, ['ui-ux-pro-max', 'impeccable', 'vercel-agent-skills', 'frontend-design']);
-  assert.ok(!choicesFromFlags({ all: true, yes: true }, {}).companions.includes('security-audit'));
+  assert.deepEqual(recommended, ['ui-ux-pro-max', 'impeccable', 'vercel-agent-skills', 'frontend-design', 'security-audit']);
+  assert.deepEqual(choicesFromFlags({ all: true, yes: true }, {}).companions, recommended);
   const [sec] = planCompanions(['claude'], { ids: ['security-audit'] });
   if (sec.commands.length) {
     assert.deepEqual(sec.commands, ['npx --yes skills@1.7.6 add cloudflare/security-audit-skill --skill security-audit --agent claude-code --yes --json']);
@@ -238,6 +250,35 @@ test('--yes alone never runs third-party companions', () => {
   assert.deepEqual(choicesFromFlags({ yes: true, companions: 'impeccable' }, {}).companions, ['impeccable']);
   assert.ok(choicesFromFlags({ all: true, yes: true }, {}).companions.length > 0);
   assert.deepEqual(choicesFromFlags({ all: true, noCompanions: true }, {}).companions, []);
+});
+
+test('--companions all installs every companion, and --companions <ids> picks a subset', () => {
+  const every = COMPANIONS.map((x) => x.id);
+  assert.deepEqual(companionList('all'), every);
+  assert.deepEqual(companionList('impeccable, all'), every);
+  assert.deepEqual(companionList('impeccable,,frontend-design'), ['impeccable', 'frontend-design']);
+  assert.deepEqual(choicesFromFlags({ all: true, companions: 'all' }, {}).companions, every);
+  assert.ok(choicesFromFlags({ all: true, companions: 'all' }, {}).companions.includes('security-audit'));
+  // --all installs the recommended set, and --no-companions still wins.
+  assert.equal(choicesFromFlags({ all: true }, {}).companions.length, COMPANIONS.filter((x) => x.default).length);
+  assert.deepEqual(choicesFromFlags({ all: true, companions: 'all', noCompanions: true }, {}).companions, []);
+});
+
+test('Cloudflare security-audit carries a warning that is shown before its installer runs', async () => {
+  const sec = COMPANIONS.find((x) => x.id === 'security-audit');
+  assert.match(sec.warning, /sandbox/);
+  for (const x of COMPANIONS.filter((c) => c.id !== 'security-audit')) assert.equal(x.warning, undefined, x.id);
+  const out = [];
+  const orig = console.log;
+  console.log = (s = '') => out.push(String(s));
+  try {
+    await install({ dir: tmp(), agent: 'claude', companions: 'all', dryRun: true, ci: true, skills: 'product-copywriting' });
+  } finally {
+    console.log = orig;
+  }
+  const text = out.join('\n');
+  if (planCompanions(['claude'], { ids: ['security-audit'] })[0].commands.length) assert.match(text, /⚠ .*sandbox/);
+  else assert.match(text, /Cloudflare security-audit[\s\S]*needs Node/);
 });
 
 test('--agent all expands everywhere, and the wizard rejects bad flags cleanly', async () => {

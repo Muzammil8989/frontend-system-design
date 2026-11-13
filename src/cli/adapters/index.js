@@ -20,6 +20,10 @@ const PROMPT_INPUTS = {
   audit: '${input:target:Path or URL (default: this project)}',
   learn: '${input:topic:Topic to learn, e.g. event loop}',
   copy: '${input:page:Page or screen, e.g. landing page hero}',
+  commit: '${input:hint:Optional hint, e.g. fixes #42}',
+  pr: '${input:base:Base branch or issue, e.g. main}',
+  undo: '${input:problem:What went wrong, e.g. committed to main}',
+  release: '${input:version:Version or bump (default: from commits)}',
 };
 
 const shared = (skills) => skills.flatMap((id) => skillFiles(id, `${SHARED_SKILLS_DIR}/${id}`));
@@ -28,16 +32,19 @@ const sharedPath = (id) => `${SHARED_SKILLS_DIR}/${id}/SKILL.md`;
 /** Short routing text used inside AGENTS.md / GEMINI.md / copilot-instructions.md. */
 function pointerBlock(skills, { title = 'Frontend System Design skills', commands = false } = {}) {
   const lines = [`## ${title}`, ''];
+  // Always loaded by these tools, so keep it short: trigger → file to read → the one rule that must not wait.
   if (skills.includes('frontend-system-design')) {
-    lines.push(
-      `- **Designing, building, redesigning or auditing any web, mobile or desktop UI / frontend architecture:** read \`${sharedPath('frontend-system-design')}\` first and follow it (requirements → architecture → UI system → quality). It covers every major stack and cites the project's learning notes.`,
-      `- **Learning a frontend topic:** use its \`references/knowledge/INDEX.md\` and teach from the matching note.`
-    );
+    lines.push(`- **Designing, building or auditing any web, mobile or desktop UI or frontend architecture, or learning a frontend topic:** follow \`${sharedPath('frontend-system-design')}\`.`);
   }
   if (skills.includes('product-copywriting')) {
-    lines.push(`- **Writing or rewriting website/app copy** (landing pages, about, onboarding, empty states, errors, app-store text): read \`${sharedPath('product-copywriting')}\` and follow it. Copy must sound human and never invent facts.`);
+    lines.push(`- **Writing website or app copy** (pages, onboarding, empty states, errors, store text): follow \`${sharedPath('product-copywriting')}\`. Never invent facts.`);
   }
-  lines.push('- No subagents? Play each specialist role in sequence (architect, UI designer, mobile, performance, accessibility, security, copywriter).');
+  if (skills.includes('git-workflow')) {
+    lines.push(`- **Commits, branches, PRs, undoing git mistakes, releases, changelogs:** follow \`${sharedPath('git-workflow')}\`. Commit only after the user confirms; never push unless asked.`);
+  }
+  if (skills.includes('frontend-system-design') || skills.includes('product-copywriting')) {
+    lines.push('- No subagents? Play each specialist role in turn.');
+  }
   if (commands) {
     const cmds = skills.flatMap((id) => byId(id).commands).map((c) => `\`/fsd-${c}\``);
     lines.push(`- Prompt files: ${cmds.join(', ')}.`);

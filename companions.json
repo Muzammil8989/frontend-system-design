@@ -1,5 +1,5 @@
 {
-  "$comment": "Third-party skills installed alongside frontend-system-design via THEIR OWN official installers. Commands verified against each project's README. Installer packages are pinned to exact versions (scripts/validate-skills.js enforces this); bump them deliberately after reviewing the upstream changes. `skills add <owner/repo>` still fetches that repo's default branch. {agent}/{providers}/{skills_agents}/{scope}/{global} placeholders are filled by src/cli/companions.js. `default: true` marks a recommended companion: the wizard pre-selects it and --all installs it. Optional ones are listed after them, unchecked. `skills add` commands use --json so the installer can check that every requested skill was actually installed. Nothing from these projects is vendored into this repo.",
+  "$comment": "Third-party skills installed alongside frontend-system-design via THEIR OWN official installers. Commands verified against each project's README. Installer packages are pinned to exact versions (scripts/validate-skills.js enforces this); bump them deliberately after reviewing the upstream changes. `skills add <owner/repo>` still fetches that repo's default branch. {agent}/{providers}/{skills_agents}/{scope}/{global} placeholders are filled by src/cli/companions.js. `default: true` marks a recommended companion: the wizard pre-selects it and --all installs it. Optional ones are listed after them, unchecked; --companions all installs every one. An optional `warning` is shown before that companion's installer runs. `skills add` commands use --json so the installer can check that every requested skill was actually installed. Nothing from these projects is vendored into this repo.",
   "companions": [
     {
       "id": "ui-ux-pro-max",
@@ -82,12 +82,13 @@
       "repo": "https://github.com/cloudflare/security-audit-skill",
       "license": "MIT",
       "purpose": "Multi-phase security audits of a codebase with independently verified, machine-readable findings",
-      "default": false,
+      "default": true,
       "runner": "once",
       "requires_node": "22.20.0",
       "command": "npx --yes skills@1.7.6 add cloudflare/security-audit-skill --skill security-audit --agent {skills_agents}{skills_global} --yes --json",
       "skills_global_flag": " --global",
       "note": "ask your agent to \"security audit this codebase\"; run target code only inside a sandbox (see its README)",
+      "warning": "runs multi-phase audits with parallel subagents, so expect higher token use. Run any audited code only inside a sandbox.",
       "agents": {
         "claude": "claude-code",
         "cursor": "cursor",

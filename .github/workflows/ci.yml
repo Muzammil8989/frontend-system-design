@@ -68,6 +68,8 @@ jobs:
           python $S/detect_stack.py .
           python $S/audit_scan.py . --max 5
           python skills/product-copywriting/scripts/copy_check.py skills/product-copywriting/SKILL.md --min-score 80
+          python skills/git-workflow/scripts/commit_check.py "feat(cli): add --companions all"
+          if python skills/git-workflow/scripts/commit_check.py "Added stuff."; then echo "::error::commit_check passed a bad message"; exit 1; fi
 
   installer:
     name: Installer (${{ matrix.os }}, Node ${{ matrix.node }})
@@ -96,6 +98,9 @@ jobs:
           test -f "$T/.claude/skills/frontend-system-design/scripts/recommend.py"
           test -f "$T/.claude/skills/frontend-system-design/references/knowledge/INDEX.md"
           test -f "$T/.claude/skills/product-copywriting/scripts/copy_check.py"
+          test -f "$T/.claude/skills/git-workflow/scripts/commit_check.py"
+          test -f "$T/.claude/commands/fsd/commit.md"
+          test -f "$T/.github/prompts/fsd-release.prompt.md"
           test -f "$T/.claude/agents/mobile-engineer.md"
           test -f "$T/.claude/commands/fsd/design.md"
           test -f "$T/.agents/skills/frontend-system-design/references/stacks/flutter.md"
@@ -104,6 +109,19 @@ jobs:
           test -f "$T/.windsurf/rules/frontend-system-design.md"
           grep -q "fsd:start" "$T/GEMINI.md"
           grep -q "fsd:start" "$T/AGENTS.md"
+          grep -q "git-workflow/SKILL.md" "$T/AGENTS.md"
+      - name: Opt-in extras (guardrail hooks, MCP config)
+        shell: bash
+        run: |
+          T="$RUNNER_TEMP/extras"
+          mkdir -p "$T" && git -C "$T" init -q
+          node bin/cli.js install --all --yes --no-companions --hooks --mcp --dir "$T"
+          test -f "$T/.claude/hooks/fsd-guard.js"
+          grep -q "fsd-guard.js" "$T/.claude/settings.json"
+          test -f "$T/.git/hooks/commit-msg"
+          grep -q "frontend-system-design" "$T/.mcp.json"
+          grep -q "frontend-system-design" "$T/.vscode/mcp.json"
+          echo '{"tool_name":"Bash","tool_input":{"command":"git push --force"}}' | node "$T/.claude/hooks/fsd-guard.js" | grep -q '"deny"'
       - name: Re-run is idempotent
         shell: bash
         run: |
@@ -138,8 +156,7 @@ jobs:
       - name: Install with all companions
         run: |
           mkdir -p "$RUNNER_TEMP/companion-proj"
-          ids=$(node -p "require('./companions.json').companions.map((c) => c.id).join(',')")
-          node bin/cli.js install --agent claude --dir "$RUNNER_TEMP/companion-proj" --yes --companions "$ids" < /dev/null
+          node bin/cli.js install --agent claude --dir "$RUNNER_TEMP/companion-proj" --yes --companions all < /dev/null
           ls -la "$RUNNER_TEMP/companion-proj/.claude/skills"
 
   links:

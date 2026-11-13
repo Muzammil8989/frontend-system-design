@@ -5,12 +5,14 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { c, fail, SHARED_SKILLS_DIR } = require('./util');
+const { c, fail, PKG, SHARED_SKILLS_DIR } = require('./util');
 const { ADAPTERS } = require('./adapters');
 const { SKILLS, byId } = require('./skills');
 const { COMPANIONS, planCompanions, runCompanions } = require('./companions');
 const { detectTools, detectStack } = require('./detect');
 const { writeOutput } = require('./writer');
+const { claudeHookOutputs, commitMsgHook } = require('./hooks');
+const { mcpOutputs } = require('./mcp-config');
 
 const ICON = { created: '+', appended: '+', updated: '~', overwritten: '!', unchanged: '=', skipped: '-', refused: '!' };
 const COLOR = { created: c.green, appended: c.green, updated: c.cyan, overwritten: c.yellow, unchanged: c.dim, skipped: c.yellow, refused: c.red };
@@ -19,6 +21,9 @@ const csv = (v) => String(v).split(',').map((s) => s.trim()).filter(Boolean);
 
 /** `--agent claude,cursor` → ids; `all` anywhere in the list means every adapter. */
 const agentList = (v) => (csv(v).includes('all') ? Object.keys(ADAPTERS) : csv(v));
+
+/** `--companions a,b` → ids; `all` anywhere in the list means every companion, optional extras included. */
+const companionList = (v) => (csv(v).includes('all') ? COMPANIONS.map((x) => x.id) : csv(v));
 
 // Renamed skills: old id → current id, so existing scripts and docs keep working.
 const LEGACY_SKILLS = { 'storytelling-copywriter': 'product-copywriting' };
@@ -34,7 +39,7 @@ function skillList(v) {
 
 /**
  * Validates flag values and fills defaults for non-interactive runs.
- * Third-party companions only run when asked for (--companions <ids> or --all); --yes alone never runs them.
+ * Third-party companions only run when asked for (--companions <ids|all> or --all); --yes alone never runs them.
  */
 function choicesFromFlags(opts, detected) {
   let tools;
@@ -47,9 +52,9 @@ function choicesFromFlags(opts, detected) {
   const skills = opts.skills ? skillList(opts.skills) : SKILLS.map((s) => s.id);
   let companions = [];
   if (opts.noCompanions) companions = [];
-  else if (opts.companions) companions = csv(opts.companions);
+  else if (opts.companions) companions = companionList(opts.companions);
   else if (opts.all) companions = COMPANIONS.filter((x) => x.default).map((x) => x.id);
-  return { tools, global: !!opts.global, skills, companions };
+  return { tools, global: !!opts.global, skills, companions, hooks: !!opts.hooks, mcp: !!opts.mcp };
 }
 
 function validate({ tools = [], skills = [], companions = [] }) {
@@ -115,6 +120,7 @@ async function confirmCompanions(plan, opts, log) {
     log(`  ${x.skip ? c.yellow('-') : c.cyan('•')} ${x.name} ${c.dim(`· ${x.license} · ${x.repo}`)}`);
     if (x.skip) log(`      ${c.yellow(`skipped: ${x.skip}`)}`);
     for (const cmd of x.commands) log(`      ${c.dim('$ ' + cmd)}`);
+    if (x.warning && !x.skip) log(`      ${c.yellow(`⚠ ${x.warning}`)}`);
   }
   if (!runnable.length || opts.dryRun) {
     if (opts.dryRun && runnable.length) log(c.dim('  Dry run: commands not executed.'));
@@ -130,20 +136,53 @@ async function confirmCompanions(plan, opts, log) {
   return ok === true;
 }
 
+/** --hooks and --mcp (both opt-in): guardrail hooks and MCP server registration. Returns the written rows. */
+function writeExtras(choices, { projectRoot, force, dryRun, log }) {
+  const rows = [];
+  const write = (root, out) => {
+    const r = writeOutput(root, out, { force, dryRun });
+    rows.push(r);
+    log(`  ${COLOR[r.action](ICON[r.action])} ${r.path} ${c.dim(r.action + (r.reason ? ` (${r.reason})` : '') + (r.dryRun ? ' (dry run)' : ''))}`);
+    if (r.action === 'refused' && out.manual) log(c.dim(`      add it by hand: ${out.manual}`));
+  };
+  if (choices.hooks) {
+    log(`\n${c.bold('Guardrail hooks')} ${c.dim('(enforce the git-workflow rules)')}`);
+    if (choices.tools.includes('claude')) {
+      const root = choices.global ? os.homedir() : projectRoot;
+      for (const out of claudeHookOutputs({ global: choices.global })) write(root, out);
+    } else log(c.dim('  - Claude Code hook skipped: Claude Code is not selected'));
+    const hook = commitMsgHook(choices, projectRoot);
+    if (hook.skip) log(c.yellow(`  - git commit-msg hook skipped: ${hook.skip}`));
+    else write(hook.root, hook.out);
+  }
+  if (choices.mcp) {
+    log(`\n${c.bold('MCP server')} ${c.dim(`(npx ${PKG.name} mcp)`)}`);
+    const { outputs, notes } = mcpOutputs(choices);
+    for (const { out } of outputs) write(projectRoot, out);
+    for (const note of notes) log(c.dim(`  · ${note}`));
+  }
+  return rows;
+}
+
 function nextSteps(tools, skills, global, log) {
   const fsd = skills.includes('frontend-system-design');
   const copy = skills.includes('product-copywriting');
+  const git = skills.includes('git-workflow');
   log(`\n${c.bold('Try it')}`);
   if (tools.includes('claude')) {
-    log(`  Claude Code   ${[fsd && '/fsd:design "your product"', fsd && '/fsd:docs', fsd && '/fsd:audit', fsd && '/fsd:learn event loop', copy && '/fsd:copy landing page'].filter(Boolean).map(c.cyan).join(' · ')}`);
+    log(`  Claude Code   ${[fsd && '/fsd:design "your product"', fsd && '/fsd:docs', fsd && '/fsd:audit', fsd && '/fsd:learn event loop', copy && '/fsd:copy landing page', git && '/fsd:commit', git && '/fsd:pr'].filter(Boolean).map(c.cyan).join(' · ')}`);
   }
   if (tools.includes('copilot')) log(`  Copilot Chat  ${skills.flatMap((s) => byId(s).commands).map((x) => c.cyan(`/fsd-${x}`)).join(' · ')}`);
   for (const t of ['cursor', 'windsurf', 'gemini', 'agents'].filter((x) => tools.includes(x))) {
-    log(`  ${(t === 'agents' ? 'Codex / other' : ADAPTERS[t].label).padEnd(13)} just ask, e.g. "design the frontend for a booking app" or "rewrite our hero copy"`);
+    log(`  ${(t === 'agents' ? 'Codex / other' : ADAPTERS[t].label).padEnd(13)} just ask, e.g. "design the frontend for a booking app", "rewrite our hero copy" or "commit this"`);
   }
   if (fsd) {
     const dir = tools.includes('claude') ? `${global ? '~/' : ''}.claude/skills/frontend-system-design` : `${SHARED_SKILLS_DIR}/frontend-system-design`;
     log(`  Python        ${c.cyan(`python3 ${dir}/scripts/recommend.py "your product"`)}`);
+  }
+  if (git) {
+    const dir = tools.includes('claude') ? `${global ? '~/' : ''}.claude/skills/git-workflow` : `${SHARED_SKILLS_DIR}/git-workflow`;
+    log(`  Python        ${c.cyan(`python3 ${dir}/scripts/commit_check.py --range origin/main..HEAD`)}`);
   }
 }
 
@@ -170,15 +209,19 @@ async function install(opts) {
   const rows = report.flatMap((r) => r.rows);
   const skipped = rows.filter((r) => r.action === 'skipped').length;
   if (skipped) log(c.yellow(`\n${skipped} file(s) have local changes and were kept — re-run with --force to overwrite.`));
+  rows.push(...writeExtras(choices, { projectRoot, force: !!opts.force, dryRun: !!opts.dryRun, log }));
   const refused = rows.filter((r) => r.action === 'refused');
-  for (const r of refused) log(c.red(`\n✖ Not written: ${r.path} (${r.reason}). Check where that link points, remove it, then re-run.`));
+  for (const r of refused) {
+    const hint = /symlink/.test(r.reason) ? 'Check where that link points, remove it, then re-run.' : 'Fix or remove that file, then re-run.';
+    log(c.red(`\n✖ Not written: ${r.path} (${r.reason}). ${hint}`));
+  }
 
   let companionResults = [];
   if (choices.companions.length) {
     const plan = planCompanions(choices.tools, { global: choices.global, ids: choices.companions });
     if (await confirmCompanions(plan, opts, log)) companionResults = await runCompanions(plan, projectRoot, log);
   } else if (!interactive && !opts.noCompanions) {
-    log(c.dim('\nCompanion skills (third-party) were not installed. To add them: --companions <ids> (see list-companions) or --all.'));
+    log(c.dim('\nCompanion skills (third-party) were not installed. To add them: --all, or pick some with --companions <ids> (see list-companions).'));
   }
 
   nextSteps(choices.tools, choices.skills, choices.global, log);
@@ -196,4 +239,4 @@ async function install(opts) {
   return { choices, report, companionResults };
 }
 
-module.exports = { install, choicesFromFlags, writeAll, validate, agentList, skillList };
+module.exports = { install, choicesFromFlags, writeAll, writeExtras, validate, agentList, companionList, skillList };

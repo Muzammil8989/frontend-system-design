@@ -1,0 +1,15 @@
+type,meaning,semver_bump,changelog_section,example
+feat,A new capability for users of the code or product,minor,Added,feat(cart): let shoppers save items for later
+fix,A bug fix: behaviour now matches what was intended,patch,Fixed,fix(auth): keep users signed in after a token refresh
+perf,A change that makes something measurably faster or lighter without changing behaviour,patch,Changed,perf(list): virtualize rows to cut render time on long feeds
+refactor,Code restructuring with no change in behaviour,none,,refactor(api): extract retry logic into a shared helper
+docs,Documentation only,none,,docs(readme): explain the recommended and full install commands
+style,Formatting and whitespace only; no logic change,none,,style: apply prettier to the components folder
+test,Adding or fixing tests only,none,,test(cli): cover --companions all
+build,Build system or dependency changes,patch,Changed,build(deps): bump vite from 5.4.1 to 5.4.8
+ci,CI configuration and scripts,none,,ci: run the installer smoke test on Windows
+chore,Maintenance that touches neither source nor tests,none,,chore: remove an unused script
+revert,Reverts an earlier commit,patch,Fixed,revert: feat(cart): let shoppers save items for later
+security,A fix for a vulnerability (use only if the repo's convention allows this type),patch,Security,security(auth): reject open redirects in the login callback
+deprecate,Marks something for removal later (use only if the repo's convention allows this type),minor,Deprecated,deprecate(api): mark v1 search endpoint as deprecated
+breaking,Not a type: add ! after the type or scope or a BREAKING CHANGE footer to any type,major,Changed,feat(api)!: require an API key on every request

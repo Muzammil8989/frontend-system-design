@@ -1,7 +1,7 @@
 {
   "name": "frontend-system-design",
   "version": "1.1.0",
-  "description": "Staff-level frontend/app architect + product copywriter skills for AI coding tools (Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI, Codex). Designs the best UI and system for web, mobile and desktop on any stack, grounded in a 120-topic learning roadmap. Interactive npx installer.",
+  "description": "Staff-level frontend architect, product copywriter and git workflow skills for AI coding tools (Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI, Codex). Designs the best UI and system for web, mobile and desktop on any stack, grounded in a 120-topic learning roadmap, and keeps commits, PRs and releases clean. One npx command also installs UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit.",
   "keywords": [
     "frontend",
     "system-design",
@@ -23,7 +23,11 @@
     "jetpack-compose",
     "copywriting",
     "windsurf",
-    "gemini-cli"
+    "gemini-cli",
+    "git",
+    "conventional-commits",
+    "changelog",
+    "semver"
   ],
   "homepage": "https://github.com/Muzammil8989/frontend-system-design#readme",
   "bugs": {
@@ -40,6 +44,7 @@
   },
   "files": [
     "bin/",
+    "hooks/",
     "src/",
     "scripts/lint-notes.js",
     "skills/",
@@ -58,7 +63,7 @@
     "sync:knowledge": "node scripts/sync-knowledge.js",
     "sync:check": "node scripts/sync-knowledge.js --check",
     "validate": "node scripts/validate-skills.js",
-    "test:node": "node --test tests/node/installer.test.js",
+    "test:node": "node --test tests/node/installer.test.js tests/node/extras.test.js",
     "test:py": "node scripts/run-python-tests.js",
     "new-note": "node bin/cli.js new",
     "skills:install": "node bin/cli.js install",

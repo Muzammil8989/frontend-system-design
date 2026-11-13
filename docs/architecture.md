@@ -24,9 +24,13 @@ flowchart LR
 |---|---|---|
 | `skills/frontend-system-design/` | Architect skill: `SKILL.md`, `references/{core,platforms,stacks,playbooks,templates,knowledge}`, `scripts/*.py`, `data/*.csv` | Contributors (except `knowledge/`, which is generated) |
 | `skills/product-copywriting/` | Copy skill: `SKILL.md`, `references/`, `scripts/copy_check.py`, `data/` | Contributors |
+| `skills/git-workflow/` | Git skill: `SKILL.md`, `references/`, `scripts/commit_check.py`, `data/commit-types.csv` and `data/git-recipes.csv` | Contributors |
 | `agents/` | Claude Code subagents (specialists) | Contributors |
-| `commands/` | Slash commands (`/fsd:design`, `/fsd:audit`, `/fsd:learn`, `/fsd:copy`); also turned into Copilot prompt files | Contributors |
+| `commands/` | Slash commands (`/fsd:design`, `/fsd:docs`, `/fsd:audit`, `/fsd:learn`, `/fsd:copy`, `/fsd:commit`, `/fsd:pr`, `/fsd:undo`, `/fsd:release`); also turned into Copilot prompt files. The skill that owns each one is set in `src/cli/skills.js` | Contributors |
 | `src/cli/` | Installer source: `index` (args) → `install` → `wizard` / `detect` / `adapters` / `writer` / `companions` | Maintainers |
+| `src/cli/hooks.js`, `hooks/fsd-guard.js` | `--hooks`: the Claude Code PreToolUse guard (pure `decide()` + stdin wrapper, fails open) and the git commit-msg hook | Maintainers |
+| `src/mcp/` | `mcp` command: zero-dependency stdio JSON-RPC server (`server.js`) and its tools (`tools.js`), which run the skills' scripts from the package and read the notes; every path is confined to `--dir` | Maintainers |
+| `src/cli/python.js` | Finds Python 3.9+ and runs scripts with an argument array (no shell); shared by the MCP server and `run-python-tests.js` | Maintainers |
 | `bin/cli.js` | Thin npx entry point | — |
 | `notes/` | Learning notes (source of truth), one folder per roadmap phase (`01-web-fundamentals/` … `11-system-design-cases/`) + `_TEMPLATE.md` | Contributors |
 | `scripts/` | Repo tooling: `lint-notes`, `sync-knowledge`, `validate-skills`, `run-python-tests` | Maintainers |

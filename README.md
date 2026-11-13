@@ -2,9 +2,9 @@
 
 # Frontend System Design
 
-### Staff-level frontend architecture, product design and storytelling copy for your AI coding agent
+### A senior frontend team for your AI coding agent: architecture, product design, human copy and clean git history
 
-Describe a problem. Your agent designs the best-fit system for **web, mobile or desktop, on any stack**. It justifies every decision, grounds it in a 120-topic learning roadmap, audits existing apps, and writes copy that sounds human.
+Describe a problem. Your agent designs the right system for **web, mobile or desktop, on any stack**, and explains every decision. It audits existing apps and writes copy that sounds human. Then it commits the work the way a careful senior engineer would.
 
 [![CI](https://github.com/Muzammil8989/frontend-system-design/actions/workflows/ci.yml/badge.svg)](https://github.com/Muzammil8989/frontend-system-design/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Muzammil8989/frontend-system-design?include_prereleases&sort=semver)](https://github.com/Muzammil8989/frontend-system-design/releases)
@@ -16,10 +16,12 @@ Describe a problem. Your agent designs the best-fit system for **web, mobile or 
 **Claude Code** · **Cursor** · **GitHub Copilot** · **Windsurf** · **Gemini CLI** · **Codex & any `AGENTS.md` tool**
 
 ```bash
-npx github:Muzammil8989/frontend-system-design install
+npx frontend-system-design install --all
 ```
 
-[Quick start](#quick-start) · [Features](#features) · [Stacks](#supported-platforms--stacks) · [Roadmap](#learning-roadmap) · [Docs](./docs/architecture.md) · [Contributing](./CONTRIBUTING.md)
+<sub>One command installs our three skills plus UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit, in every AI tool you use.<br/>Prefer to pick each piece yourself? Run <code>install</code> without flags. See <a href="#choose-your-install">Choose your install</a>.</sub>
+
+[Quick start](#quick-start) · [Features](#features) · [Git workflow](#git-workflow-skill) · [Hooks](#guardrail-hooks) · [MCP](#mcp-server) · [Stacks](#supported-platforms--stacks) · [Roadmap](#learning-roadmap) · [Docs](./docs/architecture.md) · [Contributing](./CONTRIBUTING.md)
 
 </div>
 
@@ -27,51 +29,27 @@ npx github:Muzammil8989/frontend-system-design install
 
 ## Overview
 
-AI coding agents write code quickly, but on their own they tend to pick the same default stack, the same generic UI and the same AI-sounding copy for every project. This project gives them the judgement of a senior team, packaged as **agent skills** you install with one command.
+On their own, AI coding agents pick the same default stack, the same generic UI and the same AI-sounding copy for every project, and they leave behind commits like `update stuff`. This project gives them the judgement of a senior team, packaged as **agent skills** you install with one command.
 
 | | You ask | You get |
 |---|---|---|
 | **Design** | *"Offline-first field-service app for 2,000 technicians"* | A design doc covering the platform decision, stack, **folder structure**, state and data, design tokens, every screen state, performance budgets, accessibility, security and a phased rollout. Each trade-off links to the note that explains it |
 | **Audit** | *"Review ./apps/web"* | A 100-point scored report with `file:line` evidence, blockers and fixes ranked by impact ÷ effort |
 | **Write** | *"Rewrite our landing page and onboarding"* | Story-driven copy that sounds human, checked by a scorer that flags AI-sounding phrasing. Proof it can't verify is left as a placeholder, never invented |
+| **Commit** | *"Commit this"* · *"Open a PR"* · *"I committed to main by mistake"* | Atomic commits with checked Conventional Commit messages, a ready-to-paste PR description, and the safest fix for a git mistake. It commits only after your OK and pushes only when you ask |
 | **Learn** | *"Teach me the critical rendering path"* | A lesson taught from the roadmap notes: ELI5 → core concept → example → quiz |
-
----
-
-## Why This Repo
-
-You open your editor to start a new product. Your AI agent is ready, and fast. Ten minutes later it has picked the stack it always picks, built the same dashboard it built last time, and written a hero line that could belong to any startup on the internet.
-
-So you open tabs. A blog post on SSR versus SSG. A WCAG checklist. A thread about where to store auth tokens. A performance guide that's three years old. A design-token article. A copy tool to make your words sound less robotic. Each tab knows one thing. None of them knows your project, and none of them talks to your agent.
-
-This repo closes those tabs. It puts the whole frontend team in one place and hands it to your agent:
-
-| Your agent gets | So it can |
-|---|---|
-| **An architect** | Choose the platform, rendering per route, stack, folder structure, state and data flow, and explain every trade-off |
-| **A product designer** | Set the visual direction, design tokens, components and every screen state: empty, loading, error, offline, success |
-| **Performance, accessibility and security specialists** | Set budgets for Core Web Vitals and app startup, plan for WCAG 2.2 AA, and lock down auth, CSP, XSS and secure storage |
-| **A mobile and desktop engineer** | Decide native or cross-platform, and plan offline sync, push, deep links and releases |
-| **A reviewer** | Audit an existing app and score it out of 100, with `file:line` evidence and fixes ranked by impact |
-| **A product copywriter** | Write landing pages, onboarding and microcopy that sound human, without inventing proof |
-| **A teacher** | Teach any of 120 notes across 11 phases, from how browsers work to designing a Figma-like canvas, step by step with a quiz |
-
-**What you gain by having it all in one place:**
-
-- **One install, every skill.** Architecture, UI, performance, accessibility, security, testing, mobile, copy and learning arrive together, and they know about each other. The architect hands copy to the copywriter and budgets to the performance engineer.
-- **Grounded, not guessed.** Every decision cites the note that explains it. When the notes don't cover something, the agent says so instead of making it up.
-- **Any stack, any AI tool.** 20 stacks across web, mobile and desktop. Works in Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI and Codex.
-- **Light on your machine and your tokens.** The installer copies only the skills, the notes, the agents and the commands (about 7 MB), never the whole repo. Agents read a note section by section instead of loading it whole.
-- **Yours to learn from.** The same notes that guide your agent are a full roadmap you can read yourself, on GitHub or with `/fsd:learn`.
-- **Free and open.** MIT-licensed code, CC BY 4.0 notes, and helper scripts that run offline with only the Python standard library.
 
 ---
 
 ## Table of Contents
 
-- [Why This Repo](#why-this-repo)
 - [Quick Start](#quick-start)
+- [One Command, Not Six](#one-command-not-six)
+- [Why This Repo](#why-this-repo)
 - [Features](#features)
+- [Git Workflow Skill](#git-workflow-skill)
+- [Guardrail Hooks](#guardrail-hooks)
+- [MCP Server](#mcp-server)
 - [Supported Tools](#supported-tools)
 - [Supported Platforms & Stacks](#supported-platforms--stacks)
 - [How It Works](#how-it-works)
@@ -88,22 +66,38 @@ This repo closes those tabs. It puts the whole frontend team in one place and ha
 
 ## Quick Start
 
-**Requirements:** Node.js 18 or later. Python 3.9 or later is needed for the helper scripts; they use only the standard library, so there's nothing to `pip install`.
+**Requirements**
 
-Run this in your project folder:
+- **Node.js 18 or later.** Node 22.20 or later is recommended. The Vercel, Anthropic and Cloudflare packs install through `npx skills`, which needs it. On older Node those packs are skipped, and the installer tells you how to add them later.
+- **Python 3.9 or later**, for the helper scripts. They use only the standard library, so there's nothing to `pip install`.
 
-```bash
-npx github:Muzammil8989/frontend-system-design install
-```
+### Choose your install
 
-> **You don't need to clone this repo to use it.** The installer copies only what your agent needs: the two skills (with all 120 notes inside), the specialist agents and the commands. That's about 7 MB, with no tests, docs or build files. Clone the repo only if you want to [contribute](#contributing).
+Run one of these in your project folder.
+
+| | **Recommended: everything** | **Choose yourself** | **Our skills only** |
+|---|---|---|---|
+| **Command** | `npx frontend-system-design install --all` | `npx frontend-system-design install` | `npx frontend-system-design install --all --no-companions` |
+| **Installs** | Our 3 skills, 8 agents and 9 commands, plus all five companions: UI UX Pro Max, Impeccable, Vercel agent-skills, Anthropic frontend-design and Cloudflare security-audit | Only what you tick in the wizard: AI tools, project or global scope, skills and companions. Everything recommended starts ticked | Our 3 skills, 8 agents and 9 commands. No third-party code |
+| **Choose it if** | You want the full setup without any decisions. This is the right choice for most people | You want to leave something out, or install for only some of your AI tools | Your company restricts third-party packages, or you only want our skills |
+| **Good to know** | Asks once before running the five third-party installers; add `--yes` to skip that question | Shows every command, and any warning, before you confirm | Quickest to install. Add the companions later by running `install --all` |
+
+**About Cloudflare security-audit.** Its audits run many parallel subagents, so expect higher token use, and run any audited code only inside a sandbox. The installer prints this warning before Cloudflare's installer runs. To leave it out, untick it in the wizard, or name the companions you want: `--companions ui-ux-pro-max,impeccable,vercel-agent-skills,frontend-design`.
+
+**Two opt-in extras** work with any of the three: `--hooks` adds [guardrail hooks](#guardrail-hooks) that enforce the git rules, and `--mcp` connects the [MCP server](#mcp-server) to your AI tools. The wizard asks about both.
+
+Add `--dry-run` to any command to see exactly what it would do without changing anything.
+
+<sub>Want the latest unreleased changes from <code>main</code>? Replace <code>npx frontend-system-design</code> with <code>npx github:Muzammil8989/frontend-system-design</code>.</sub>
+
+> **You don't need to clone this repo to use it.** The installer copies only what your agent needs: the three skills (with all 120 notes inside), the specialist agents and the commands. That's about 7 MB, with no tests, docs or build files. Clone the repo only if you want to [contribute](#contributing).
 
 | Install for | Where the files go |
 |---|---|
 | This project (default) | `.claude/` and/or `.agents/skills/` in your project, plus small rule files for Cursor, Windsurf, Copilot or Gemini |
 | Every project (`--global`) | Your home folder, e.g. `C:\Users\<you>\.claude\` on Windows or `~/.claude/` on macOS and Linux. Nothing is added to the project |
 
-The installer detects the AI tools on your machine, preselects them, asks a few questions, and installs:
+Without flags, the wizard detects the AI tools on your machine, preselects them, and lets you choose the rest:
 
 ```text
 ┌   Frontend System Design v1.1.0
@@ -120,9 +114,10 @@ The installer detects the AI tools on your machine, preselects them, asks a few 
 │  ◻ Gemini CLI
 │  ◻ Codex & other AGENTS.md tools
 ◆  Where should Claude Code get them?   ● This project   ○ Globally (~/.claude)
-◆  Which skills?   ◼ Frontend System Design   ◼ Product Copywriting
-◆  Recommended companion skills:   ◼ UI UX Pro Max   ◼ Impeccable   ◼ Vercel agent-skills   ◼ frontend-design
-◆  Optional extras, for specific needs:   ◻ Cloudflare security-audit
+◆  Which skills?   ◼ Frontend System Design   ◼ Product Copywriting   ◼ Git Workflow
+◆  Recommended companion skills (space to untick):
+│  ◼ UI UX Pro Max   ◼ Impeccable   ◼ Vercel agent-skills   ◼ frontend-design   ◼ Cloudflare security-audit
+◇  Ready to install: shows every command, and the Cloudflare sandbox warning
 ◆  Install now?   Yes
 └  Done. Happy building!
 ```
@@ -131,43 +126,121 @@ Then ask your agent, for example:
 
 ```text
 /fsd:design "real-time analytics dashboard for a logistics company"
+/fsd:commit
 ```
 
 <details>
-<summary><b>Non-interactive install (CI, scripts, dotfiles)</b></summary>
+<summary><b>More install commands (CI, scripts, dotfiles)</b></summary>
 
 | Goal | Command |
 |---|---|
-| Everything, including third-party companions, no questions | `npx github:Muzammil8989/frontend-system-design install --all --yes` |
-| Claude Code for every project | `npx github:Muzammil8989/frontend-system-design install --agent claude --global --yes` |
-| Only the copywriter, for Cursor and Windsurf | `npx github:Muzammil8989/frontend-system-design install --agent cursor,windsurf --skills product-copywriting --yes` |
-| Our skills only, no third-party skills | `npx github:Muzammil8989/frontend-system-design install --all --yes --no-companions` |
-| Preview without changing anything | `npx github:Muzammil8989/frontend-system-design install --all --dry-run` |
+| Recommended (everything), with no questions at all | `npx frontend-system-design install --all --yes` |
+| Everything except Cloudflare security-audit | `npx frontend-system-design install --all --companions ui-ux-pro-max,impeccable,vercel-agent-skills,frontend-design` |
+| Claude Code only, for every project | `npx frontend-system-design install --agent claude --global --yes` |
+| Only the Git Workflow skill, for Claude Code and Cursor | `npx frontend-system-design install --agent claude,cursor --skills git-workflow --no-companions --yes` |
+| Only the copywriter, for Cursor and Windsurf | `npx frontend-system-design install --agent cursor,windsurf --skills product-copywriting --yes` |
+| Pick specific companions | `npx frontend-system-design install --all --companions impeccable,security-audit` |
+| Preview without changing anything | `npx frontend-system-design install --all --dry-run` |
+
+`--yes` alone never runs third-party installers. They run only when you pass `--all` or `--companions`.
 
 </details>
 
 ---
 
+## One Command, Not Six
+
+A good setup for an AI agent usually means finding each skill pack, learning its installer, and running it again for every tool you use:
+
+```bash
+# Without this repo, for Claude Code alone:
+npx ui-ux-pro-max-cli init --ai claude
+npx impeccable install --providers=claude --scope=project
+npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices web-design-guidelines vercel-composition-patterns --agent claude-code
+npx skills add anthropics/skills --skill frontend-design --agent claude-code
+npx skills add cloudflare/security-audit-skill --skill security-audit --agent claude-code
+# ...then the same again for Cursor, Copilot, Windsurf, Gemini and Codex,
+# and you still have no architect, no copywriter and no git workflow.
+```
+
+With this repo:
+
+```bash
+npx frontend-system-design install --all      # everything, for every AI tool
+npx frontend-system-design install            # or choose each piece in the wizard
+```
+
+| That one command | What it does |
+|---|---|
+| **Finds your AI tools** | Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI and Codex, each with the right file layout and flags |
+| **Installs our skills** | Frontend System Design, Product Copywriting and Git Workflow, plus 8 specialist agents, 9 `/fsd:*` commands and 120 notes |
+| **Installs five well-known third-party skills** | [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [Impeccable](https://github.com/pbakaus/impeccable), [Vercel agent-skills](https://github.com/vercel-labs/agent-skills), [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) and [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill), in parallel |
+| **Lets you choose** | Without `--all`, a short wizard lets you untick any tool, skill or companion before anything runs |
+| **Wires them together** | Our skills hand off to the companions when they're installed, so your agent uses them on its own |
+
+What it runs, and how you can check it:
+
+- **Pinned:** [`companions.json`](./companions.json) pins every third-party installer to an exact version.
+- **Visible:** the installer prints each command before it runs, and `--dry-run` shows them all without running anything.
+- **Official:** each companion's own upstream installer does the work. This repo copies none of their code ([THIRD_PARTY.md](./THIRD_PARTY.md)).
+
+---
+
+## Why This Repo
+
+You open your editor to start a new product. Your AI agent is ready, and fast. Ten minutes later it has picked the stack it always picks and built the same dashboard as last time. The hero line could belong to any startup, and all of it is committed as `update`.
+
+So you open tabs. A blog post on SSR versus SSG. A WCAG checklist. A thread about where to store auth tokens. A performance guide that's three years old. A copy tool to make your words sound less robotic. A Stack Overflow answer on undoing a commit you already pushed. Each tab knows one thing. None of them knows your project, and none of them talks to your agent.
+
+This repo closes those tabs. It puts the whole team in one place and hands it to your agent:
+
+| Your agent gets | So it can |
+|---|---|
+| **An architect** | Choose the platform, rendering per route, stack, folder structure, state and data flow, and explain every trade-off |
+| **A product designer** | Set the visual direction, design tokens, components and every screen state: empty, loading, error, offline, success |
+| **Performance, accessibility and security specialists** | Set budgets for Core Web Vitals and app startup, plan for WCAG 2.2 AA, and lock down auth, CSP, XSS and secure storage |
+| **A mobile and desktop engineer** | Decide native or cross-platform, and plan offline sync, push, deep links and releases |
+| **A reviewer** | Audit an existing app and score it out of 100, with `file:line` evidence and fixes ranked by impact |
+| **A product copywriter** | Write landing pages, onboarding and microcopy that sound human, without inventing proof |
+| **A git and release engineer** | Split work into atomic commits, write messages and PRs reviewers can scan, fix git mistakes safely, and cut releases with a proper changelog |
+| **A teacher** | Teach any of 120 notes across 11 phases, from how browsers work to designing a Figma-like canvas, step by step with a quiz |
+
+**What you gain by having it all in one place:**
+
+- **One command, every skill.** Architecture, UI, performance, accessibility, security, mobile, copy, git and learning arrive together, along with five well-known third-party skills for design and security. And the skills know about each other: the architect hands copy to the copywriter, and the git skill commits a design in reviewable slices.
+- **Grounded, not guessed.** Every decision cites the note that explains it. When the notes don't cover something, the agent says so instead of making it up.
+- **Safe by default.** Third-party installers are pinned and shown before they run. The git skill never commits without your OK, and never pushes, force-pushes or skips hooks unless you ask.
+- **Any stack, any AI tool.** 20 stacks across web, mobile and desktop. Works in Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI and Codex.
+- **Light on your machine and your tokens.** The installer copies only the skills, notes, agents and commands (about 7 MB), never the whole repo. Agents read a note section by section instead of loading it whole.
+- **Free and open.** MIT-licensed code, CC BY 4.0 notes, and helper scripts that run offline with only the Python standard library.
+
+---
+
 ## Features
 
-### Two skills
+### Three skills
 
 | Skill | What it does |
 |---|---|
 | **`frontend-system-design`** | **Problem-first system design.** It restates your problem, matches it to a known system design case, and works through **RADIO + UI**: Requirements, Architecture, Data, Interface, Optimizations, then the UI system. It decides native vs cross-platform, rendering per route, the stack and a feature-based **folder structure**, then state and data, design tokens, every screen state, budgets, accessibility (WCAG 2.2 AA) and security. Every trade-off includes a *"Why — learn more"* link to a roadmap note. It also **audits** existing apps and **teaches** topics |
 | **`product-copywriting`** | **Website and app copy that reads as human.** The customer is the hero, using story frameworks such as PAS, BAB and origin stories. It covers landing pages, about pages, pricing, onboarding, empty states, errors, permission prompts, push notifications, app-store listings and microcopy. A bundled checker flags 170 AI-sounding phrases, filler, passive voice, flat rhythm and reading level. Unverified proof becomes a `[placeholder]`, never a made-up testimonial or statistic |
+| **`git-workflow`** | **Clean, reviewable history.** It reads your repo's conventions first. Then it writes atomic commits with checked [Conventional Commit](https://www.conventionalcommits.org/) messages, plus PR titles and descriptions. Releases get a [semver](https://semver.org/) bump and a [Keep a Changelog](https://keepachangelog.com/) entry. Its undo playbook covers 34 common git mistakes, from a wrong-branch commit to a leaked secret, each with the safest fix first and its risk level. [More below](#git-workflow-skill) |
 
-### Specialist agents and commands
+### Commands and specialist agents
 
 | Command | What happens |
 |---|---|
 | `/fsd:design <problem>` | The lead architect runs **specialists in parallel** and merges their work into one design doc: `ui-designer`, `mobile-engineer`, `performance-engineer`, `accessibility-specialist`, `security-reviewer` and `copywriter` |
-| `/fsd:docs [focus]` | Writes or refreshes the project docs in `docs/`: architecture, system design, design tokens (`tokens.json`), color with a computed contrast table, typography with the type scale, components and quality. `/fsd:design` writes them too when you create a product |
+| `/fsd:docs [focus]` | Writes or refreshes the project docs in `docs/`: architecture, system design, design tokens (`tokens.json`), color with a computed contrast table, typography with the type scale, components and quality |
 | `/fsd:audit [path]` | The read-only `ui-ux-reviewer` and the specialists score the app out of 100 |
 | `/fsd:learn <topic>` | An interactive lesson from the roadmap notes |
 | `/fsd:copy <page>` | The `copywriter` writes, checks and revises until the copy scores at least 80 |
+| `/fsd:commit [hint]` | Reads the staged diff, proposes atomic commits, checks each message, and commits only after you confirm |
+| `/fsd:pr [base]` | Branch name, PR title and description from the whole branch, plus a size check and split suggestions |
+| `/fsd:undo <problem>` | Diagnoses a git mistake and gives the least destructive fix, its risk level, and a way back |
+| `/fsd:release [version]` | Picks the semver bump from the commits, writes the CHANGELOG entry and release notes, and prepares the tag |
 
-Copilot gets the same commands as `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn` and `/fsd-copy`. Tools without subagents run each specialist role in sequence.
+Copilot gets the same commands as `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn`, `/fsd-copy`, `/fsd-commit`, `/fsd-pr`, `/fsd-undo` and `/fsd-release`. In Cursor, Windsurf, Gemini CLI and Codex, ask in plain language ("commit this", "design the frontend for…"). Tools without subagents run each specialist role in sequence.
 
 ### Python engine (standard library only, offline)
 
@@ -178,7 +251,95 @@ Copilot gets the same commands as `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fs
 | `search.py` | BM25 search over the curated datasets: 20 product types, 73 stacks, 16 UI styles, 21 WCAG-AA palettes, 23 font pairings and 41 UX patterns |
 | `budget.py` | Core Web Vitals and size budgets for the web (including a Lighthouse `budget.json`), plus startup, frame and size targets for mobile and desktop |
 | `audit_scan.py` | Static accessibility, security and performance scan for web, React Native, Flutter, Swift, Kotlin and XAML |
+| `tokens_check.py` | Validates a design-token file: references, types, and color contrast |
 | `copy_check.py` | Scores copy from 0 to 100 with line-level fixes |
+| `commit_check.py` | Lints a commit message or a whole branch (0-100) and suggests the next semver version from the commits |
+
+---
+
+## Git Workflow Skill
+
+Most agents can run `git commit`. Few leave history that a reviewer, `git bisect` or a release tool can use. This skill covers the whole loop, and it **follows your repo's own conventions first**: it reads `CONTRIBUTING`, commitlint or hook config, the PR template and recent `git log` before it writes anything.
+
+| Mode | Ask | What it does |
+|---|---|---|
+| **Commit** | `/fsd:commit` · *"commit this"* | Reviews the staged diff, stops if it finds a secret, splits mixed changes into atomic commits, writes and checks each message, then commits **after you say yes**. It never pushes |
+| **PR** | `/fsd:pr` · *"open a PR"* | Suggests a branch name and reads every commit on the branch. It flags `wip` and `fixup!` commits and checks the size. Then it writes the title and description from your PR template, listing only the tests you ran |
+| **Undo** | `/fsd:undo committed to main` | Diagnoses with `status`, `log` and `reflog`, asks whether the work was pushed, then gives the safest fix with its risk level, whether it rewrites history, and how to undo the fix. Destructive steps need an explicit yes, every time |
+| **Release** | `/fsd:release` | Works out major, minor or patch from the commits since the last tag, writes a user-facing CHANGELOG entry and release notes, then prepares the commit and annotated tag. It pushes only when you ask |
+
+**Ground rules the skill always follows:**
+
+- No push, force-push, history rewrite or `--no-verify` unless you ask for that exact action.
+- No secrets or build output in commits, and no invented issue numbers, versions or test results.
+- `revert` over `reset` on shared branches, and `--force-with-lease`, never plain `--force`.
+- A backup branch before anything risky.
+
+Check messages yourself, or in CI:
+
+```bash
+python3 .claude/skills/git-workflow/scripts/commit_check.py "feat(cli): add --companions all"
+python3 .claude/skills/git-workflow/scripts/commit_check.py --range origin/main..HEAD
+python3 .claude/skills/git-workflow/scripts/commit_check.py --range v1.1.0..HEAD --suggest-bump
+# Suggested bump: minor (v1.1.0 → v1.2.0)
+```
+
+---
+
+## Guardrail Hooks
+
+A skill is advice: the agent follows it most of the time. A hook is a rule the tool enforces every time. Add `--hooks` to turn the git skill's safety rules into hooks:
+
+```bash
+npx frontend-system-design install --all --hooks
+```
+
+**In Claude Code** (`.claude/hooks/fsd-guard.js`, registered in `.claude/settings.json`), every shell command the agent runs is checked first:
+
+| The agent tries to… | What happens |
+|---|---|
+| `git push --force`, `push -f`, `push +branch` | **Blocked.** It's told to use `--force-with-lease` on its own branch, and only when you ask |
+| `--no-verify` / `commit -n` | **Blocked.** It has to fix what your hooks report |
+| Commit `.env`, private keys, certificates or credential files | **Blocked**, with the steps to unstage them and commit an example file instead |
+| `git push`, `--force-with-lease`, `reset --hard`, `clean -f`, `branch -D`, `stash drop`, `filter-repo`, discard the whole tree, delete a tag | **Asks you first** |
+| Anything else | Runs as normal |
+
+**In git itself** (`.git/hooks/commit-msg`), every commit message, yours included, is checked by `commit_check.py`. `wip` and `fixup!` commits are allowed locally, so your workflow isn't blocked; `commit_check.py --range` catches them before you merge.
+
+It's built to stay out of your way:
+- Your other hooks are kept. The settings file is merged, and the git hook is skipped (with the line to add by hand) if you already use husky, lefthook, `core.hooksPath` or your own `commit-msg` hook.
+- If the guard itself fails, it lets the command run. A bug in a guardrail should never stop your work.
+- To remove it, delete the `fsd-guard.js` entry under `hooks.PreToolUse` in `.claude/settings.json`, `.claude/hooks/fsd-guard.js`, and `.git/hooks/commit-msg`.
+
+---
+
+## MCP Server
+
+The skills work inside coding agents. The **MCP server** brings the same engine and the 120 notes to any [MCP](https://modelcontextprotocol.io/) client: Claude Desktop, ChatGPT, VS Code, Cursor, Gemini CLI, n8n and others.
+
+```bash
+npx frontend-system-design mcp                   # stdio server; tools may read the current folder
+npx frontend-system-design install --all --mcp   # or register it in each selected tool's MCP config
+```
+
+| Tool | What it does |
+|---|---|
+| `recommend` | Product idea → platform, stack, styles, palettes, fonts, UX patterns, budget, and the notes behind each choice |
+| `search` | Search products, stacks, UI styles, WCAG-AA palettes, font pairings and UX patterns |
+| `budget` | Core Web Vitals and size budgets for web; startup and frame targets for mobile and desktop |
+| `detect_stack` · `audit_scan` | Detect an existing project's stack; static accessibility, security and performance scan |
+| `tokens_check` | Validate a design-tokens file, including color contrast |
+| `copy_check` | Score UI and marketing copy for human, specific writing |
+| `commit_check` | Lint a commit message or a whole branch, and suggest the next version |
+| `list_notes` · `read_note` | Find a learning note, then read only the sections you need (Key Points and Cheat Sheet by default) |
+
+`--mcp` writes `.mcp.json` (Claude Code), `.cursor/mcp.json`, `.vscode/mcp.json` and `.gemini/settings.json` for the tools you select. It merges with what's there and prints a snippet for Windsurf and for files it can't merge (for example, JSON with comments). For any other client, add a stdio server:
+
+```json
+{ "mcpServers": { "frontend-system-design": { "command": "npx", "args": ["-y", "frontend-system-design", "mcp", "--dir", "/path/to/your/project"] } } }
+```
+
+**Local and contained.** It runs on your machine with no network calls of its own. Tools can read only the folder given with `--dir` (default: the current folder), and paths outside it are refused. It has no new dependencies and needs Python 3.9+ for the engine tools; the note tools work without it.
 
 ---
 
@@ -186,7 +347,7 @@ Copilot gets the same commands as `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fs
 
 | Tool | What gets installed |
 |---|---|
-| **Claude Code** | `.claude/skills/*`, 8 subagents in `.claude/agents/`, and the `/fsd:*` commands. Use `--global` to install to `~/.claude` |
+| **Claude Code** | `.claude/skills/*`, 8 subagents in `.claude/agents/`, and 9 `/fsd:*` commands. Use `--global` to install to `~/.claude` |
 | **Cursor** | `.agents/skills/*` plus agent-requested rules in `.cursor/rules/*.mdc` |
 | **GitHub Copilot** (VS Code) | `.agents/skills/*`, a managed block in `.github/copilot-instructions.md`, and `/fsd-*` prompt files |
 | **Windsurf** | `.agents/skills/*` plus `.windsurf/rules/*.md` (model-decision trigger) |
@@ -233,8 +394,10 @@ flowchart LR
     P --> S["Security"]
     P --> C["Copywriter"]
     A & UI & M & F & Y & S & C --> O["Design doc<br/>trade-offs · learn-more notes<br/>phased rollout"]
+    O --> G["Git workflow<br/>atomic commits · PR"]
     style P fill:#eef2ff,stroke:#4f46e5
     style O fill:#dcfce7,stroke:#16a34a
+    style G fill:#fef3c7,stroke:#d97706
 ```
 
 <details>
@@ -274,12 +437,16 @@ flowchart LR
 /fsd:audit ./apps/mobile
 /fsd:learn event loop
 /fsd:copy "landing page hero and about page"
+/fsd:commit
+/fsd:pr main
+/fsd:undo "I committed to main instead of my feature branch"
+/fsd:release
 > Riverpod or Bloc for our Flutter app?
 ```
 
-**Cursor, Windsurf, Gemini CLI, Codex.** Ask in plain language, e.g. *"Design the frontend for a hotel booking marketplace"* or *"Rewrite our onboarding so it sounds human"*.
+**Cursor, Windsurf, Gemini CLI, Codex.** Ask in plain language, e.g. *"Design the frontend for a hotel booking marketplace"*, *"Rewrite our onboarding so it sounds human"* or *"Commit this and write the PR description"*.
 
-**Copilot Chat:** `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn`, `/fsd-copy`.
+**Copilot Chat:** `/fsd-design`, `/fsd-docs`, `/fsd-audit`, `/fsd-learn`, `/fsd-copy`, `/fsd-commit`, `/fsd-pr`, `/fsd-undo`, `/fsd-release`.
 
 **Any terminal:**
 
@@ -289,6 +456,7 @@ python3 $S/recommend.py "add a booking flow" --project .
 python3 $S/detect_stack.py .
 python3 $S/budget.py --type mobile-consumer --platform mobile
 python3 .claude/skills/product-copywriting/scripts/copy_check.py hero.md --min-score 80
+python3 .claude/skills/git-workflow/scripts/commit_check.py --range origin/main..HEAD
 ```
 
 On Windows, use `py` (or `python`) instead of `python3`.
@@ -297,45 +465,47 @@ On Windows, use `py` (or `python`) instead of `python3`.
 
 ## Companion Skills
 
-Our skills act as the **architect** and the **storyteller**. The wizard also offers these well-regarded skills for extra depth, and our skills hand off to them when they're installed. Each one is installed with **its own official installer**; nothing is copied into this repository.
+Our skills act as the **architect**, the **storyteller** and the **release engineer**. The installer adds these five well-regarded skills for extra depth, and our skills hand off to them when they're installed. Each one is installed with **its own official installer**; nothing is copied into this repository.
 
-The wizard asks in two steps. First come the **recommended** companions, already selected. Then come the **optional extras**, unselected, for specific needs. `--all` installs the recommended ones only.
+| How you install | Which companions you get |
+|---|---|
+| `install --all` | All five, after one confirmation (none with `--yes`) |
+| `install` (wizard) | All five start ticked; untick any you don't want |
+| `--companions <ids>` | Only the ones you name, e.g. `--companions impeccable,security-audit` |
+| `--no-companions` | None |
 
-**Recommended**
+| Companion | Adds | License | Replaces running, per tool |
+|---|---|---|---|
+| [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | A large searchable catalogue of UI styles, palettes, font pairings and UX guidelines | MIT | `npx ui-ux-pro-max-cli init --ai <tool>` |
+| [Impeccable](https://github.com/pbakaus/impeccable) | Design polish, critique and audit commands; anti-pattern detection (Claude Code, Cursor, Codex) | Apache-2.0 | `npx impeccable install --providers=<tools> --scope=<scope>` |
+| [Vercel agent-skills](https://github.com/vercel-labs/agent-skills) | `vercel-react-best-practices`, `web-design-guidelines`, `vercel-composition-patterns` | MIT | `npx skills add vercel-labs/agent-skills --skill … --agent <tools>` |
+| [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Distinctive, non-generic visual direction | See upstream | `npx skills add anthropics/skills --skill frontend-design --agent <tools>` |
+| [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill) | Full multi-phase security audits of a codebase, with independently verified findings and a report. Needs an agent with parallel subagents (higher token use); run target code only inside a sandbox | MIT | `npx skills add cloudflare/security-audit-skill --skill security-audit --agent <tools>` |
 
-| Companion | Adds | License |
-|---|---|---|
-| [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | A large searchable catalogue of UI styles, palettes, font pairings and UX guidelines | MIT |
-| [Impeccable](https://github.com/pbakaus/impeccable) | Design polish, critique and audit commands; anti-pattern detection | Apache-2.0 |
-| [Vercel agent-skills](https://github.com/vercel-labs/agent-skills) | `vercel-react-best-practices`, `web-design-guidelines`, `vercel-composition-patterns` | MIT |
-| [Anthropic frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Distinctive, non-generic visual direction | See upstream |
-
-**Optional extras**
-
-| Companion | Adds | License |
-|---|---|---|
-| [Cloudflare security-audit](https://github.com/cloudflare/security-audit-skill) | Full multi-phase security audits of a codebase, with independently verified findings and a report. Needs an agent with parallel subagents; run target code only inside a sandbox | MIT |
-
-Every installer is pinned to an exact version in [`companions.json`](./companions.json), and its command is shown before it runs. For `npx skills` packs, the installer reads the per-skill result and marks the companion ✖ if any requested skill wasn't installed. Non-interactive runs (`--yes`) install companions only when you ask for them with `--companions <ids>` or `--all`. See [THIRD_PARTY.md](./THIRD_PARTY.md).
+Every installer is pinned to an exact version in [`companions.json`](./companions.json), and its command is shown before it runs, with a warning where one applies. For `npx skills` packs, the installer reads the per-skill result and marks the companion ✖ if any requested skill wasn't installed. Non-interactive runs (`--yes`) install companions only when you ask for them with `--all` or `--companions <ids>`. See [THIRD_PARTY.md](./THIRD_PARTY.md).
 
 ---
 
 ## CLI Reference
 
 ```text
-npx github:Muzammil8989/frontend-system-design <command> [options]
+npx frontend-system-design <command> [options]
 
 install                  Interactive wizard in a terminal; flags skip questions
   --agent <list>           claude, cursor, copilot, windsurf, gemini, agents, all
-  --skills <list>          frontend-system-design, product-copywriting
+  --skills <list>          frontend-system-design, product-copywriting, git-workflow (default: all)
   --global                 Claude Code: install to ~/.claude (all projects)
   --dir <path>             Target project (default: current directory)
-  --companions <ids>       Run these third-party companion installers (pinned versions)
+  --companions <ids|all>   Run only these companion installers (pinned versions)
   --no-companions          Skip third-party companion skills
-  --all                    Every tool + the recommended companion skills
-  --yes, -y                No questions; companions only with --companions or --all
+  --all                    Every tool + every recommended companion skill
+  --yes, -y                No questions; companions only with --all or --companions
+  --hooks                  Guardrail hooks: Claude Code guard + git commit-msg check (opt-in)
+  --mcp                    Register the MCP server in each selected tool's MCP config (opt-in)
   --force                  Overwrite files you changed locally
   --dry-run                Preview; write and run nothing
+mcp                      Run the MCP server on stdio
+  --dir <path>             Folder the tools may read (default: current directory)
 list                     Show what each tool integration installs
 list-companions          Show companion skills and licenses
 ```
@@ -350,9 +520,30 @@ Re-running `install` is safe:
 ## FAQ
 
 <details>
+<summary><b>Which install should I choose?</b></summary>
+
+Start with **Recommended** (`install --all`): it installs everything. Run `install` without flags to **choose yourself** in the wizard, for example to leave out Cloudflare security-audit if you can't run audited code in a sandbox. Choose **Our skills only** (`--no-companions`) if you can't install third-party packages. You can switch later: re-running with different flags only adds what's missing.
+
+</details>
+
+<details>
+<summary><b>Will the git skill commit or push without asking?</b></summary>
+
+No. It shows the files and the full message and runs `git commit` only after you say yes. It never pushes, force-pushes, rewrites shared history, deletes branches or skips hooks unless you ask for that exact action. Destructive undo steps (`reset --hard`, `clean`, `branch -D`) each need their own yes, and it makes a backup branch first.
+
+</details>
+
+<details>
+<summary><b>My team doesn't use Conventional Commits. Will the git skill fight that?</b></summary>
+
+No. It reads `CONTRIBUTING`, commitlint or hook config and your recent `git log` first, and follows what it finds. Conventional Commits is only the fallback. The checker accepts extra types with `--types`.
+
+</details>
+
+<details>
 <summary><b>Does anything get sent over the network?</b></summary>
 
-Our installer only copies files into your project, or into `~/.claude` with `--global`. The Python scripts make no network calls. The only network activity is the companion installers (pinned versions). In the wizard you see their exact commands before confirming; with `--yes` they run only if you pass `--companions <ids>` or `--all`. Skip them with `--no-companions`. See [SECURITY.md](./SECURITY.md).
+Our installer only copies files into your project, or into `~/.claude` with `--global`. The Python scripts make no network calls. The only network activity is the companion installers (pinned versions). The MCP server and the guardrail hooks run locally and make no network calls. In the wizard you see their exact commands before confirming; with `--yes` they run only if you pass `--all` or `--companions`. Skip them with `--no-companions`. See [SECURITY.md](./SECURITY.md).
 
 </details>
 
@@ -366,11 +557,13 @@ Run the same `npx … install` command again. Unchanged files are updated in pla
 <details>
 <summary><b>How do I uninstall?</b></summary>
 
-Delete the folders and files listed by `npx github:Muzammil8989/frontend-system-design list`:
-- `.claude/skills/frontend-system-design`, `.claude/skills/product-copywriting`, the agents and `.claude/commands/fsd/`;
+Delete the folders and files listed by `npx frontend-system-design list`:
+- `.claude/skills/frontend-system-design`, `.claude/skills/product-copywriting`, `.claude/skills/git-workflow`, the agents and `.claude/commands/fsd/`;
 - `.agents/skills/…`;
 - the `.cursor` and `.windsurf` rules;
-- the `fsd:start … fsd:end` block in `AGENTS.md`, `GEMINI.md` or `copilot-instructions.md`.
+- the `fsd:start … fsd:end` block in `AGENTS.md`, `GEMINI.md` or `copilot-instructions.md`;
+- with `--hooks`: `.claude/hooks/fsd-guard.js`, its entry in `.claude/settings.json`, and `.git/hooks/commit-msg`;
+- with `--mcp`: the `frontend-system-design` entry in `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json` or `.gemini/settings.json`.
 
 </details>
 
@@ -396,14 +589,17 @@ No. In an existing codebase it detects your stack, follows that stack's guide, a
 frontend-system-design/
 ├── skills/
 │   ├── frontend-system-design/     SKILL.md · references/{core,platforms,stacks,playbooks,templates,knowledge} · scripts/ · data/
-│   └── product-copywriting/        SKILL.md · references/ · scripts/copy_check.py · data/
+│   ├── product-copywriting/        SKILL.md · references/ · scripts/copy_check.py · data/
+│   └── git-workflow/               SKILL.md · references/ · scripts/commit_check.py · data/{commit-types,git-recipes}.csv
 ├── agents/                         8 specialist subagents
-├── commands/                       /fsd:design · /fsd:docs · /fsd:audit · /fsd:learn · /fsd:copy
-├── src/cli/                        installer: index · install · wizard · detect · adapters/ · writer · companions
+├── commands/                       /fsd:design · docs · audit · learn · copy · commit · pr · undo · release
+├── src/cli/                        installer: index · install · wizard · detect · adapters/ · writer · companions · hooks · mcp-config · python
+├── src/mcp/                        MCP server: server (stdio JSON-RPC) · tools
+├── hooks/fsd-guard.js              Claude Code guardrail hook (installed with --hooks)
 ├── bin/cli.js                      npx entry point
 ├── notes/                          learning roadmap: 01-web-fundamentals/ … 11-system-design-cases/ (synced into the skill's knowledge/)
 ├── scripts/                        lint-notes · sync-knowledge · validate-skills · run-python-tests
-├── tests/                          node/ (installer) · python/ (engine, platforms, copy checker)
+├── tests/                          node/ (installer) · python/ (engine, platforms, tokens, copy and commit checkers)
 ├── docs/                           architecture · adding a stack · adding an AI tool · reading the notes
 └── .github/ · companions.json · CHANGELOG · CONTRIBUTING · SECURITY · LICENSE
 ```
@@ -730,7 +926,7 @@ Phases 1–4 build the foundations. Phases 5–9 cover the engineering practices
 
 ## Contributing
 
-Contributions of every size are welcome: a new stack guide, a product playbook, a better palette, a sharper agent, copywriting rules, support for another AI tool, or a roadmap note.
+Contributions of every size are welcome: a new stack guide, a product playbook, a better palette, a sharper agent, copywriting rules, a git recipe, support for another AI tool, or a roadmap note.
 
 > **Clone only to contribute.** To *use* the skills, run the [one-line installer](#quick-start) instead.
 
@@ -751,6 +947,7 @@ npm ci && npm test        # same checks as CI: note lint, knowledge sync, valida
 | A learning note | `notes/<NN-phase>/<slug>.md` (new note: `npm run new-note -- <slug> --phase <1-11>`) | `npm run lint:notes` and `npm run sync:knowledge` |
 | The architect skill | `skills/frontend-system-design/` (`SKILL.md`, `references/`, `scripts/`, `data/`) | `npm run validate` |
 | The copywriting skill | `skills/product-copywriting/` | `npm run validate` |
+| The git skill | `skills/git-workflow/` (rules in `references/`, recipes in `data/git-recipes.csv`) | `npm run validate` and `npm run test:py` |
 | An agent or a command | `agents/*.md`, `commands/*.md` | `npm run validate` |
 | The installer or a new AI tool | `src/cli/` | `npm run test:node` |
 
@@ -764,7 +961,7 @@ npm test                  # must pass before you open the PR
 npm run skills:install -- --agent claude --no-companions   # optional: try your change in your own agent
 ```
 
-Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat(notes): …`, `fix(skill): …`). Start with [CONTRIBUTING.md](./CONTRIBUTING.md), then use the guide for your change: [adding a stack](./docs/adding-a-stack.md) or [adding an AI tool](./docs/adding-an-agent-tool.md).
+Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat(notes): …`, `fix(skill): …`). Check your branch with `python skills/git-workflow/scripts/commit_check.py --range origin/main..HEAD`, or let `/fsd:commit` write the messages for you. Start with [CONTRIBUTING.md](./CONTRIBUTING.md), then use the guide for your change: [adding a stack](./docs/adding-a-stack.md) or [adding an AI tool](./docs/adding-an-agent-tool.md).
 
 | | |
 |---|---|

@@ -24,6 +24,13 @@ const SKILLS = [
     agents: ['copywriter'],
     commands: ['copy'],
   },
+  {
+    id: 'git-workflow',
+    label: 'Git Workflow',
+    hint: 'clean commits, PRs, safe undo & releases: Conventional Commits, semver, changelog',
+    agents: [],
+    commands: ['commit', 'pr', 'undo', 'release'],
+  },
 ];
 
 const skillDir = (id) => path.join(PKG_ROOT, 'skills', id);

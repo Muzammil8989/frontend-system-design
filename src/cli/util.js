@@ -9,7 +9,7 @@ const PKG_ROOT = path.resolve(__dirname, '..', '..');
 const PKG = JSON.parse(fs.readFileSync(path.join(PKG_ROOT, 'package.json'), 'utf8'));
 const REPO = 'Muzammil8989/frontend-system-design';
 const REPO_URL = `https://github.com/${REPO}`;
-const NPX = `npx github:${REPO}`;
+const NPX = `npx ${PKG.name}`;
 const SHARED_SKILLS_DIR = '.agents/skills';
 
 /* ---------- terminal colors (respect NO_COLOR and non-TTY) ---------- */

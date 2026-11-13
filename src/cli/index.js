@@ -25,7 +25,7 @@ const NOTE_PHASES = [
   '10-advanced-topics',
   '11-system-design-cases',
 ];
-const BOOLEAN_FLAGS = ['all', 'yes', 'global', 'force', 'dryRun', 'noCompanions', 'listCompanions', 'ci', 'quiet', 'noReadme', 'json', 'help'];
+const BOOLEAN_FLAGS = ['all', 'yes', 'global', 'force', 'dryRun', 'noCompanions', 'listCompanions', 'ci', 'quiet', 'noReadme', 'json', 'help', 'hooks', 'mcp'];
 
 function parseArgs(argv, { warn = (msg) => console.error(c.yellow(msg)) } = {}) {
   const opts = { _: [] };
@@ -51,7 +51,7 @@ function parseArgs(argv, { warn = (msg) => console.error(c.yellow(msg)) } = {}) 
 
 function help() {
   console.log(`
-${c.bold('frontend-system-design')} ${c.dim(`v${PKG.version}`)}: staff-level frontend architect + product copywriter for AI coding tools
+${c.bold('frontend-system-design')} ${c.dim(`v${PKG.version}`)}: frontend architect, product copywriter and git workflow skills for AI coding tools
 
 ${c.bold('Usage')}
   ${NPX} install               ${c.dim('# interactive wizard')}
@@ -60,15 +60,20 @@ ${c.bold('Usage')}
 ${c.bold('Commands')}
   install                Install skills, specialist agents and commands (asks questions in a terminal)
     --agent <list>         ${Object.keys(ADAPTERS).join(', ')}, all
-    --skills <list>        ${SKILLS.map((s) => s.id).join(', ')} (default: both)
+    --skills <list>        ${SKILLS.map((s) => s.id).join(', ')} (default: all)
     --global               Claude Code: install to ~/.claude (all projects)
     --dir <path>           Target project (default: current directory)
-    --companions <ids>     Run these third-party companion installers (pinned versions; see list-companions)
+    --companions <ids|all> Run only these companion installers (pinned versions; see list-companions)
     --no-companions        Skip third-party companion skills
-    --all                  Every tool + the recommended companion skills
+    --all                  Every tool + every recommended companion skill
     --yes, -y              No questions: use flags/defaults (companions only with --companions or --all)
+    --hooks                Guardrails: Claude Code hook (blocks force-push, --no-verify, committing secrets;
+                           asks before risky git commands) + a git commit-msg hook. Opt-in
+    --mcp                  Register the MCP server in each selected tool's MCP config. Opt-in
     --force                Overwrite files you changed locally
     --dry-run              Preview; write and run nothing
+  mcp                    Run the MCP server on stdio (engine tools + learning notes for any MCP client)
+    --dir <path>           Folder the tools may read (default: current directory)
   list                   Show what each tool integration installs
   list-companions        Show companion skills and their licenses
   new <slug> --phase <n> (contributors) Scaffold notes/<phase-folder>/<slug>.md from the template
@@ -77,6 +82,9 @@ ${c.bold('Commands')}
 
 ${c.bold('Examples')}
   ${NPX} install
+  ${NPX} install --all                       ${c.dim('# recommended: every tool, every skill, every companion')}
+  ${NPX} install --all --no-companions       ${c.dim('# our skills only, no third-party installers')}
+  ${NPX} install --all --hooks --mcp         ${c.dim('# plus guardrail hooks and the MCP server')}
   ${NPX} install --agent claude --global --yes
   ${NPX} install --agent cursor,windsurf --skills product-copywriting --no-companions
 
@@ -87,7 +95,7 @@ Docs: ${REPO_URL}#readme
 function listCompanions() {
   const groups = [
     ['Recommended companion skills (pre-selected in the wizard; installed by --all)', COMPANIONS.filter((x) => x.default)],
-    ['Optional extras (choose them in the wizard or with --companions <ids>)', COMPANIONS.filter((x) => !x.default)],
+    ['Optional extras (choose them in the wizard, or use --companions <ids> or --companions all)', COMPANIONS.filter((x) => !x.default)],
   ];
   for (const [title, list] of groups.filter(([, l]) => l.length)) {
     console.log(c.bold(`\n${title}\n`));
@@ -155,6 +163,8 @@ async function main(argv = process.argv.slice(2)) {
       return listCompanions();
     case 'new':
       return newNote(opts);
+    case 'mcp':
+      return require('../mcp/server').start(opts);
     case 'lint': {
       const { run } = require('../../scripts/lint-notes.js');
       process.exitCode = run({ root: path.resolve(opts.dir || process.cwd()), files: opts._, readme: !opts.noReadme, json: !!opts.json });

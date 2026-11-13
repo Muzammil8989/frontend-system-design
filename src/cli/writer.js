@@ -4,6 +4,9 @@
  * Idempotent file writer.
  *   { path, content }         → standalone file (kept if locally modified unless --force)
  *   { path, block, heading }  → managed block inside a shared file (AGENTS.md, GEMINI.md, …)
+ *   { path, json: fn }        → JSON config merged in place (settings.json, .mcp.json): fn(parsed) returns the
+ *                               next object and must touch only our own keys; unparseable files are refused
+ *   `mode` (optional)         → file mode after writing, e.g. 0o755 for a git hook
  */
 
 const fs = require('fs');
@@ -53,7 +56,30 @@ function writeOutput(root, out, { force = false, dryRun = false } = {}) {
   let next;
   let action;
 
-  if (out.block !== undefined) {
+  if (out.json) {
+    let current = {};
+    if (exists) {
+      const text = read(abs);
+      try {
+        current = text.trim() ? JSON.parse(text) : {};
+      } catch {
+        return { path: out.path, action: 'refused', reason: 'not valid JSON (comments?); left untouched' };
+      }
+      if (!current || typeof current !== 'object' || Array.isArray(current)) {
+        return { path: out.path, action: 'refused', reason: 'not a JSON object; left untouched' };
+      }
+    }
+    let merged;
+    try {
+      merged = out.json(JSON.parse(JSON.stringify(current)));
+    } catch (e) {
+      return { path: out.path, action: 'refused', reason: e.message };
+    }
+    // Compare data, not formatting, so a hand-formatted file isn't rewritten when nothing changed.
+    if (exists && JSON.stringify(merged) === JSON.stringify(current)) return { path: out.path, action: 'unchanged' };
+    next = JSON.stringify(merged, null, 2);
+    action = exists ? 'updated' : 'created';
+  } else if (out.block !== undefined) {
     const block = `${BLOCK_START}\n${out.block.trim()}\n${BLOCK_END}`;
     if (!exists) {
       next = `${out.heading}\n\n${block}\n`;
@@ -79,6 +105,7 @@ function writeOutput(root, out, { force = false, dryRun = false } = {}) {
   if (!dryRun) {
     fs.mkdirSync(path.dirname(abs), { recursive: true });
     fs.writeFileSync(abs, normalize(next));
+    if (out.mode) fs.chmodSync(abs, out.mode);
   }
   return { path: out.path, action, dryRun };
 }

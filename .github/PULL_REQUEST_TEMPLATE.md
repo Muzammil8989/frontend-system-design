@@ -8,6 +8,7 @@ Closes #
 
 - [ ] Skill: references or playbooks (`skills/frontend-system-design/references/`)
 - [ ] Skill: data (`skills/frontend-system-design/data/*.csv`)
+- [ ] Skill: product-copywriting or git-workflow (`skills/product-copywriting/`, `skills/git-workflow/`)
 - [ ] Skill: Python scripts or tests
 - [ ] Agents or commands (`agents/`, `commands/`)
 - [ ] Installer, companions or CI (`bin/`, `companions.json`, `.github/`)
@@ -23,6 +24,7 @@ Closes #
 - [ ] Installer changes: tested `node bin/cli.js install --all --dir <tmp> --no-companions`, and the re-run reports no changes
 - [ ] Learning notes: every template section is filled in, and the README progress and badge are updated
 - [ ] `CHANGELOG.md` updated under **Unreleased**
+- [ ] Commit messages and the PR title follow Conventional Commits (`python skills/git-workflow/scripts/commit_check.py --range origin/main..HEAD`)
 
 ## Example output (for skill or script changes)
 

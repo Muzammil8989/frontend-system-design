@@ -175,6 +175,7 @@ if (reg) {
     if (!npx) err(where, `${c.id}: command must start with "npx <package>@<version>"`);
     else if (!/^(?:@[\w.-]+\/)?[\w.-]+@\d+\.\d+\.\d+$/.test(npx[1])) err(where, `${c.id}: pin "${npx[1]}" to an exact version, e.g. ${npx[1].replace(/@[^/]*$/, '')}@1.2.3`);
     for (const a of Object.keys(c.agents || {})) if (!ADAPTERS[a]) err(where, `${c.id}: unknown tool key ${a}`);
+    if (c.warning !== undefined && (typeof c.warning !== 'string' || !c.warning.trim())) err(where, `${c.id}: "warning" must be a non-empty string`);
   }
 }
 

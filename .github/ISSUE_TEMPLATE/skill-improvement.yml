@@ -1,5 +1,5 @@
 name: "🧠 Skill improvement"
-description: Improve the frontend-system-design skill — a wrong recommendation, a new product playbook, new data, an agent or a new AI tool integration.
+description: Improve a skill (frontend-system-design, product-copywriting or git-workflow) — a wrong recommendation, a new playbook or git recipe, new data, an agent or command, or a new AI tool integration.
 title: "[Skill] "
 labels: ["skill"]
 body:
@@ -12,7 +12,9 @@ body:
         - New product playbook / product type
         - Data (styles, palettes, fonts, patterns, stacks)
         - Specialist agent or command
-        - Python scripts (recommend / search / budget / audit_scan)
+        - Python scripts (recommend / search / budget / audit_scan / copy_check / commit_check)
+        - Git workflow (commit rules, PRs, undo recipes, releases)
+        - Copywriting (voice, frameworks, checker)
         - Installer / support for another AI tool
         - Companion skill (add / update / remove)
     validations:
