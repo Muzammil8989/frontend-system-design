@@ -2,7 +2,7 @@
 
 Thanks for helping make **Frontend System Design** better! It's two things in one repo, and both welcome contributions:
 
-1. **The AI skills.** `frontend-system-design` gives coding agents staff-level judgement on frontend and app architecture and UI, for web, mobile and desktop. `product-copywriting` writes human-sounding website and app copy. Both live in `skills/`, `agents/`, `commands/`, `src/cli/` and `companions.json`.
+1. **The AI skills.** `frontend-system-design` gives coding agents staff-level judgement on frontend and app architecture and UI, for web, mobile and desktop. `product-copywriting` writes human-sounding website and app copy. `git-workflow` keeps commits, PRs and releases clean and fixes git mistakes safely. All three live in `skills/`, `agents/`, `commands/`, `src/cli/` and `companions.json`.
 2. **The learning roadmap.** 120 deep-dive notes on frontend system design, in `notes/`. They also ship inside the skill as its knowledge base: agents cite them in designs, and `/fsd:learn` teaches from them.
 
 - [Ways to contribute](#ways-to-contribute)
@@ -24,6 +24,7 @@ Thanks for helping make **Frontend System Design** better! It's two things in on
 | Add or improve a **stack guide** (any framework, mobile or desktop) | [docs/adding-a-stack.md](./docs/adding-a-stack.md) |
 | Add a product playbook, palette, font pairing or UX pattern | PR to `skills/frontend-system-design/data/*.csv` and `references/playbooks/product-playbooks.md` |
 | Improve the copywriting rules or the AI-tell list | PR to `skills/product-copywriting/references/` or `data/ai-tells.csv` |
+| Improve the git rules, or add an undo recipe | PR to `skills/git-workflow/references/` or `data/git-recipes.csv` (keep the safest fix first, with an honest risk level) |
 | Improve an agent or command | PR to `agents/` or `commands/` |
 | Support another AI tool, or add a companion skill | [docs/adding-an-agent-tool.md](./docs/adding-an-agent-tool.md); open an issue first |
 | Write a roadmap note | Claim it with a [New topic issue](https://github.com/Muzammil8989/frontend-system-design/issues/new?template=new-topic.yml) |
@@ -70,15 +71,16 @@ skills/
 │   ├── references/playbooks/      product playbooks
 │   ├── references/templates/      design-doc template, audit rubric
 │   ├── references/knowledge/      GENERATED from notes/ by `npm run sync:knowledge`; don't edit
-│   ├── scripts/*.py               recommend, detect_stack, search, budget, audit_scan (stdlib only)
+│   ├── scripts/*.py               recommend, detect_stack, search, budget, audit_scan, tokens_check (stdlib only)
 │   └── data/*.csv                 curated datasets
-└── product-copywriting/           SKILL.md · references/ · scripts/copy_check.py · data/
+├── product-copywriting/           SKILL.md · references/ · scripts/copy_check.py · data/
+└── git-workflow/                  SKILL.md · references/ · scripts/commit_check.py · data/{commit-types,git-recipes}.csv
 agents/  commands/                 Specialist subagents and slash commands
 src/cli/                           Installer: index · install · wizard · detect · adapters/ · writer · companions
 bin/cli.js                         npx entry point
 notes/                             Learning notes (source of truth): one folder per roadmap phase + _TEMPLATE.md
 scripts/                           Repo tooling: lint-notes, sync-knowledge, validate-skills, run-python-tests
-tests/node/  tests/python/         Installer tests · engine and copy-checker tests
+tests/node/  tests/python/         Installer tests · engine, token, copy-checker and commit-checker tests
 docs/                              architecture, adding a stack, adding an AI tool
 ```
 
@@ -153,6 +155,12 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 | `feat(cli)` / `fix(cli)` | `feat(cli): support Windsurf rules` |
 | `feat(notes)` / `fix(notes)` | `feat(notes): add DOM & Virtual DOM note` |
 | `docs`, `chore(ci)`, `test` | `chore(ci): cache setup-python` |
+
+Check your messages before you push. If the git-workflow skill is installed in your agent, `/fsd:commit` writes and checks them for you:
+
+```bash
+python skills/git-workflow/scripts/commit_check.py --range origin/main..HEAD
+```
 
 The workflow:
 - Keep each PR focused on one concern, and fill in the PR template.
