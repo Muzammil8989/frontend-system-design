@@ -54,12 +54,23 @@ function lanes(plan) {
   return [...byPkg.values()];
 }
 
+/**
+ * The environment for companion installers. When this installer itself was started by `npx -p <pkg>` /
+ * `npm exec --package`, npm exports npm_config_package and npm_config_call; an inner `npx --yes <companion>`
+ * would inherit them and try to run the companion's name as a command inside OUR package.
+ */
+function companionEnv(env = process.env) {
+  const out = { ...env };
+  for (const k of Object.keys(out)) if (/^npm_config_(package|call)$/i.test(k)) delete out[k];
+  return out;
+}
+
 /** Runs one command with buffered output (so parallel runs don't interleave) and no stdin (so a prompt fails fast instead of hanging). */
 function exec(cmd, cwd) {
   return new Promise((resolve) => {
     let stdout = '';
     let stderr = '';
-    const child = spawn(cmd, { cwd, shell: true, env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn(cmd, { cwd, shell: true, env: companionEnv(), stdio: ['ignore', 'pipe', 'pipe'] });
     child.stdout.on('data', (d) => (stdout += d));
     child.stderr.on('data', (d) => (stderr += d));
     child.on('error', (e) => resolve({ code: 1, stdout, stderr: `${stderr}${e.message}\n` }));
@@ -129,4 +140,4 @@ async function runCompanions(plan, cwd, log = console.log, { retries = 1, retryD
   return runnable.map((c) => ({ id: c.id, name: c.name, ok: !failed.has(c.id), reason: failed.get(c.id), note: c.note, commands: c.commands }));
 }
 
-module.exports = { COMPANIONS, planCompanions, runCompanions, lanes, skillsReport };
+module.exports = { COMPANIONS, planCompanions, runCompanions, lanes, skillsReport, companionEnv };
