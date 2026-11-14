@@ -23,6 +23,10 @@ npx frontend-system-design install --all
 
 [Quick start](#quick-start) · [Features](#features) · [Git workflow](#git-workflow-skill) · [Hooks](#guardrail-hooks) · [MCP](#mcp-server) · [Stacks](#supported-platforms--stacks) · [Roadmap](#learning-roadmap) · [Docs](./docs/architecture.md) · [Contributing](./CONTRIBUTING.md)
 
+<br/>
+
+<img src="./assets/landing-page-hero.png" alt="Frontend System Design landing page: 'A senior frontend team for your AI coding agent', with the npx install command and the list of supported AI tools" width="900" />
+
 </div>
 
 ---
